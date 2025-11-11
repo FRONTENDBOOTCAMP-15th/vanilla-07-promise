@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "readonly-brunch",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

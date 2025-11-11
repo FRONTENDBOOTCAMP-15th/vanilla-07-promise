@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "team-brunch",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
