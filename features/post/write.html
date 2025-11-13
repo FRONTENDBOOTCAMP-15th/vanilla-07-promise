@@ -1,91 +1,91 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>글쓰기</title>
-    <link rel="stylesheet" href="../../assets/css/base/global.css" />
-    <link rel="stylesheet" href="./write.css" />
-    <script type="module" src="./write.ts"></script>
-  </head>
-  <body>
-    <header>
-      <button>
-        <img src="../../assets/images/post/IconCancel.png" alt="뒤로가기" />
-      </button>
-      <h2>글쓰기</h2>
-      <button type="submit" class="submit-Btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 30 30"
-          fill="none"
-          class="Register-icon"
+<! doctype html >
+< html  lang =" ko " >
+  < 머리 >
+    < 메타  문자셋 =" UTF-8 " / > 
+    < 메타  이름 =" 뷰포트 " 콘텐츠 =" 너비=장치 너비, 초기 크기=1.0 " / > 
+    < 제목 > 글쓰기 </ 제목 >
+    < 링크  rel =" 스타일시트 " href =" ../../assets/css/base/global.css " />
+    < 링크  rel =" 스타일시트 " href =" ./write.css " />
+    < 스크립트  유형 =" 모듈 " src =" ./write.ts " > </ 스크립트 >
+  </ 머리말 >
+  < 본문 >
+    < 헤더 >
+      < 버튼 >
+        < img  src =" ../../assets/images/post/IconCancel.png " alt =" 뒤가기 " />
+      </ 버튼 >
+      < h2 > 글쓰기 </ h2 >
+      < 버튼  유형 =" 제출 " 클래스 =" 제출 버튼 " >
+        < SVG
+          xmlns =" http://www.w3.org/2000/svg "
+          너비 =" 30 "
+          높이 =" 30 "
+          뷰박스 =" 0 0 30 30 "
+          채우기 =" 없음 "
+          클래스 =" 등록 아이콘 "
         >
-          <path d="M23.5 9.5L13.5 21L6.5 13.5" stroke="#444444" />
-        </svg>
-      </button>
-    </header>
-    <main>
-      <form class="post-form">
-        <div class="form-title">
-          <label for="title" class="sr-only">제목</label>
-          <input type="text" id="title" name="title" placeholder="제목" />
-        </div>
+          < 경로  d =" M23.5 9.5L13.5 21L6.5 13.5 " 스트로크 =" #444444 " />
+        </svg>​​
+      </ 버튼 >
+    </ 헤더 >
+    < 메인 >
+      < 폼  클래스 =" 포스트폼 " >
+        < div  클래스 =" 폼제목 " >
+          < label  for =" title " class =" sr - only " > 제목 </label>
+          < input  type =" text " id =" title " name =" title " placeholder =" 제목 " />
+        </div>​​
 
-        <div class="form-subtitle">
-          <label for="subtitle" class="sr-only">소제목</label>
-          <input
-            type="text"
-            id="subtitle"
-            name="subtitle"
-            placeholder="소제목"
+        < div  클래스 =" 폼-자막 " >
+          < label  for =" subtitle " class =" sr-only " > 소제목 </ label >
+          < 입력
+            유형 =" 텍스트 "
+            id =" 자막 "
+            이름 =" 자막 "
+            자리 표시자 =" 소제목 "
           />
-        </div>
+        </div>​​
 
-        <div class="form-content">
-          <label for="content" class="sr-only">내용</label>
-          <textarea
-            id="content"
-            name="content"
-            placeholder="내용을 입력하세요."
-          ></textarea>
-        </div>
+        < div  클래스 =" 폼-콘텐츠 " >
+          < label  for =" content " class =" sr - only " > 내용 </label>
+          < 텍스트 영역
+            id =" 콘텐츠 "
+            이름 =" 내용 "
+            placeholder =" 내용을 입력하세요. "
+          > </ 텍스트 영역 >
+        </div>​​
 
-        <section class="editor-toolbar" aria-label="글쓰기 도구">
-          <div class="left-buttons">
-            <label class="upload-button" aria-label="사진 첨부">
-              <img
-                src="../../assets/images/post/IconPicture.png"
-                alt="사진업로드"
+        < 섹션  클래스 =" editor-toolbar " aria-label =" 글쓰기 도구 " >
+          < div  class =" 왼쪽 버튼 " >
+            < label  class =" 업로드 버튼 " aria-label =" 사진 첨부 " >
+              < 이미지
+                src =" ../../assets/images/post/IconPicture.png "
+                alt =" 사진업로드 "
               />
-              <input
-                type="file"
-                name="imageUpload"
-                accept="image/*"
-                style="display: none"
-                multiple
+              < 입력
+                유형 =" 파일 "
+                이름 =" 이미지 업로드 "
+                수락 =" image/* "
+                스타일 =" 표시: 없음 "
+                다수의
               />
-            </label>
+            </ 라벨 >
 
-            <label type="button" aria-label="목록 정렬">
-              <img
-                src="../../assets/images/post/IconAlign.png"
-                alt="텍스트 정렬방식"
+            < 라벨  유형 =" 버튼 " aria-label =" 목록다음 " >
+              < 이미지
+                src =" ../../assets/images/post/IconAlign.png "
+                alt =" 오른쪽 방향 "
               />
-            </label>
-          </div>
-          <div class="right-buttons">
-            <label type="button" aria-label="텍스트 작성">
-              <img
-                src="../../assets/images/post/IconKeyboardUp.png"
-                alt="사진업로드"
+            </ 라벨 >
+          </div>​​
+          < div  class =" 오른쪽 버튼 " >
+            < label  type =" 버튼 " aria-label =" 텍스트 작성 " >
+              < 이미지
+                src =" ../../assets/images/post/IconKeyboardUp.png "
+                alt =" 사진업로드 "
               />
-            </label>
-          </div>
-        </section>
-      </form>
-    </main>
-  </body>
+            </ 라벨 >
+          </div>​​
+        </ 섹션 >
+      </ 양식 >
+    </ 메인 >
+  </ 본문 >
 </html>
