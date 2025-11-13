@@ -23,14 +23,14 @@
     </section>
     <form action="" id="login-form" class="login-form" novalidate>
       <div class="field" data-field="email">
-        <label for="emailInput" class="field-label">이메일</label>
+        <label for="emailInput" class="field-label sr-only">이메일</label>
         <input type="email" class="field-input" id="email-input" name="email" autocomplete="email" placeholder="이메일 주소를 입력하세요" required />
         <p id="email-message" class="field-message" aria-live="polite"></p>
       </div>
 
       <div class="field" data-field="password">
         <div class="field-header">
-          <label for="passwordInput" class="field-label">비밀번호</label>
+          <label for="passwordInput" class="field-label sr-only">비밀번호</label>
         </div>
         <input type="password" id="password-input" class="field-input" name="password" autocomplete="current-password" minlength="6" placeholder="비밀번호를 입력하세요" required />
         <p id="password-message" class="field-message" aria-live="polite"></p>
@@ -52,6 +52,8 @@
       </button>
         <a href="#" class="login-link">비밀번호 찾기</a>
       </div>
+
+      <div class="login-status" role="status" aria-live="polite"></div>
 
       <button type="submit" class="login-submit is-active">로그인</button>
       <button type="button" class="login-kakao" data-role="kakao-login">
