@@ -8,6 +8,12 @@ import {
   type User,
 } from '../../types/apiClient';
 
+const metaEnv =
+  (import.meta as unknown as { env?: Record<string, string | undefined> })
+    .env ?? {};
+const KAKAO_REST_API_KEY = metaEnv.VITE_KAKAO_REST_API_KEY ?? '';
+const KAKAO_REDIRECT_URI = metaEnv.VITE_KAKAO_REDIRECT_URI ?? '';
+
 const form = document.querySelector<HTMLFormElement>('#signup-form');
 const nicknameInput =
   document.querySelector<HTMLInputElement>('#nickname-input');
@@ -41,11 +47,9 @@ const passwordConfirmToggle = document.querySelector<HTMLButtonElement>(
 );
 
 const kakaoLoginButton = document.querySelector<HTMLButtonElement>(
-  "[data-role='kakao-login']"
+  "[data-role='kakao-login']",
 );
 
-const KAKAO_JS_KEY = import.meta.env.VITE_KAKAO_JS_KEY;
-const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
 const formStatus = document.querySelector<HTMLDivElement>('.form-status');
 
 const fieldElements = {
@@ -364,13 +368,19 @@ async function processRegistration(
 ): Promise<void> {
   event.preventDefault();
 
-  if (!form || !nicknameInput || !emailInput) {
+  if (!form) {
     return;
   }
 
   const requirePassword = provider === 'local';
-  const nicknameValid = validateNickname();
-  const emailValid = validateEmail();
+  const nicknameValid =
+    provider === 'kakao'
+      ? Boolean(nicknameInput?.value.trim() || 'placeholder')
+      : validateNickname();
+  const emailValid =
+    provider === 'kakao'
+      ? Boolean(emailInput?.value.trim() || 'placeholder')
+      : validateEmail();
   const passwordValid = requirePassword ? validatePassword() : true;
   const confirmValid = requirePassword ? validatePasswordConfirm() : true;
 
@@ -386,8 +396,11 @@ async function processRegistration(
     return;
   }
 
-  const nicknameValue = nicknameInput.value.trim();
-  const emailValue = emailInput.value.trim();
+  const nicknameValue =
+    nicknameInput?.value.trim() || `kakao-${Date.now().toString(36)}`;
+  const emailValue =
+    emailInput?.value.trim() ||
+    `kakao_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`;
 
   if (isNicknameRegisteredLocally(nicknameValue)) {
     duplicateState.nicknameChecked = false;
@@ -650,15 +663,14 @@ function initEventListeners(): void {
     void handleKakaoSubmit(event);
   });
 }
-kakaoLoginButton?.addEventListener("click", () => {
-  if (!KAKAO_JS_KEY || !REDIRECT_URI) {
-    console.error("카카오 환경변수가 설정되지 않았습니다.");
-    return;
-  }
+kakaoLoginButton?.addEventListener('click', () => {
+  const redirectUrl =
+    `https://kauth.kakao.com/oauth/authorize?response_type=code` +
+    `&client_id=${KAKAO_REST_API_KEY}` +
+    `&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}` +
+    `&scope=account_email,gender`;
 
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_JS_KEY}&redirect_uri=${REDIRECT_URI}`;
-
-  window.location.href = kakaoAuthUrl;
+  window.location.href = redirectUrl;
 });
 
 initEventListeners();

@@ -23,7 +23,7 @@ const api = axios.create({
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
-    'client-id': metaEnv.VITE_CLIENT_ID,
+    'client-id': metaEnv.VITE_CLIENT_ID ?? '',
   },
 });
 
@@ -180,54 +180,6 @@ export const registerUser = async (
   }
 };
 
-// 🔥 카카오 회원가입 API (독립된 함수)
-export const kakaoRegisterUser = async (
-  userData: User,
-): Promise<ApiItemResponse<User>> => {
-  try {
-    // 🔧 extra 데이터 정리
-    const extraData = { ...(userData.extra ?? {}) };
-    if (!extraData.providerAccountId) delete extraData.providerAccountId;
-
-    // 🔥 카카오 회원가입용 payload (중복 제거 + 명확화)
-    const payload: Record<string, unknown> = {
-      email: userData.email,
-      name: userData.name,
-      type: userData.type ?? 'user',
-      loginType: 'kakao', // 카카오 전용
-      provider: 'kakao', // provider 명시
-    };
-
-    // 🔧 카카오는 password를 직접 입력하지 않음 → optional
-    if (userData.password) {
-      payload.password = userData.password;
-    }
-
-    // 🔧 프로필 이미지 있으면 추가
-    if (userData.image) {
-      payload.image = userData.image;
-    }
-
-    // 🔧 extra 데이터 있으면 추가
-    if (Object.keys(extraData).length > 0) {
-      payload.extra = extraData;
-    }
-
-    // 🌐 API 요청
-    const { data } = await api.post<ApiItemResponse<User>>(
-      '/users/signup/oauth',
-      payload,
-    );
-
-    return data;
-  } catch (err) {
-    if (isAxiosError(err)) {
-      console.error('[kakaoRegisterUser] 요청 실패:', err.response?.data);
-    }
-    throw err;
-  }
-};
-
 // ✅ 회원 목록 조회
 export const getUserList = async (): Promise<ApiListResponse<User>> => {
   const { data } = await api.get<ApiListResponse<User>>('/users');
@@ -308,7 +260,6 @@ export const loginKakaoCallback = async (
 // ✅ export 모듈
 export default {
   registerUser,
-  kakaoRegisterUser,
   getUserList,
   getUserById,
   updateUser,

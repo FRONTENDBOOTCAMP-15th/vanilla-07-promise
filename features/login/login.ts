@@ -1,4 +1,4 @@
-import { loginUser, loginKakao } from '../../types/apiClient';
+import { loginUser, loginKakaoCallback } from '../../types/apiClient';
 
 const form = document.querySelector<HTMLFormElement>('#login-form');
 const emailInput = document.querySelector<HTMLInputElement>('#email-input');
@@ -19,7 +19,7 @@ type FieldKey = keyof typeof fieldElements;
 type FieldState = 'neutral' | 'success' | 'error' | 'info';
 
 /**
- * ✅ 필드 상태 업데이트
+ * 기본 field 상태 업데이트
  */
 function setFieldState(
   field: FieldKey,
@@ -41,14 +41,13 @@ function setFieldState(
     fieldElement.classList.add(className);
   }
 
-  // ✅ field-message로 수정 (HTML과 일치)
   const msgElem =
     fieldElement.querySelector<HTMLParagraphElement>('.field-message');
   if (msgElem) msgElem.textContent = message ?? '';
 }
 
 /**
- * ✅ 폼 상태 메시지
+ * 폼 상태 메시지
  */
 function setFormStatus(
   message: string,
@@ -60,26 +59,17 @@ function setFormStatus(
   formStatus.classList.add(`is-${type}`);
 }
 
-/**
- * ✅ 필드 초기화
- */
 function resetFieldStates(): void {
   setFieldState('email', 'neutral');
   setFieldState('password', 'neutral');
 }
 
-/**
- * ✅ 버튼 로딩 상태 토글
- */
 function toggleLoading(isLoading: boolean): void {
   if (!submitButton) return;
   submitButton.disabled = isLoading;
   submitButton.textContent = isLoading ? '로그인 중...' : '로그인';
 }
 
-/**
- * ✅ 이메일 유효성 검사
- */
 function validateEmail(): boolean {
   if (!emailInput) return false;
   const value = emailInput.value.trim();
@@ -96,9 +86,6 @@ function validateEmail(): boolean {
   return true;
 }
 
-/**
- * ✅ 비밀번호 유효성 검사
- */
 function validatePassword(): boolean {
   if (!passwordInput) return false;
   const value = passwordInput.value.trim();
@@ -110,9 +97,6 @@ function validatePassword(): boolean {
   return true;
 }
 
-/**
- * ✅ 로그인 버튼 활성화 갱신
- */
 function updateSubmitState(): void {
   if (!submitButton) return;
   const canSubmit = validateEmail() && validatePassword();
@@ -121,7 +105,7 @@ function updateSubmitState(): void {
 }
 
 /**
- * ✅ 로그인 처리
+ * 🔥 일반 로그인 처리
  */
 async function handleSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
@@ -147,8 +131,6 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
     setFormStatus('로그인 성공! 🎉', 'success');
     form.reset();
     resetFieldStates();
-
-    // 로그인 후 이동
     window.location.href = '/dashboard.html';
   } catch (error) {
     console.error('[handleSubmit] 로그인 요청 실패:', error);
@@ -160,47 +142,70 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
 }
 
 /**
- * ✅ 카카오 로그인 초기화
+ * 🔥 카카오 로그인(authorize) 이동
  */
 function initKakaoLogin(): void {
   if (!kakaoLoginButton) return;
-  kakaoLoginButton.addEventListener('click', async () => {
-    try {
-      setFormStatus('카카오 로그인 페이지로 이동합니다...', 'info');
-      await loginKakao();
-    } catch (error) {
-      console.error('[loginKakao] 실패:', error);
-      setFormStatus('카카오 로그인 중 오류가 발생했습니다.', 'error');
-    }
+
+  const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY;
+  const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
+  kakaoLoginButton.addEventListener('click', () => {
+    const url =
+      `https://kauth.kakao.com/oauth/authorize?response_type=code` +
+      `&client_id=${REST_API_KEY}` +
+      `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
+      `&scope=account_email,gender`;
+
+    window.location.href = url;
   });
 }
 
 /**
- * ✅ 초기화
+ * 🔥 redirect_uri 에서 code 감지 → 서버로 카카오 회원가입/로그인 요청
+ */
+async function handleKakaoCallback(): Promise<void> {
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get('code');
+
+  if (!code) return; // 카카오에서 돌아온 것이 아님
+
+  setFormStatus('카카오 계정 확인 중...', 'info');
+
+  try {
+    const response = await loginKakaoCallback(code);
+
+    if (!response.ok) {
+      setFormStatus(response.message ?? '카카오 로그인 실패', 'error');
+      return;
+    }
+
+    setFormStatus('카카오 로그인 성공! 🎉', 'success');
+    window.location.href = '/dashboard.html';
+  } catch (err) {
+    console.error('[kakao callback error]', err);
+    setFormStatus('카카오 로그인 처리 중 오류 발생', 'error');
+  }
+}
+
+/**
+ * 초기화
  */
 
-// ✅ 입력할 때마다 유효성 검사 실행
 emailInput?.addEventListener('input', () => {
   validateEmail();
   updateSubmitState();
 });
-
-emailInput?.addEventListener('blur', () => {
-  validateEmail();
-});
+emailInput?.addEventListener('blur', () => validateEmail());
 
 passwordInput?.addEventListener('input', () => {
   validatePassword();
   updateSubmitState();
 });
+passwordInput?.addEventListener('blur', () => validatePassword());
 
-passwordInput?.addEventListener('blur', () => {
-  validatePassword();
-});
-
-form?.addEventListener('submit', event => {
-  void handleSubmit(event);
-});
+form?.addEventListener('submit', event => void handleSubmit(event));
 
 initKakaoLogin();
+handleKakaoCallback(); // 🔥 카카오 callback 자동 처리 추가
 updateSubmitState();
