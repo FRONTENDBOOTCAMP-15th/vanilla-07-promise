@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="login.css" />
+  <script type="module" src="./login.ts"></script>
+</head>
+<body>
+  <main class="login" aria-labelledby="loginHeading">
+    <section class="login-hero">
+      <div class="login-illustration" aria-hidden="true">
+        <img src="../../assets/images/login.svg" alt="브런치 작가 일러스트" />
+      </div>
+      <h2 id="login-heading" class="login-title">
+        브런치 작가로 데뷔하세요.
+      </h2>
+      <p class="login-subtitle">
+        진솔한 에세이부터 업계 전문 지식까지, 당신의 이야기를 세상에
+            선보이세요.
+      </p>
+    </section>
+    <form action="" id="login-form" class="login-form" novalidate>
+      <div class="field" data-field="email">
+        <label for="emailInput" class="field-label sr-only">이메일</label>
+        <input type="email" class="field-input" id="email-input" name="email" autocomplete="email" placeholder="이메일 주소를 입력하세요" required />
+        <p id="email-message" class="field-message" aria-live="polite"></p>
+      </div>
+
+      <div class="field" data-field="password">
+        <div class="field-header">
+          <label for="passwordInput" class="field-label sr-only">비밀번호</label>
+        </div>
+        <input type="password" id="password-input" class="field-input" name="password" autocomplete="current-password" minlength="6" placeholder="비밀번호를 입력하세요" required />
+        <p id="password-message" class="field-message" aria-live="polite"></p>
+      </div>
+
+      <div class="login-options">
+        <button type="button" class="remember" data-role="remember" aria-pressed="false">
+        <span class="remember-check" aria-hidden="true">
+          <!-- SVG 아이콘 -->
+          <svg width="20" height="20" viewBox="0 0 1000 1000" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+            <circle cx="500" cy="500" r="475" fill="#DDDDDD"/>
+            <path d="M775 275L475 725L250 500"
+                  stroke="white" stroke-width="90"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        로그인 정보 저장
+      </button>
+        <a href="#" class="login-link">비밀번호 찾기</a>
+      </div>
+
+      <div class="login-status" role="status" aria-live="polite"></div>
+
+      <button type="submit" class="login-submit is-active">로그인</button>
+      <button type="button" class="login-kakao" data-role="kakao-login">
+        <span aria-hidden="true"><img src="../../assets/images/kakao.svg" alt="카카오톡" /></span>
+        카카오계정으로 로그인
+      </button>
+
+      <footer class="login-footer">
+        <a href="#" class="login-link">회원가입</a>
+        <a href="#" class="login-link">계정 찾기</a>
+      </footer>
+    </form>
+  </main>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

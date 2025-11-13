@@ -20,7 +20,7 @@
 /* 3️⃣ 기본 글꼴 & 배경 */
 html,
 body {
-  height: 100%;
+  min-height: 100dvh;
   font-family: 'Pretendard', sans-serif;
   line-height: 1.5;
   color: var(--color-text);
