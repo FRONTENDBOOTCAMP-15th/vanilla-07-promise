@@ -12,16 +12,113 @@ const isAxiosError = (error: unknown): error is AxiosErrorLike => {
 };
 
 // ✅ 환경변수 (Vite 전용)
-const API_SERVER = import.meta.env.VITE_API_SERVER;
+const metaEnv =
+  (import.meta as unknown as { env?: Record<string, string | undefined> })
+    .env ?? {};
+const API_SERVER = metaEnv.VITE_API_SERVER;
 
 // ✅ Axios 인스턴스 생성
 const api = axios.create({
   baseURL: API_SERVER,
-  withCredentials: true,
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
+    'client-id': metaEnv.VITE_CLIENT_ID,
   },
 });
+
+const LOCAL_USERS_STORAGE_KEY = 'vanilla:signup:users';
+
+export type ProviderVariant = 'local' | 'kakao';
+
+export interface LocalRegisteredUser {
+  email: string;
+  nickname: string;
+  provider: ProviderVariant | string;
+  type: string;
+}
+
+const normalizeValue = (value: string): string => value.trim().toLowerCase();
+
+const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
+  if (typeof item !== 'object' || item === null) {
+    return false;
+  }
+  const candidate = item as Record<string, unknown>;
+  return (
+    typeof candidate.email === 'string' &&
+    typeof candidate.nickname === 'string' &&
+    typeof candidate.provider === 'string' &&
+    typeof candidate.type === 'string'
+  );
+};
+
+export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
+  if (typeof window === 'undefined') {
+    return [];
+  }
+  try {
+    const raw = window.localStorage.getItem(LOCAL_USERS_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.filter(isValidLocalUser).map(user => ({
+      email: normalizeValue((user as LocalRegisteredUser).email),
+      nickname: normalizeValue((user as LocalRegisteredUser).nickname),
+      provider: (user as LocalRegisteredUser).provider,
+      type: (user as LocalRegisteredUser).type,
+    }));
+  } catch (error) {
+    console.warn('[apiClient] Failed to load local registered users:', error);
+    return [];
+  }
+};
+
+const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  try {
+    window.localStorage.setItem(
+      LOCAL_USERS_STORAGE_KEY,
+      JSON.stringify(
+        users.map(user => ({
+          email: normalizeValue(user.email),
+          nickname: normalizeValue(user.nickname),
+          provider: user.provider,
+          type: user.type,
+        })),
+      ),
+    );
+  } catch (error) {
+    console.warn('[apiClient] Failed to store local registered users:', error);
+  }
+};
+
+export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
+  const current = loadLocalRegisteredUsers();
+  current.push({
+    email: normalizeValue(user.email),
+    nickname: normalizeValue(user.nickname),
+    provider: user.provider,
+    type: user.type,
+  });
+  storeLocalRegisteredUsers(current);
+};
+
+export const isEmailRegisteredLocally = (email: string): boolean => {
+  const normalized = normalizeValue(email);
+  return loadLocalRegisteredUsers().some(user => user.email === normalized);
+};
+
+export const isNicknameRegisteredLocally = (nickname: string): boolean => {
+  const normalized = normalizeValue(nickname);
+  return loadLocalRegisteredUsers().some(user => user.nickname === normalized);
+};
 
 // ✅ 타입 정의
 export interface User {
@@ -57,7 +154,7 @@ export interface ApiListResponse<T> {
 
 // ✅ 회원가입
 export const registerUser = async (
-  userData: User
+  userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
     const extraPayload = { ...(userData.extra ?? {}) };
@@ -73,14 +170,59 @@ export const registerUser = async (
       ...(Object.keys(extraPayload).length > 0 && { extra: extraPayload }),
     };
 
-    const { data } = await api.post<ApiItemResponse<User>>(
-      '/users/signup/oauth',
-      payload
-    );
+    const { data } = await api.post<ApiItemResponse<User>>('/users', payload);
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
       console.error('[registerUser] 요청 실패:', err.response?.data);
+    }
+    throw err;
+  }
+};
+
+// 🔥 카카오 회원가입 API (독립된 함수)
+export const kakaoRegisterUser = async (
+  userData: User,
+): Promise<ApiItemResponse<User>> => {
+  try {
+    // 🔧 extra 데이터 정리
+    const extraData = { ...(userData.extra ?? {}) };
+    if (!extraData.providerAccountId) delete extraData.providerAccountId;
+
+    // 🔥 카카오 회원가입용 payload (중복 제거 + 명확화)
+    const payload: Record<string, unknown> = {
+      email: userData.email,
+      name: userData.name,
+      type: userData.type ?? 'user',
+      loginType: 'kakao', // 카카오 전용
+      provider: 'kakao', // provider 명시
+    };
+
+    // 🔧 카카오는 password를 직접 입력하지 않음 → optional
+    if (userData.password) {
+      payload.password = userData.password;
+    }
+
+    // 🔧 프로필 이미지 있으면 추가
+    if (userData.image) {
+      payload.image = userData.image;
+    }
+
+    // 🔧 extra 데이터 있으면 추가
+    if (Object.keys(extraData).length > 0) {
+      payload.extra = extraData;
+    }
+
+    // 🌐 API 요청
+    const { data } = await api.post<ApiItemResponse<User>>(
+      '/users/signup/oauth',
+      payload,
+    );
+
+    return data;
+  } catch (err) {
+    if (isAxiosError(err)) {
+      console.error('[kakaoRegisterUser] 요청 실패:', err.response?.data);
     }
     throw err;
   }
@@ -94,7 +236,7 @@ export const getUserList = async (): Promise<ApiListResponse<User>> => {
 
 // ✅ 회원 상세 조회
 export const getUserById = async (
-  id: string
+  id: string,
 ): Promise<ApiItemResponse<User>> => {
   const { data } = await api.get<ApiItemResponse<User>>(`/users/${id}`);
   return data;
@@ -103,11 +245,11 @@ export const getUserById = async (
 // ✅ 회원 정보 수정
 export const updateUser = async (
   id: string,
-  updateData: Partial<User>
+  updateData: Partial<User>,
 ): Promise<ApiItemResponse<User>> => {
   const { data } = await api.put<ApiItemResponse<User>>(
     `/users/${id}`,
-    updateData
+    updateData,
   );
   return data;
 };
@@ -120,7 +262,7 @@ export const loginUser = async (loginData: {
   try {
     const { data } = await api.post<ApiItemResponse<User>>(
       '/users/login',
-      loginData
+      loginData,
     );
     return data;
   } catch (err) {
@@ -134,9 +276,8 @@ export const loginUser = async (loginData: {
 // ✅ 카카오 로그인
 export const loginKakao = async (): Promise<ApiItemResponse<unknown>> => {
   try {
-    const { data } = await api.get<ApiItemResponse<unknown>>(
-      '/users/login/kakao'
-    );
+    const { data } =
+      await api.get<ApiItemResponse<unknown>>('/users/login/kakao');
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -148,12 +289,12 @@ export const loginKakao = async (): Promise<ApiItemResponse<unknown>> => {
 
 // ✅ 카카오 로그인 콜백
 export const loginKakaoCallback = async (
-  code: string
+  code: string,
 ): Promise<ApiItemResponse<User>> => {
   try {
     const { data } = await api.post<ApiItemResponse<User>>(
       '/users/login/kakao/callback',
-      { code }
+      { code },
     );
     return data;
   } catch (err) {
@@ -167,6 +308,7 @@ export const loginKakaoCallback = async (
 // ✅ export 모듈
 export default {
   registerUser,
+  kakaoRegisterUser,
   getUserList,
   getUserById,
   updateUser,

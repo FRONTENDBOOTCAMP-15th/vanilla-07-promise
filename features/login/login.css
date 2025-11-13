@@ -1,7 +1,5 @@
-@import url('../../assets/css/base/base.css');
-@import url('../../assets/css/base/reset.css');
-@import url('../../assets/css/base/variables.css');
-@import url('../../assets/css/base/theme.css');
+@import url('../../assets/css/base/global.css');
+
 
 body {
   margin: 0;
@@ -10,6 +8,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: var(--font-family-pre);
 }
 html,
 body {
@@ -82,6 +81,82 @@ body {
   gap: 1.625em;
 }
 
+.login-status {
+  min-height: 1.5em;
+  padding: 0.75em 1em;
+  border-radius: var(--border-radius);
+  font-size: 0.875em;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.login-status:empty {
+  display: none;
+}
+
+.login-status.is-info,
+.login-status.is-success,
+.login-status.is-error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.login-status.is-success {
+  background-color: rgba(0, 198, 190, 0.12);
+  color: var(--color-primary);
+}
+
+.login-status.is-error {
+  background-color: rgba(252, 59, 117, 0.12);
+  color: var(--color-error);
+}
+
+.form-status {
+  min-height: 1.5em;
+  padding: 0.75em 1em;
+  border-radius: var(--border-radius);
+  font-size: 0.875em;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.form-status:empty {
+  display: none;
+}
+
+.form-status.is-info,
+.form-status.is-success,
+.form-status.is-error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-status.is-success {
+  background-color: rgba(0, 198, 190, 0.12);
+  color: var(--color-primary);
+}
+
+.form-status.is-error {
+  background-color: rgba(252, 59, 117, 0.12);
+  color: var(--color-error);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -112,24 +187,48 @@ body {
 }
 
 .field-message {
-  min-height: 18px;
-  margin: -1em;
-  font-size: 0.78em;
+  min-height: 1.25em;
+  margin: -0.25em 0 0;
+  font-size: 0.8em;
   color: #8e8e8e;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: 
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* 메시지가 있을 때만 표시 */
+.field-message:not(:empty) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.field-info .field-label,
+.field-info .field-message {
+  color: var(--color-text);
+}
+.field-info .field-input {
+  border-color: var(--color-border);
 }
 
 .field-success .field-label,
-.field-success .filed-message {
+.field-success .field-message {
   color: var(--color-primary);
 }
-.field-success .filed-input {
+.field-success .field-input {
   border-color: var(--color-primary);
 }
+
 .field-error .field-label,
-.field-error .filed-message {
+.field-error .field-message {
   color: var(--color-error);
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: -0.3px;
 }
-.field-error .filed-input {
+.field-error .field-input {
   border-color: var(--color-error);
 }
 
@@ -152,10 +251,11 @@ body {
 }
 
 .remember-check {
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  display: inline flex;
+  border: 1px solid #bcbcbc;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 0.78em;
@@ -166,7 +266,7 @@ body {
   color: var(--color-primary);
 }
 
-.remember.is-active .remember-check.is-active {
+.remember.is-active .remember-check {
   background: var(--color-primary);
   border-color: var(--color-border);
   color: var(--color-bg);
@@ -181,7 +281,7 @@ body {
   border-radius: var(--border-radius);
   font-size: 1em;
   font-weight: 600;
-  background: #AAAAAA;
+  background: #aaaaaa;
   color: #fff;
   cursor: not-allowed;
   transition:
@@ -191,6 +291,7 @@ body {
 
 .login-submit.is-active {
   background: var(--color-primary);
+  cursor: pointer;
 }
 
 .login-submit.is-active:hover {
