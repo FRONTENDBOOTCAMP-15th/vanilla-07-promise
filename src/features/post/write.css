@@ -1,0 +1,43 @@
+@import url('../../../assets/css/base/global.css');
+
+
+body {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container {
+  max-width: 360px;
+  width: 100%;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  height: 44px;
+}
+.post-form {
+  color: #959595;
+  font-size: 1.5em;
+  line-height: 1.625em;
+  
+  input {
+    height: 68px;
+    border-bottom: 1px solid #eee;
+  }
+
+  textarea {
+    height: 333px;
+  }
+}
+
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  
+}
+
+.left-buttons {
+  display: flex;
+}
