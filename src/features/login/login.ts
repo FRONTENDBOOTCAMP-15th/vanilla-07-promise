@@ -247,53 +247,6 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
 }
 
 /* ================================
-   🔥 카카오 로그인 이동
-================================ */
-function initKakaoLogin(): void {
-  if (!kakaoLoginButton) return;
-
-  const REST_API_KEY = metaEnv.VITE_KAKAO_REST_API_KEY ?? '';
-  const REDIRECT_URI = metaEnv.VITE_KAKAO_REDIRECT_URI ?? '';
-
-  kakaoLoginButton.addEventListener('click', () => {
-    const url =
-      `https://kauth.kakao.com/oauth/authorize?response_type=code` +
-      `&client_id=${REST_API_KEY}` +
-      `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-      `&scope=account_email,gender`;
-
-    window.location.href = url;
-  });
-}
-
-/* ================================
-   🔥 카카오 callback 처리
-================================ */
-async function handleKakaoCallback(): Promise<void> {
-  const url = new URL(window.location.href);
-  const code = url.searchParams.get('code');
-
-  if (!code) return;
-
-  setFormStatus('카카오 계정 확인 중...', 'info');
-
-  try {
-    const response = await loginKakaoCallback(code);
-
-    if (!response.ok) {
-      setFormStatus(response.message ?? '카카오 로그인 실패', 'error');
-      return;
-    }
-
-    setFormStatus('카카오 로그인 성공! 🎉', 'success');
-    window.location.href = '/dashboard.html';
-  } catch (err) {
-    console.error('[kakao callback error]', err);
-    setFormStatus('카카오 로그인 처리 중 오류 발생', 'error');
-  }
-}
-
-/* ================================
    초기화
 ================================ */
 emailInput?.addEventListener('input', () => {
@@ -323,7 +276,5 @@ rememberButton?.addEventListener('click', () => {
   }
 });
 
-initKakaoLogin();
-handleKakaoCallback();
 loadRememberedLogin();
 updateSubmitState();
