@@ -3,18 +3,14 @@ import {
   loginUser,
 } from '../../../types/apiClient';
 
-const metaEnv =
-  (import.meta as unknown as { env?: Record<string, string | undefined> })
-    .env ?? {};
+
 
 const form = document.querySelector<HTMLFormElement>('#login-form');
 const emailInput = document.querySelector<HTMLInputElement>('#email-input');
 const passwordInput =
   document.querySelector<HTMLInputElement>('#password-input');
 const submitButton = document.querySelector<HTMLButtonElement>('.login-submit');
-const kakaoLoginButton = document.querySelector<HTMLButtonElement>(
-  "[data-role='kakao-login']",
-);
+
 const rememberButton = document.querySelector<HTMLButtonElement>(
   "[data-role='remember']",
 );
