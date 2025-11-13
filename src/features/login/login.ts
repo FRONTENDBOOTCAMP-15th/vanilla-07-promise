@@ -1,7 +1,6 @@
 import {
   findLocalRegisteredUser,
   loginUser,
-  loginKakaoCallback,
 } from '../../../types/apiClient';
 
 const metaEnv =
