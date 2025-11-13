@@ -1,4 +1,4 @@
-@import url('../../assets/css/base/global.css');
+@import url('../../../assets/css/base/global.css');
 
 
 body {
@@ -262,13 +262,9 @@ body {
   color: transparent;
 }
 
-.remember.is-active {
-  color: var(--color-primary);
-}
 
-.remember.is-active .remember-check {
-  background: var(--color-primary);
-  border-color: var(--color-border);
+.remember-check.is-active svg {
+  fill: var(--color-primary);
   color: var(--color-bg);
   box-shadow: 0 6px 12px rgba(47, 162, 145, 0.35);
 }

@@ -2,11 +2,9 @@ import {
   addLocalRegisteredUser,
   isEmailRegisteredLocally,
   isNicknameRegisteredLocally,
-  kakaoRegisterUser,
   registerUser,
-  type ProviderVariant,
   type User,
-} from '../../types/apiClient';
+} from '../../../types/apiClient';
 
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
@@ -30,9 +28,6 @@ const providerAccountIdInput =
   document.querySelector<HTMLInputElement>('#account-id');
 const submitButton =
   document.querySelector<HTMLButtonElement>('.signup-submit');
-const kakaoSubmitButton = document.querySelector<HTMLButtonElement>(
-  "[data-role='kakao-submit']",
-);
 const nicknameCheckButton = document.querySelector<HTMLButtonElement>(
   "[data-action='nickname-check']",
 );
@@ -362,27 +357,19 @@ function togglePasswordVisibility(
 }
 
 async function processRegistration(
-  provider: ProviderVariant,
   event: Event,
   triggerButton: HTMLButtonElement | null,
 ): Promise<void> {
   event.preventDefault();
 
-  if (!form) {
+  if (!form || !nicknameInput || !emailInput || !passwordInput || !passwordConfirmInput) {
     return;
   }
 
-  const requirePassword = provider === 'local';
-  const nicknameValid =
-    provider === 'kakao'
-      ? Boolean(nicknameInput?.value.trim() || 'placeholder')
-      : validateNickname();
-  const emailValid =
-    provider === 'kakao'
-      ? Boolean(emailInput?.value.trim() || 'placeholder')
-      : validateEmail();
-  const passwordValid = requirePassword ? validatePassword() : true;
-  const confirmValid = requirePassword ? validatePasswordConfirm() : true;
+  const nicknameValid = validateNickname();
+  const emailValid = validateEmail();
+  const passwordValid = validatePassword();
+  const confirmValid = validatePasswordConfirm();
 
   if (!(nicknameValid && emailValid && passwordValid && confirmValid)) {
     setFormStatus('입력값을 다시 확인해주세요.', 'error');
@@ -396,11 +383,8 @@ async function processRegistration(
     return;
   }
 
-  const nicknameValue =
-    nicknameInput?.value.trim() || `kakao-${Date.now().toString(36)}`;
-  const emailValue =
-    emailInput?.value.trim() ||
-    `kakao_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}@example.com`;
+  const nicknameValue = nicknameInput.value.trim();
+  const emailValue = emailInput.value.trim();
 
   if (isNicknameRegisteredLocally(nicknameValue)) {
     duplicateState.nicknameChecked = false;
@@ -413,19 +397,12 @@ async function processRegistration(
   if (isEmailRegisteredLocally(emailValue)) {
     duplicateState.emailChecked = false;
     setFieldState('email', 'error', '이미 사용 중인 이메일입니다.');
-    setFormStatus(
-      '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-      'error',
-    );
+    setFormStatus('이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.', 'error');
     updateSubmitState();
     return;
   }
 
-  const pendingMessage =
-    provider === 'kakao'
-      ? '카카오 회원가입을 진행 중입니다...'
-      : '회원가입을 진행 중입니다...';
-  setFormStatus(pendingMessage, 'info');
+  setFormStatus('회원가입을 진행 중입니다...', 'info');
 
   if (triggerButton) {
     triggerButton.setAttribute('aria-busy', 'true');
@@ -435,34 +412,23 @@ async function processRegistration(
   try {
     const imageValue = imageInput?.value?.trim() ?? '';
     const providerAccountIdValue = providerAccountIdInput?.value?.trim() ?? '';
-    const basePayload: User = {
-      email: emailValue.trim(),
-      name: nicknameValue.trim(),
+
+    const payload: User = {
+      email: emailValue,
+      name: nicknameValue,
+      password: passwordInput.value,
       type: memberTypeInput?.value ?? 'user',
-      provider,
+      provider: 'local',
       ...(imageValue ? { image: imageValue } : {}),
       ...(providerAccountIdValue
         ? { extra: { providerAccountId: providerAccountIdValue } }
         : {}),
     };
 
-    if (requirePassword && passwordInput) {
-      basePayload.password = passwordInput.value;
-    } else if (passwordInput?.value) {
-      basePayload.password = passwordInput.value;
-    }
-
-    const response =
-      provider === 'kakao'
-        ? await kakaoRegisterUser(basePayload)
-        : await registerUser(basePayload);
+    const response = await registerUser(payload);
 
     if (!response.ok) {
-      const fallbackMessage =
-        provider === 'kakao'
-          ? '카카오 회원가입에 실패했습니다.'
-          : '회원가입에 실패했습니다.';
-      const message = response.message ?? fallbackMessage;
+      const message = response.message ?? '회원가입에 실패했습니다.';
       if (message.includes('이메일')) {
         duplicateState.emailChecked = false;
         setFieldState('email', 'error', message);
@@ -475,11 +441,7 @@ async function processRegistration(
       return;
     }
 
-    const successMessage =
-      provider === 'kakao'
-        ? '카카오 회원가입이 완료되었습니다!'
-        : '회원가입이 완료되었습니다!';
-    setFormStatus(successMessage, 'success');
+    setFormStatus('회원가입이 완료되었습니다!', 'success');
     form.reset();
     duplicateState.nicknameChecked = false;
     duplicateState.emailChecked = false;
@@ -488,16 +450,13 @@ async function processRegistration(
     addLocalRegisteredUser({
       email: emailValue,
       nickname: nicknameValue,
-      provider,
+      provider: 'local',
       type: memberTypeInput?.value ?? 'user',
+      password: passwordInput.value,
     });
 
-    if (passwordInput) {
-      passwordInput.type = 'password';
-    }
-    if (passwordConfirmInput) {
-      passwordConfirmInput.type = 'password';
-    }
+    passwordInput.type = 'password';
+    passwordConfirmInput.type = 'password';
     passwordToggle?.classList.remove('is-visible');
     passwordConfirmToggle?.classList.remove('is-visible');
   } catch (error) {
@@ -524,11 +483,7 @@ async function processRegistration(
       }
       setFormStatus(serverMessage, 'error');
     } else {
-      const errorMessage =
-        provider === 'kakao'
-          ? '카카오 회원가입 처리 중 오류가 발생했습니다.'
-          : '회원가입 처리 중 오류가 발생했습니다.';
-      setFormStatus(errorMessage, 'error');
+      setFormStatus('회원가입 처리 중 오류가 발생했습니다.', 'error');
     }
   } finally {
     if (triggerButton) {
@@ -540,12 +495,9 @@ async function processRegistration(
 }
 
 async function handleSubmit(event: SubmitEvent): Promise<void> {
-  await processRegistration('local', event, submitButton);
+  await processRegistration(event, submitButton);
 }
 
-async function handleKakaoSubmit(event: Event): Promise<void> {
-  await processRegistration('kakao', event, kakaoSubmitButton);
-}
 
 function initEventListeners(): void {
   nicknameInput?.addEventListener('input', () => {
@@ -659,9 +611,6 @@ function initEventListeners(): void {
     void handleSubmit(event);
   });
 
-  kakaoSubmitButton?.addEventListener('click', event => {
-    void handleKakaoSubmit(event);
-  });
 }
 kakaoLoginButton?.addEventListener('click', () => {
   const redirectUrl =

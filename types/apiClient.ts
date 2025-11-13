@@ -36,6 +36,7 @@ export interface LocalRegisteredUser {
   nickname: string;
   provider: ProviderVariant | string;
   type: string;
+  password?: string;
 }
 
 const normalizeValue = (value: string): string => value.trim().toLowerCase();
@@ -71,6 +72,7 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
       nickname: normalizeValue((user as LocalRegisteredUser).nickname),
       provider: (user as LocalRegisteredUser).provider,
       type: (user as LocalRegisteredUser).type,
+      password: (user as LocalRegisteredUser).password,
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -91,6 +93,7 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
           nickname: normalizeValue(user.nickname),
           provider: user.provider,
           type: user.type,
+          password: user.password,
         })),
       ),
     );
@@ -106,6 +109,7 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     nickname: normalizeValue(user.nickname),
     provider: user.provider,
     type: user.type,
+    password: user.password,
   });
   storeLocalRegisteredUsers(current);
 };
@@ -120,22 +124,127 @@ export const isNicknameRegisteredLocally = (nickname: string): boolean => {
   return loadLocalRegisteredUsers().some(user => user.nickname === normalized);
 };
 
-// ✅ 타입 정의
+export const findLocalRegisteredUser = (
+  email: string,
+): LocalRegisteredUser | undefined => {
+  const normalized = normalizeValue(email);
+  return loadLocalRegisteredUsers().find(user => user.email === normalized);
+};
+
+export interface ApiResponse<T> {
+  ok: boolean;
+  message?: string;
+  data?: T;
+  item?: T;
+  token?: string;
+}
+
+export interface KakaoTokenResponse {
+  token_type: string;
+  access_token: string;
+  expires_in: number;
+  refresh_token?: string;
+  refresh_token_expires_in?: number;
+  scope?: string;
+}
+
+export interface KakaoUserAccount {
+  email?: string;
+  gender?: string;
+}
+
+export interface KakaoUserProfile {
+  nickname?: string;
+  profile_image_url?: string;
+}
+
+export interface KakaoUserResponse {
+  id: number;
+  kakao_account?: KakaoUserAccount;
+  properties?: KakaoUserProfile;
+}
+
 export interface User {
   _id?: string;
   email: string;
-  name: string;
   password?: string;
+  name?: string;
   provider?: string;
+  image?: string;
   type?: string;
-  image?: string | null;
-  extra?: {
-    providerAccountId?: string;
-    [key: string]: unknown;
-  };
-  createdAt?: string;
-  updatedAt?: string;
+  extra?: Record<string, unknown>;
 }
+
+// ===================================================
+// 1) ⭐ 일반 로그인 API (항상 200) — 서버 변경 후 완전 호환
+// ===================================================
+export const loginUser = async (payload: {
+  email: string;
+  password: string;
+}): Promise<ApiResponse<User>> => {
+  try {
+    const { data } = await api.post<ApiResponse<User>>('/users/login', payload);
+
+    // 항상 200이므로 throw 없음
+    return data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response?.data) {
+      return err.response.data as ApiResponse<User>;
+    }
+    console.error('[loginUser] 서버 오류:', err);
+    return {
+      ok: false,
+      message: '서버 오류가 발생했습니다.',
+    };
+  }
+};
+
+// ===================================================
+// 2) ⭐ 카카오 토큰 요청 (POST /auth/kakao/token)
+// ===================================================
+export const getKakaoToken = async (
+  code: string,
+): Promise<KakaoTokenResponse | ApiResponse<null>> => {
+  try {
+    const { data } = await api.post<KakaoTokenResponse | ApiResponse<null>>(
+      '/auth/kakao/token',
+      { code },
+    );
+    return data;
+  } catch (err) {
+    console.error('[getKakaoToken] 오류:', err);
+    return {
+      ok: false,
+      message: '카카오 토큰 요청 실패',
+      data: null,
+    };
+  }
+};
+
+// ===================================================
+// 3) ⭐ 카카오 유저 정보 요청 (POST /auth/kakao/userinfo)
+// ===================================================
+export const getKakaoUserInfo = async (
+  accessToken: string,
+): Promise<KakaoUserResponse | ApiResponse<null>> => {
+  try {
+    const { data } = await api.post<KakaoUserResponse | ApiResponse<null>>(
+      '/auth/kakao/userinfo',
+      {
+        access_token: accessToken,
+      },
+    );
+    return data;
+  } catch (err) {
+    console.error('[getKakaoUserInfo] 오류:', err);
+    return {
+      ok: false,
+      message: '카카오 유저 정보 요청 실패',
+      data: null,
+    };
+  }
+};
+
 
 // ✅ 응답 타입 정의
 export interface ApiItemResponse<T> {
@@ -192,78 +301,4 @@ export const getUserById = async (
 ): Promise<ApiItemResponse<User>> => {
   const { data } = await api.get<ApiItemResponse<User>>(`/users/${id}`);
   return data;
-};
-
-// ✅ 회원 정보 수정
-export const updateUser = async (
-  id: string,
-  updateData: Partial<User>,
-): Promise<ApiItemResponse<User>> => {
-  const { data } = await api.put<ApiItemResponse<User>>(
-    `/users/${id}`,
-    updateData,
-  );
-  return data;
-};
-
-// ✅ 일반 로그인
-export const loginUser = async (loginData: {
-  email: string;
-  password: string;
-}): Promise<ApiItemResponse<User>> => {
-  try {
-    const { data } = await api.post<ApiItemResponse<User>>(
-      '/users/login',
-      loginData,
-    );
-    return data;
-  } catch (err) {
-    if (isAxiosError(err)) {
-      console.error('[loginUser] 로그인 실패:', err.response?.data);
-    }
-    throw err;
-  }
-};
-
-// ✅ 카카오 로그인
-export const loginKakao = async (): Promise<ApiItemResponse<unknown>> => {
-  try {
-    const { data } =
-      await api.get<ApiItemResponse<unknown>>('/users/login/kakao');
-    return data;
-  } catch (err) {
-    if (isAxiosError(err)) {
-      console.error('[loginKakao] 요청 실패:', err.response?.data);
-    }
-    throw err;
-  }
-};
-
-// ✅ 카카오 로그인 콜백
-export const loginKakaoCallback = async (
-  code: string,
-): Promise<ApiItemResponse<User>> => {
-  try {
-    const { data } = await api.post<ApiItemResponse<User>>(
-      '/users/login/kakao/callback',
-      { code },
-    );
-    return data;
-  } catch (err) {
-    if (isAxiosError(err)) {
-      console.error('[loginKakaoCallback] 실패:', err.response?.data);
-    }
-    throw err;
-  }
-};
-
-// ✅ export 모듈
-export default {
-  registerUser,
-  getUserList,
-  getUserById,
-  updateUser,
-  loginUser,
-  loginKakao,
-  loginKakaoCallback,
 };
