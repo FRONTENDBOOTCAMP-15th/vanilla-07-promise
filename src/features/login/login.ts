@@ -179,7 +179,7 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
     form.reset();
     setFieldState('email', 'neutral');
     setFieldState('password', 'neutral');
-    window.location.href = '/dashboard.html';
+    window.location.href = '/index.html';
   };
 
   try {
