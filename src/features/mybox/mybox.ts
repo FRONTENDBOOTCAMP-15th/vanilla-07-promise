@@ -6,10 +6,10 @@ interface Writer {
 }
 
 const writers: Writer[] = [
-  { name: "그레이스", img: "/images/icons/grace.svg", link: "/src/features/writerhome/writerhome.html" },
-  { name: "베이스", img: "/images/icons/base.svg", link: "/src/features/writerhome/writerhome.html" },
-  { name: "톰요크", img: "/images/icons/tomyork.svg", link: "/src/features/writerhome/writerhome.html" },
-  { name: "그레이스", img: "/images/icons/grace.svg", link: "/src/features/writerhome/writerhome.html" },
+  { name: "그레이스", img: "/assets/images/mybox-icons/grace.svg", link: "/src/features/writerhome/writerhome.html" },
+  { name: "베이스", img: "/assets/images/mybox-icons/base.svg", link: "/src/features/writerhome/writerhome.html" },
+  { name: "톰요크", img: "/assets/images/mybox-icons/tomyork.svg", link: "/src/features/writerhome/writerhome.html" },
+  { name: "그레이스", img: "/assets/images/mybox-icons/grace.svg", link: "/src/features/writerhome/writerhome.html" },
 ];
 
 const list = document.querySelector(".fav-writers__list") as HTMLUListElement;

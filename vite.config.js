@@ -7,9 +7,9 @@ export default defineConfig({
         // 메인 페이지
         index: 'index.html',
 
-        // // 사용자 관련
-        // 'user/login': 'src/pages/user/login.html',
-        // 'user/signup': 'src/pages/user/signup.html',
+        // 사용자 관련
+        "features/login": "src/features/login/login.html",
+        "features/signup": "src/features/signup/signup.html",
 
         // // 게시판 관련
         // 'board/list': 'src/pages/board/list.html',
