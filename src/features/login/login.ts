@@ -1,9 +1,9 @@
 import {
   findLocalRegisteredUser,
   loginUser,
+  type LocalRegisteredUser,
+  type User,
 } from '../../../types/apiClient';
-
-
 
 const form = document.querySelector<HTMLFormElement>('#login-form');
 const emailInput = document.querySelector<HTMLInputElement>('#email-input');
@@ -118,10 +118,19 @@ function updateSubmitState(): void {
 }
 
 const REMEMBER_KEY = 'vanilla:login:remember';
+const LOGIN_SESSION_KEY = 'vanilla:login:session';
 
 interface RememberPayload {
   email: string;
   remember: boolean;
+}
+
+interface LoginSessionPayload {
+  email: string;
+  name?: string;
+  provider?: string;
+  token?: string;
+  loggedAt: string;
 }
 
 function loadRememberedLogin(): void {
@@ -156,6 +165,34 @@ function saveRememberedLogin(email: string, remember: boolean): void {
   }
 }
 
+function persistLoginSession(session: LoginSessionPayload): void {
+  try {
+    window.localStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(session));
+  } catch (error) {
+    console.warn('[login] failed to persist session:', error);
+  }
+}
+
+function buildSessionPayload(
+  userData: Partial<User> | LocalRegisteredUser | undefined,
+  fallbackEmail: string,
+  token?: string,
+): LoginSessionPayload {
+  return {
+    email: userData?.email ?? fallbackEmail,
+    name:
+      'name' in (userData ?? {})
+        ? (userData as Partial<User>)?.name
+        : (userData as LocalRegisteredUser | undefined)?.nickname,
+    provider:
+      'provider' in (userData ?? {})
+        ? (userData as Partial<User>)?.provider
+        : (userData as LocalRegisteredUser | undefined)?.provider,
+    token,
+    loggedAt: new Date().toISOString(),
+  };
+}
+
 /* ================================
    🔥 일반 로그인 (200 방식)
 ================================ */
@@ -173,9 +210,14 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
   const shouldRemember =
     rememberButton?.classList.contains('is-active') ?? false;
 
-  const completeLogin = (): void => {
+  const completeLogin = (
+    userData?: Partial<User> | LocalRegisteredUser,
+    token?: string,
+  ): void => {
+    const session = buildSessionPayload(userData, emailValue, token);
+    persistLoginSession(session);
     setFormStatus('로그인 성공! 🎉', 'success');
-    saveRememberedLogin(emailValue, shouldRemember);
+    saveRememberedLogin(session.email, shouldRemember);
     form.reset();
     setFieldState('email', 'neutral');
     setFieldState('password', 'neutral');
@@ -195,7 +237,7 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
       const localUser = findLocalRegisteredUser(emailValue);
 
       if (localUser && localUser.password === passwordValue) {
-        completeLogin();
+        completeLogin(localUser);
         return;
       }
 
@@ -212,7 +254,8 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
     }
 
     // 🔥 성공
-    completeLogin();
+    const remoteUser = response.data ?? response.item;
+    completeLogin(remoteUser, response.token);
   } catch (error) {
     console.error('[handleSubmit] 로그인 요청 실패:', error);
     const axiosError = error as {
@@ -225,7 +268,7 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
 
     const localUser = findLocalRegisteredUser(emailValue);
     if (localUser && localUser.password === passwordValue) {
-      completeLogin();
+      completeLogin(localUser);
       return;
     }
 
