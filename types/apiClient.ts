@@ -18,7 +18,7 @@ const metaEnv =
 const API_SERVER = metaEnv.VITE_API_SERVER;
 
 // ✅ Axios 인스턴스 생성
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_SERVER,
   withCredentials: false,
   headers: {
@@ -244,7 +244,6 @@ export const getKakaoUserInfo = async (
     };
   }
 };
-
 
 // ✅ 응답 타입 정의
 export interface ApiItemResponse<T> {
