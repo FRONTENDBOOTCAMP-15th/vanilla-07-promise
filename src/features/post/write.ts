@@ -8,10 +8,12 @@ const imageInput = document.querySelector<HTMLInputElement>(
   'input[name="imageUpload"]',
 );
 const submitButton = document.querySelector<HTMLButtonElement>('.submit-btn');
+const backButton = document.querySelector<HTMLButtonElement>('header > button');
 const alignButton = document.querySelector<HTMLElement>(
   '.align-button, [aria-label="목록 정렬"]',
 );
-const keyboardIcon = document.querySelector<HTMLImageElement>('.right-buttons img')
+const keyboardIcon =
+  document.querySelector<HTMLImageElement>('.right-buttons img');
 
 const STORAGE_KEY = 'vanilla:posts';
 
@@ -27,10 +29,12 @@ interface StoredPost {
   }>;
   createdAt: string;
 }
-keyboardIcon?.addEventListener('click', () => {contentInput?.focus();})
+keyboardIcon?.addEventListener('click', () => {
+  contentInput?.focus();
+});
 
 setTimeout(() => {
-  contentInput?.scrollIntoView({behavior: "smooth", block: "center"});
+  contentInput?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }, 50);
 
 const generateId = (): string => {
@@ -145,6 +149,15 @@ const registerFieldListeners = (): void => {
 };
 
 const init = (): void => {
+  backButton?.addEventListener('click', event => {
+    event.preventDefault();
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.assign('/');
+    }
+  });
+
   if (submitButton && form) {
     submitButton.addEventListener('click', () => {
       form.requestSubmit();
