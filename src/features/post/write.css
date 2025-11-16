@@ -8,8 +8,8 @@ body {
   align-items: center;
 }
 .container {
-  max-width: 360px;
   width: 100%;
+  padding: 0 1.5625em;
 }
 header {
   display: flex;
@@ -35,10 +35,6 @@ header {
   }
 }
  
-
-.form-subtitle {
-  width: 370px;
-}
 .editor-toolbar {
   display: flex;
   justify-content: space-between;

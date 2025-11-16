@@ -1,4 +1,7 @@
 import postApi, { type PostPayload } from '../../../types/postApi';
+import { getAxios } from '../utils/axios';
+import { TEMP_TOKEN } from '../../common/token';
+
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
@@ -16,6 +19,29 @@ const keyboardIcon =
   document.querySelector<HTMLImageElement>('.right-buttons img');
 
 const STORAGE_KEY = 'vanilla:posts';
+
+const axiosInstance = getAxios();
+
+export async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('attach', file);
+
+  const { data } = await axiosInstance.post('/files/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      // 2. Authorization 헤더 추가
+      'Authorization': `Bearer ${TEMP_TOKEN}`, 
+    },
+  });
+
+  console.log('파일 업로드 응답:', data);
+
+  if (data && data.item && Array.isArray(data.item) && data.item.length > 0) {
+    return data.item[0].path;
+  }
+
+  return '';
+}
 
 interface StoredPost {
   id: string;
@@ -43,6 +69,31 @@ const generateId = (): string => {
   }
   return `${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
 };
+
+export async function createPostRequest(
+  title: string,
+  subtitle: string,
+  content: string,
+  getAlign: () => string,
+  file?: File,
+) {
+  let imageUrl = '';
+  if (file) {
+    imageUrl = await uploadImage(file);
+  }
+  return {
+    _id: Date.now(),
+    type: 'brunch',
+    title,
+    extra: {
+      subtitle,
+      align: getAlign(),
+    },
+    content,
+    createdAt: new Date().toISOString(),
+    image: imageUrl,
+  };
+}
 
 const loadPosts = (): StoredPost[] => {
   try {
