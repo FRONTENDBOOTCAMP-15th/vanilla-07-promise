@@ -7,6 +7,7 @@ body {
   align-items: center;
 }
 .container {
+  margin-top: 100px;
   width: 100%;
   padding: 0 1.5625em;
   position: relative; /* 헤더 기준으로 submit 버튼 배치 */
