@@ -15,6 +15,12 @@
         <section class="field" data-field="nickname">
           <div class="field-header">
             <label for="nickname-input" class="field-label">별명</label>
+            <button
+              type="button"
+              class="field-action field-action-nickname is-active"
+              data-action="nickname-check"
+            >중복확인
+            </button>
           </div>
           <input
             type="text"
@@ -26,7 +32,7 @@
             minlength="2"
             max="20"
             required
-          />
+          />            
           <p class="field-message" id="nickname-message" aria-live="polite"></p>
         </section>
 

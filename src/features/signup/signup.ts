@@ -1,5 +1,6 @@
 import {
   addLocalRegisteredUser,
+  isNameRegisteredInDb,
   isEmailRegisteredInDb,
   isEmailRegisteredLocally,
   registerUser,
@@ -46,8 +47,13 @@ const kakaoLoginButton = document.querySelector<HTMLButtonElement>(
 
 const formStatus = document.querySelector<HTMLDivElement>('.form-status');
 
-// 🔥 nickname 제거됨
-// nicknameField, nicknameInput 없음
+// 🔥 닉네임 필드(있으면 사용, 없으면 무시)
+const nicknameField =
+  document.querySelector<HTMLElement>("[data-field='nickname']") ?? null;
+const nicknameInput =
+  document.querySelector<HTMLInputElement>('input#nickname-input') ??
+  document.querySelector<HTMLInputElement>('input[name="nickname"]') ??
+  null;
 
 const emailField = document.querySelector<HTMLElement>("[data-field='email']");
 const passwordField = document.querySelector<HTMLElement>(
@@ -58,6 +64,7 @@ const passwordConfirmField = document.querySelector<HTMLElement>(
 );
 
 const fieldElements = {
+  nickname: nicknameField ?? undefined,
   email: emailField,
   password: passwordField,
   passwordConfirm: passwordConfirmField,
@@ -67,6 +74,7 @@ type Field = keyof typeof fieldElements;
 type FieldState = 'neutral' | 'success' | 'error' | 'info';
 
 const duplicateState = {
+  nicknameChecked: false,
   emailChecked: false,
 };
 
@@ -76,7 +84,9 @@ const stateClassMap: Record<Exclude<FieldState, 'neutral'>, string> = {
   info: 'field-info',
 };
 
-function getDuplicateCheckButton(field: 'email'): HTMLButtonElement | null {
+function getDuplicateCheckButton(
+  field: 'email' | 'nickname',
+): HTMLButtonElement | null {
   const fieldSelector = `[data-field='${field}']`;
   const container = document.querySelector<HTMLElement>(fieldSelector);
   if (!container) return null;
@@ -449,6 +459,47 @@ function initEventListeners() {
     setFieldState('email', 'success', '사용할 수 있는 이메일입니다.');
     setFormStatus('이메일 중복확인을 완료했어요.', 'info');
     updateSubmitState();
+  });
+
+  // 닉네임 중복확인 버튼(옵션)
+  const nicknameCheckButton =
+    document.querySelector<HTMLButtonElement>('.field-action-nickname') ??
+    getDuplicateCheckButton('nickname');
+  nicknameCheckButton?.addEventListener('click', async () => {
+    if (!nicknameInput) {
+      setFieldState('nickname', 'error', '닉네임 입력란을 찾을 수 없어요.');
+      return;
+    }
+    const value = nicknameInput.value.trim();
+    if (!value) {
+      duplicateState.nicknameChecked = false;
+      setFieldState('nickname', 'error', '닉네임을 입력해주세요.');
+      return;
+    }
+    try {
+      const duplicated = await isNameRegisteredInDb(value);
+      if (duplicated) {
+        duplicateState.nicknameChecked = false;
+        setFieldState('nickname', 'error', '이미 사용 중인 닉네임입니다.');
+        return;
+      }
+      duplicateState.nicknameChecked = true;
+      setFieldState('nickname', 'success', '사용할 수 있는 닉네임입니다.');
+    } catch {
+      duplicateState.nicknameChecked = false;
+      setFieldState('nickname', 'info', '중복확인 중 오류가 발생했습니다.');
+    }
+  });
+
+  // 닉네임 입력 변화 시 상태 초기화(옵션)
+  nicknameInput?.addEventListener('input', () => {
+    duplicateState.nicknameChecked = false;
+    const value = nicknameInput.value.trim();
+    if (!value) {
+      setFieldState('nickname', 'error', '닉네임을 입력해주세요.');
+    } else {
+      setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
+    }
   });
 
   passwordInput?.addEventListener('input', () => {

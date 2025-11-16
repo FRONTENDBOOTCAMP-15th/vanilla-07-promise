@@ -25,7 +25,7 @@ export const api = axios.create({
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
-    'client-id': metaEnv.VITE_CLIENT_ID ?? '',
+    'client-id': metaEnv.VITE_CLIENT_ID || 'brunch',
   },
 });
 
@@ -52,8 +52,9 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
   return (
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
-    typeof candidate.provider === 'string' &&
-    typeof candidate.type === 'string'
+    typeof candidate.type === 'string' &&
+    (typeof candidate.provider === 'string' ||
+      typeof candidate.provider === 'undefined')
   );
 };
 
@@ -320,9 +321,8 @@ export const getUserByEmail = async (
   email: string,
 ): Promise<ApiItemResponse<User>> => {
   const normalized = normalizeValue(email);
-  const encoded = encodeURIComponent(normalized);
   const { data } = await api.get<ApiItemResponse<User>>(`/users/email`, {
-    params: { email: encoded },
+    params: { email: normalized },
   });
   return data;
 };
@@ -341,9 +341,47 @@ export const isEmailRegisteredInDb = async (
       if (status === 404) {
         return false;
       }
+      // 서버가 409(Conflict)로 중복을 알리는 경우 → 사용 중인 이메일
+      if (status === 409) {
+        return true;
+      }
     }
     console.error(
       '[apiClient] Failed to check server email duplication:',
+      error,
+    );
+    throw error;
+  }
+};
+
+// ✅ 닉네임으로 사용자 조회 (/users/name?name=...)
+export const getUserByName = async (
+  name: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalized = normalizeValue(name);
+  const { data } = await api.get<ApiItemResponse<User>>(`/users/name`, {
+    params: { name: normalized },
+  });
+  return data;
+};
+
+// ✅ DB 닉네임 중복 여부 확인
+export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
+  const normalized = name.trim();
+  if (!normalized) return false;
+  try {
+    const response = await getUserByName(normalized);
+    const user = response.data ?? response.item;
+    return Boolean(user);
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const status = error.response?.status;
+      if (status === 404) {
+        return false;
+      }
+    }
+    console.error(
+      '[apiClient] Failed to check server name duplication:',
       error,
     );
     throw error;
