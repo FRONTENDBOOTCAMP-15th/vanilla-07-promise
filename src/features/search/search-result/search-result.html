@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./search-result.css" />
+    <script type="module" src="./search-result.ts"></script>
+    <script type="module" src="../../../common/nav.ts"></script>
+  </head>
+  <body>
+    <div class="search-result">
+      <header>
+        <label for="search-input" class="sr-only">검색어 입력창</label>
+        <input
+          class="search-input"
+          type="search"
+          placeholder="검색어 입력"
+          aria-label="검색어 입력창"
+        />
+      </header>
+
+      <nav aria-label="검색 결과 탭 메뉴" class="menu">
+        <ul class="tab-list">
+          <li class="write-item active">
+            <a aria-label="검색 단어 기준 글보기" href="">글</a>
+          </li>
+          <li class="author-item">
+            <a aria-label="작가기준 글보기" href="">작가</a>
+          </li>
+        </ul>
+      </nav>
+
+      <main>
+        <div class="result-range">
+          <h3 class="result-num" aria-live="polite">글 검색 결과 800건</h3>
+          <span class="result-sort">
+            <a href="">정확도</a>
+            <a href="">최신</a>
+          </span>
+        </div>
+
+        <ul>
+          <li>
+            <a href="#" class="result-title">
+              <strong>딸의 정부청사 출장에 부모님이 동행하는 이유</strong>
+            </a>
+            <figure>
+              <img
+                src="../../../../assets/images/search/writeImg.png"
+                alt="꽃 이미지가 포함된 검색 결과 미리보기"
+              />
+              <figcaption>
+                <p>오늘날까지 같은 <mark>주소</mark>에서 영업 중입니다...</p>
+                <address class="author" aria-label="작성자 정보">
+                  <time datetime="2023-04-19">Apr 19.20</time>
+                  <span class="byline">by Windsbird</span>
+                </address>
+              </figcaption>
+            </figure>
+          </li>
+        </ul>
+      </main>
+      <brunch-nav></brunch-nav>
+    </div>
+  </body>
+</html>
