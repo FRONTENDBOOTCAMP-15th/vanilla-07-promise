@@ -19,14 +19,13 @@ const metaEnv =
     .env ?? {};
 const API_SERVER = metaEnv.VITE_API_SERVER;
 
-// ✅ Axios 인스턴스 생성
+// ✅ Axios 인스턴스 생성 (client-id 및 인증 헤더 포함)
 export const api = axios.create({
   baseURL: API_SERVER,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'client-id': metaEnv.VITE_CLIENT_ID ?? '',
-    Authorization: `Bearer ${TEMP_TOKEN}`
   },
 });
 
@@ -53,10 +52,8 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
   return (
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
-    (typeof candidate.type === 'string' ||
-      typeof candidate.type === 'undefined') &&
-    (typeof candidate.provider === 'string' ||
-      typeof candidate.provider === 'undefined')
+    typeof candidate.provider === 'string' &&
+    typeof candidate.type === 'string'
   );
 };
 
@@ -69,24 +66,17 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     if (!raw) {
       return [];
     }
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return parsed.filter(isValidLocalUser).map(user => {
-      const typedUser = user as LocalRegisteredUser;
-      const providerValue =
-        typeof typedUser.provider === 'string' ? typedUser.provider : 'local';
-      const typeValue =
-        typeof typedUser.type === 'string' ? typedUser.type : 'user';
-      return {
-        email: normalizeValue(typedUser.email),
-        nickname: normalizeValue(typedUser.nickname),
-        type: typeValue,
-        password: typedUser.password,
-        provider: providerValue,
-      };
-    });
+    return parsed.filter(isValidLocalUser).map(user => ({
+      email: normalizeValue((user as LocalRegisteredUser).email),
+      nickname: normalizeValue((user as LocalRegisteredUser).nickname),
+      provider: (user as LocalRegisteredUser).provider,
+      type: (user as LocalRegisteredUser).type,
+      password: (user as LocalRegisteredUser).password,
+    }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
     return [];
@@ -104,10 +94,8 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
         users.map(user => ({
           email: normalizeValue(user.email),
           nickname: normalizeValue(user.nickname),
-          image: user.image,
           type: user.type,
           password: user.password,
-          provider: user.provider ?? 'local',
         })),
       ),
     );
@@ -124,26 +112,25 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     image: user.image,
     type: user.type,
     password: user.password,
-    provider: user.provider ?? 'local',
   });
   storeLocalRegisteredUsers(current);
 };
 
 export const isEmailRegisteredLocally = (email: string): boolean => {
   const normalized = normalizeValue(email);
-  return loadLocalRegisteredUsers().some(user => user.email === normalized);
+  return loadLocalRegisteredUsers().some(u => u.email === normalized);
 };
 
 export const isNicknameRegisteredLocally = (nickname: string): boolean => {
   const normalized = normalizeValue(nickname);
-  return loadLocalRegisteredUsers().some(user => user.nickname === normalized);
+  return loadLocalRegisteredUsers().some(u => u.nickname === normalized);
 };
 
 export const findLocalRegisteredUser = (
   email: string,
 ): LocalRegisteredUser | undefined => {
   const normalized = normalizeValue(email);
-  return loadLocalRegisteredUsers().find(user => user.email === normalized);
+  return loadLocalRegisteredUsers().find(u => u.email === normalized);
 };
 
 export interface ApiResponse<T> {
@@ -186,7 +173,6 @@ export interface User {
   name?: string;
   image?: string;
   type?: string;
-  provider?: ProviderVariant;
   extra?: Record<string, unknown>;
 }
 
@@ -199,7 +185,6 @@ export const loginUser = async (payload: {
 }): Promise<ApiResponse<User>> => {
   try {
     const { data } = await api.post<ApiResponse<User>>('/users/login', payload);
-
     // 항상 200이므로 throw 없음
     return data;
   } catch (err) {
@@ -280,8 +265,13 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) };
-    if (!extraPayload.providerAccountId) delete extraPayload.providerAccountId;
+    const extraPayload = { ...(userData.extra ?? {}) } as Record<
+      string,
+      unknown
+    >;
+    if (!('providerAccountId' in extraPayload)) {
+      // nothing to send
+    }
 
     const payload = {
       email: userData.email,

@@ -4,7 +4,7 @@ export interface PostPayload {
   title: string;
   content: string;
   subtitle?: string;
-  images?: string[];
+  images?: string;
 }
 
 export interface PostResponse {
@@ -12,8 +12,7 @@ export interface PostResponse {
   title: string;
   content: string;
   subtitle?: string;
-  images?: string[];
-  author?: User;
+  images?: string;
   createdAt?: string;
   updatedAt?: string;
 }
