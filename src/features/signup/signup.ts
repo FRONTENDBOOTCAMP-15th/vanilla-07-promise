@@ -350,7 +350,6 @@ async function processRegistration(
       name: emailValue.split('@')[0], // ← nickname 제거 → 이메일로 이름 대체
       password: passwordInput.value,
       type: memberTypeInput?.value ?? 'user',
-      provider: 'local',
       ...(imageInput?.value ? { image: imageInput.value.trim() } : {}),
       ...(providerAccountIdInput?.value
         ? { extra: { providerAccountId: providerAccountIdInput.value.trim() } }
