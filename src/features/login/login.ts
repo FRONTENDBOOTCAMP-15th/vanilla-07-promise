@@ -1,9 +1,9 @@
 import {
   findLocalRegisteredUser,
   loginUser,
-  type LocalRegisteredUser,
-  type User,
-} from '../../../types/apiClient';
+} from '../../types/apiClient.ts';
+
+
 
 const form = document.querySelector<HTMLFormElement>('#login-form');
 const emailInput = document.querySelector<HTMLInputElement>('#email-input');
