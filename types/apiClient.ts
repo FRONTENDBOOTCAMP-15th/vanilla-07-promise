@@ -5,6 +5,7 @@ import { TEMP_TOKEN } from '../src/common/token';
 interface AxiosErrorLike {
   response?: {
     data?: unknown;
+    status?: number;
   };
 }
 
@@ -24,10 +25,7 @@ export const api = axios.create({
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
-    'client-id': metaEnv.VITE_CLIENT_ID ?? '',
-    ...(typeof TEMP_TOKEN === 'string' && TEMP_TOKEN
-      ? { Authorization: `Bearer ${TEMP_TOKEN}` }
-      : {}),
+    'client-id': metaEnv.VITE_CLIENT_ID || 'brunch',
   },
 });
 
@@ -73,15 +71,12 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return (parsed as unknown[]).filter(isValidLocalUser).map(u => ({
-      email: normalizeValue(u.email),
-      nickname: normalizeValue(u.nickname),
-      image: typeof u.image === 'string' ? u.image : undefined,
-      type: u.type,
-      password: typeof u.password === 'string' ? u.password : undefined,
-      ...(typeof u.provider === 'string'
-        ? { provider: u.provider as ProviderVariant }
-        : {}),
+    return parsed.filter(isValidLocalUser).map(user => ({
+      email: normalizeValue((user as LocalRegisteredUser).email),
+      nickname: normalizeValue((user as LocalRegisteredUser).nickname),
+      provider: (user as LocalRegisteredUser).provider,
+      type: (user as LocalRegisteredUser).type,
+      password: (user as LocalRegisteredUser).password,
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -97,13 +92,11 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
     window.localStorage.setItem(
       LOCAL_USERS_STORAGE_KEY,
       JSON.stringify(
-        users.map(u => ({
-          email: normalizeValue(u.email),
-          nickname: normalizeValue(u.nickname),
-          image: u.image,
-          type: u.type,
-          password: u.password,
-          ...(u.provider ? { provider: u.provider } : {}),
+        users.map(user => ({
+          email: normalizeValue(user.email),
+          nickname: normalizeValue(user.nickname),
+          type: user.type,
+          password: user.password,
         })),
       ),
     );
@@ -120,7 +113,6 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     image: user.image,
     type: user.type,
     password: user.password,
-    ...(user.provider ? { provider: user.provider } : {}),
   });
   storeLocalRegisteredUsers(current);
 };
@@ -183,7 +175,6 @@ export interface User {
   image?: string;
   type?: string;
   extra?: Record<string, unknown>;
-  provider?: string;
 }
 
 // ===================================================
@@ -314,4 +305,85 @@ export const getUserById = async (
 ): Promise<ApiItemResponse<User>> => {
   const { data } = await api.get<ApiItemResponse<User>>(`/users/${id}`);
   return data;
+};
+
+export const getUserByPath = async (
+  path: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalizedPath = path.replace(/^\/+/, '');
+  const { data } = await api.get<ApiItemResponse<User>>(
+    `/users/${normalizedPath}`,
+  );
+  return data;
+};
+
+export const getUserByEmail = async (
+  email: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalized = normalizeValue(email);
+  const { data } = await api.get<ApiItemResponse<User>>(`/users/email`, {
+    params: { email: normalized },
+  });
+  return data;
+};
+
+export const isEmailRegisteredInDb = async (
+  email: string,
+): Promise<boolean> => {
+  const normalized = normalizeValue(email);
+  try {
+    const response = await getUserByEmail(normalized);
+    const user = response.data ?? response.item;
+    return Boolean(user);
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const status = error.response?.status;
+      if (status === 404) {
+        return false;
+      }
+      // 서버가 409(Conflict)로 중복을 알리는 경우 → 사용 중인 이메일
+      if (status === 409) {
+        return true;
+      }
+    }
+    console.error(
+      '[apiClient] Failed to check server email duplication:',
+      error,
+    );
+    throw error;
+  }
+};
+
+// ✅ 닉네임으로 사용자 조회 (/users/name?name=...)
+export const getUserByName = async (
+  name: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalized = normalizeValue(name);
+  const { data } = await api.get<ApiItemResponse<User>>(`/users/name`, {
+    params: { name: normalized },
+  });
+  return data;
+};
+
+// ✅ DB 닉네임 중복 여부 확인
+export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
+  const normalized = name.trim();
+  if (!normalized) return false;
+  try {
+    const response = await getUserByName(normalized);
+    const user = response.data ?? response.item;
+    return Boolean(user);
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const status = error.response?.status;
+      if (status === 404) {
+        return false;
+      }
+    }
+    console.error(
+      '[apiClient] Failed to check server name duplication:',
+      error,
+    );
+    throw error;
+  }
 };
