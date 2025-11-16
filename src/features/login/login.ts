@@ -1,7 +1,7 @@
 import {
   findLocalRegisteredUser,
   loginUser,
-} from '../../../types/apiClient';
+} from '../../types/apiClient.ts';
 
 
 

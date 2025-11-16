@@ -4,7 +4,7 @@ import {
   isNicknameRegisteredLocally,
   registerUser,
   type User,
-} from '../../../types/apiClient';
+} from '../../types/apiClient.ts';
 
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
