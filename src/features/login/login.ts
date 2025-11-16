@@ -184,10 +184,6 @@ function buildSessionPayload(
       'name' in (userData ?? {})
         ? (userData as Partial<User>)?.name
         : (userData as LocalRegisteredUser | undefined)?.nickname,
-    provider:
-      'provider' in (userData ?? {})
-        ? (userData as Partial<User>)?.provider
-        : (userData as LocalRegisteredUser | undefined)?.provider,
     token,
     loggedAt: new Date().toISOString(),
   };

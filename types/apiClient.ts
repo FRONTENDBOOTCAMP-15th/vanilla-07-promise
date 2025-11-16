@@ -1,9 +1,11 @@
 // ✅ axios 임포트 (타입 자동 인식)
 import axios from 'axios';
+import { TEMP_TOKEN } from '../src/common/token';
 
 interface AxiosErrorLike {
   response?: {
     data?: unknown;
+    status?: number;
   };
 }
 
@@ -24,6 +26,7 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'client-id': metaEnv.VITE_CLIENT_ID ?? '',
+    Authorization: `Bearer ${TEMP_TOKEN}`
   },
 });
 
@@ -34,9 +37,10 @@ export type ProviderVariant = 'local' | 'kakao';
 export interface LocalRegisteredUser {
   email: string;
   nickname: string;
-  provider: ProviderVariant | string;
+  image?: string;
   type: string;
   password?: string;
+  provider?: ProviderVariant;
 }
 
 const normalizeValue = (value: string): string => value.trim().toLowerCase();
@@ -49,8 +53,10 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
   return (
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
-    typeof candidate.provider === 'string' &&
-    typeof candidate.type === 'string'
+    (typeof candidate.type === 'string' ||
+      typeof candidate.type === 'undefined') &&
+    (typeof candidate.provider === 'string' ||
+      typeof candidate.provider === 'undefined')
   );
 };
 
@@ -67,13 +73,20 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return parsed.filter(isValidLocalUser).map(user => ({
-      email: normalizeValue((user as LocalRegisteredUser).email),
-      nickname: normalizeValue((user as LocalRegisteredUser).nickname),
-      provider: (user as LocalRegisteredUser).provider,
-      type: (user as LocalRegisteredUser).type,
-      password: (user as LocalRegisteredUser).password,
-    }));
+    return parsed.filter(isValidLocalUser).map(user => {
+      const typedUser = user as LocalRegisteredUser;
+      const providerValue =
+        typeof typedUser.provider === 'string' ? typedUser.provider : 'local';
+      const typeValue =
+        typeof typedUser.type === 'string' ? typedUser.type : 'user';
+      return {
+        email: normalizeValue(typedUser.email),
+        nickname: normalizeValue(typedUser.nickname),
+        type: typeValue,
+        password: typedUser.password,
+        provider: providerValue,
+      };
+    });
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
     return [];
@@ -91,9 +104,10 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
         users.map(user => ({
           email: normalizeValue(user.email),
           nickname: normalizeValue(user.nickname),
-          provider: user.provider,
+          image: user.image,
           type: user.type,
           password: user.password,
+          provider: user.provider ?? 'local',
         })),
       ),
     );
@@ -107,9 +121,10 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
   current.push({
     email: normalizeValue(user.email),
     nickname: normalizeValue(user.nickname),
-    provider: user.provider,
+    image: user.image,
     type: user.type,
     password: user.password,
+    provider: user.provider ?? 'local',
   });
   storeLocalRegisteredUsers(current);
 };
@@ -169,9 +184,9 @@ export interface User {
   email: string;
   password?: string;
   name?: string;
-  provider?: string;
   image?: string;
   type?: string;
+  provider?: ProviderVariant;
   extra?: Record<string, unknown>;
 }
 
@@ -273,7 +288,6 @@ export const registerUser = async (
       password: userData.password,
       name: userData.name,
       type: userData.type ?? 'user',
-      loginType: userData.provider ?? 'local',
       ...(userData.image && { image: userData.image }),
       ...(Object.keys(extraPayload).length > 0 && { extra: extraPayload }),
     };
@@ -300,4 +314,48 @@ export const getUserById = async (
 ): Promise<ApiItemResponse<User>> => {
   const { data } = await api.get<ApiItemResponse<User>>(`/users/${id}`);
   return data;
+};
+
+export const getUserByPath = async (
+  path: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalizedPath = path.replace(/^\/+/, '');
+  const { data } = await api.get<ApiItemResponse<User>>(
+    `/users/${normalizedPath}`,
+  );
+  return data;
+};
+
+export const getUserByEmail = async (
+  email: string,
+): Promise<ApiItemResponse<User>> => {
+  const normalized = normalizeValue(email);
+  const encoded = encodeURIComponent(normalized);
+  const { data } = await api.get<ApiItemResponse<User>>(`/users/email`, {
+    params: { email: encoded },
+  });
+  return data;
+};
+
+export const isEmailRegisteredInDb = async (
+  email: string,
+): Promise<boolean> => {
+  const normalized = normalizeValue(email);
+  try {
+    const response = await getUserByEmail(normalized);
+    const user = response.data ?? response.item;
+    return Boolean(user);
+  } catch (error) {
+    if (isAxiosError(error)) {
+      const status = error.response?.status;
+      if (status === 404) {
+        return false;
+      }
+    }
+    console.error(
+      '[apiClient] Failed to check server email duplication:',
+      error,
+    );
+    throw error;
+  }
 };
