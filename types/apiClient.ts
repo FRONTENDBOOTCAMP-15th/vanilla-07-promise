@@ -16,7 +16,8 @@ const isAxiosError = (error: unknown): error is AxiosErrorLike => {
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
     .env ?? {};
-const API_SERVER = metaEnv.VITE_API_SERVER;
+const API_SERVER =
+  metaEnv.VITE_API_SERVER || 'https://fesp-api.koyeb.app/market';
 
 // ✅ Axios 인스턴스 생성 (client-id 및 인증 헤더 포함)
 export const api = axios.create({
