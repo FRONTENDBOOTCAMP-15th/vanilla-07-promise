@@ -57,6 +57,29 @@ const savePosts = (posts: StoredPost[]): void => {
   }
 };
 
+const validateRequiredFields = (): boolean => {
+  const title = titleInput?.value.trim() ?? '';
+  const subtitle = subtitleInput?.value.trim() ?? '';
+  const content = contentInput?.value.trim() ?? '';
+
+  if (!title) {
+    alert('제목을 입력해주세요.');
+    titleInput?.focus();
+    return false;
+  }
+  if (!subtitle) {
+    alert('소제목을 입력해주세요.');
+    subtitleInput?.focus();
+    return false;
+  }
+  if (!content) {
+    alert('내용을 입력해주세요.');
+    contentInput?.focus();
+    return false;
+  }
+  return true;
+};
+
 const persistLocally = (payload: PostPayload): void => {
   const posts = loadPosts();
   const newPost: StoredPost = {
@@ -84,27 +107,11 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     return;
   }
 
-  const title = titleInput.value.trim();
+  if (!validateRequiredFields()) return;
+
+  const title = titleInput.value.trim() ?? '';
   const subtitle = subtitleInput?.value.trim() ?? '';
-  const content = contentInput.value.trim();
-
-  if (!title) {
-    alert('제목을 입력해주세요.');
-    titleInput?.focus();
-    return;
-  }
-
-  if (!subtitle) {
-    alert('소제목을 입력해주세요.');
-    subtitleInput?.focus();
-    return;
-  }
-
-  if (!content) {
-    alert('내용을 입력해주세요.');
-    contentInput?.focus();
-    return;
-  }
+  const content = contentInput.value.trim() ?? '';
 
   const file =
     imageInput?.files && imageInput.files.length > 0
@@ -138,11 +145,15 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
 const updateSubmitButtonState = (): void => {
   if (!submitButton) return;
   const title = titleInput?.value.trim() ?? '';
+  const subtitle = subtitleInput?.value.trim() ?? '';
   const content = contentInput?.value.trim() ?? '';
-  if (title && content) {
+  const hasAny = Boolean(title || subtitle || content);
+  if (hasAny) {
     submitButton.classList.add('active');
+    submitButton.removeAttribute('disabled');
   } else {
     submitButton.classList.remove('active');
+    submitButton.setAttribute('disabled', 'true');
   }
 };
 
