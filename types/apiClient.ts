@@ -55,7 +55,8 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
     typeof candidate.type === 'string' &&
-    (typeof candidate.provider === 'string' || typeof candidate.provider === 'undefined')
+    (typeof candidate.provider === 'string' ||
+      typeof candidate.provider === 'undefined')
   );
 };
 
@@ -68,17 +69,19 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     if (!raw) {
       return [];
     }
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return parsed.map((u: any) => ({
-      email: normalizeValue(u.email as string),
-      nickname: normalizeValue(u.nickname as string),
-      image: (u as any).image as string | undefined,
-      type: (u as any).type as string,
-      password: (u as any).password as string | undefined,
-      ...(u.provider ? { provider: u.provider as ProviderVariant } : {}),
+    return (parsed as unknown[]).filter(isValidLocalUser).map(u => ({
+      email: normalizeValue(u.email),
+      nickname: normalizeValue(u.nickname),
+      image: typeof u.image === 'string' ? u.image : undefined,
+      type: u.type,
+      password: typeof u.password === 'string' ? u.password : undefined,
+      ...(typeof u.provider === 'string'
+        ? { provider: u.provider as ProviderVariant }
+        : {}),
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -89,7 +92,7 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
 const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
   if (typeof window === 'undefined') {
     return;
-    }
+  }
   try {
     window.localStorage.setItem(
       LOCAL_USERS_STORAGE_KEY,
@@ -272,7 +275,10 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) } as Record<string, unknown>;
+    const extraPayload = { ...(userData.extra ?? {}) } as Record<
+      string,
+      unknown
+    >;
     if (!('providerAccountId' in extraPayload)) {
       // nothing to send
     }
@@ -290,7 +296,7 @@ export const registerUser = async (
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
-      console.error('[registerUser] 요청 실패:', (err as any).response?.data);
+      console.error('[registerUser] 요청 실패:', err.response?.data);
     }
     throw err;
   }

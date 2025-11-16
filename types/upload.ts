@@ -1,6 +1,4 @@
-// types/upload.ts
 import { api } from './apiClient';
-import type { PostPayload } from './postApi';
 
 interface UploadItem {
   path?: string;
@@ -32,24 +30,41 @@ export async function uploadImage(file: File): Promise<string> {
   throw new Error('이미지 URL을 받지 못했습니다.');
 }
 
+export interface PostPayload {
+  _id: number;
+  type: 'brunch';
+  title: string;
+  extra: {
+    subtitle: string;
+    align: string;
+  };
+  content: string;
+  createdAt: string;
+  image: string;
+}
+
 export async function createPostRequest(
   title: string,
   subtitle: string,
   content: string,
-  _getAlign: () => string, // 현재 API 전송에는 사용되지 않음
+  getAlign: () => string,
   file?: File,
 ): Promise<PostPayload> {
-  let imageUrl: string | undefined;
+  let imageUrl = '';
   if (file) {
     imageUrl = await uploadImage(file);
   }
 
-  const payload: PostPayload = {
+  return {
+    _id: Date.now(),
+    type: 'brunch',
     title,
+    extra: {
+      subtitle,
+      align: getAlign(),
+    },
     content,
-    ...(subtitle ? { subtitle } : {}),
-    ...(imageUrl ? { images: imageUrl } : {}),
-  } as PostPayload;
-
-  return payload;
+    createdAt: new Date().toISOString(),
+    image: imageUrl,
+  };
 }
