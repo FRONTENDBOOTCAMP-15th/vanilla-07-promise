@@ -1,5 +1,6 @@
 // ✅ axios 임포트 (타입 자동 인식)
 import axios from 'axios';
+import { TEMP_TOKEN } from '../src/common/token';
 
 interface AxiosErrorLike {
   response?: {
@@ -17,13 +18,16 @@ const metaEnv =
     .env ?? {};
 const API_SERVER = metaEnv.VITE_API_SERVER;
 
-// ✅ Axios 인스턴스 생성
+// ✅ Axios 인스턴스 생성 (client-id 및 인증 헤더 포함)
 export const api = axios.create({
   baseURL: API_SERVER,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'client-id': metaEnv.VITE_CLIENT_ID ?? '',
+    ...(typeof TEMP_TOKEN === 'string' && TEMP_TOKEN
+      ? { Authorization: `Bearer ${TEMP_TOKEN}` }
+      : {}),
   },
 });
 
@@ -34,9 +38,10 @@ export type ProviderVariant = 'local' | 'kakao';
 export interface LocalRegisteredUser {
   email: string;
   nickname: string;
-  provider: ProviderVariant | string;
+  image?: string;
   type: string;
   password?: string;
+  provider?: ProviderVariant;
 }
 
 const normalizeValue = (value: string): string => value.trim().toLowerCase();
@@ -49,8 +54,9 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
   return (
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
-    typeof candidate.provider === 'string' &&
-    typeof candidate.type === 'string'
+    typeof candidate.type === 'string' &&
+    (typeof candidate.provider === 'string' ||
+      typeof candidate.provider === 'undefined')
   );
 };
 
@@ -63,16 +69,19 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     if (!raw) {
       return [];
     }
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) {
       return [];
     }
-    return parsed.filter(isValidLocalUser).map(user => ({
-      email: normalizeValue((user as LocalRegisteredUser).email),
-      nickname: normalizeValue((user as LocalRegisteredUser).nickname),
-      provider: (user as LocalRegisteredUser).provider,
-      type: (user as LocalRegisteredUser).type,
-      password: (user as LocalRegisteredUser).password,
+    return (parsed as unknown[]).filter(isValidLocalUser).map(u => ({
+      email: normalizeValue(u.email),
+      nickname: normalizeValue(u.nickname),
+      image: typeof u.image === 'string' ? u.image : undefined,
+      type: u.type,
+      password: typeof u.password === 'string' ? u.password : undefined,
+      ...(typeof u.provider === 'string'
+        ? { provider: u.provider as ProviderVariant }
+        : {}),
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -88,12 +97,13 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
     window.localStorage.setItem(
       LOCAL_USERS_STORAGE_KEY,
       JSON.stringify(
-        users.map(user => ({
-          email: normalizeValue(user.email),
-          nickname: normalizeValue(user.nickname),
-          provider: user.provider,
-          type: user.type,
-          password: user.password,
+        users.map(u => ({
+          email: normalizeValue(u.email),
+          nickname: normalizeValue(u.nickname),
+          image: u.image,
+          type: u.type,
+          password: u.password,
+          ...(u.provider ? { provider: u.provider } : {}),
         })),
       ),
     );
@@ -107,28 +117,29 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
   current.push({
     email: normalizeValue(user.email),
     nickname: normalizeValue(user.nickname),
-    provider: user.provider,
+    image: user.image,
     type: user.type,
     password: user.password,
+    ...(user.provider ? { provider: user.provider } : {}),
   });
   storeLocalRegisteredUsers(current);
 };
 
 export const isEmailRegisteredLocally = (email: string): boolean => {
   const normalized = normalizeValue(email);
-  return loadLocalRegisteredUsers().some(user => user.email === normalized);
+  return loadLocalRegisteredUsers().some(u => u.email === normalized);
 };
 
 export const isNicknameRegisteredLocally = (nickname: string): boolean => {
   const normalized = normalizeValue(nickname);
-  return loadLocalRegisteredUsers().some(user => user.nickname === normalized);
+  return loadLocalRegisteredUsers().some(u => u.nickname === normalized);
 };
 
 export const findLocalRegisteredUser = (
   email: string,
 ): LocalRegisteredUser | undefined => {
   const normalized = normalizeValue(email);
-  return loadLocalRegisteredUsers().find(user => user.email === normalized);
+  return loadLocalRegisteredUsers().find(u => u.email === normalized);
 };
 
 export interface ApiResponse<T> {
@@ -169,10 +180,10 @@ export interface User {
   email: string;
   password?: string;
   name?: string;
-  provider?: string;
   image?: string;
   type?: string;
   extra?: Record<string, unknown>;
+  provider?: string;
 }
 
 // ===================================================
@@ -184,7 +195,6 @@ export const loginUser = async (payload: {
 }): Promise<ApiResponse<User>> => {
   try {
     const { data } = await api.post<ApiResponse<User>>('/users/login', payload);
-
     // 항상 200이므로 throw 없음
     return data;
   } catch (err) {
@@ -265,15 +275,19 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) };
-    if (!extraPayload.providerAccountId) delete extraPayload.providerAccountId;
+    const extraPayload = { ...(userData.extra ?? {}) } as Record<
+      string,
+      unknown
+    >;
+    if (!('providerAccountId' in extraPayload)) {
+      // nothing to send
+    }
 
     const payload = {
       email: userData.email,
       password: userData.password,
       name: userData.name,
       type: userData.type ?? 'user',
-      loginType: userData.provider ?? 'local',
       ...(userData.image && { image: userData.image }),
       ...(Object.keys(extraPayload).length > 0 && { extra: extraPayload }),
     };
