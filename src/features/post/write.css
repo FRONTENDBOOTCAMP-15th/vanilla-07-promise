@@ -14,6 +14,7 @@ body {
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center; /* 수직 가운데 정렬로 아이콘 정렬 */
   border-bottom: 1px solid #eee;
   height: 44px;
 }
@@ -47,10 +48,24 @@ header {
   display: flex;
 }
 
+/* 제출 버튼을 헤더와 같은 수평선상에 배치 */
+.form-content {
+  position: relative;
+}
 .submit-btn {
   opacity: 0.4;
   pointer-events: none;
   transition: 0.2s ease;
+  position: absolute; /* 오른쪽 상단에 고정 */
+  right: 0;
+  top: -56px; /* 헤더 높이 기준으로 위로 올려 평행 배치 */
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
 }
 .submit-btn.active {
   opacity: 1;

@@ -117,8 +117,8 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     image: user.image,
     type: user.type,
     password: user.password,
-    ...(user.other ? { provider: user.provider } : {}),
-  } as any);
+    ...(user.provider ? { provider: user.provider } : {}),
+  });
   storeLocalRegisteredUsers(current);
 };
 
@@ -209,7 +209,7 @@ export const loginUser = async (payload: {
 // ===================================================
 // 2) ⭐ 카카오 토큰 요청 (POST /auth/kakao/token)
 // ===================================================
-export const getKareoToken = async (
+export const getKakaoToken = async (
   code: string,
 ): Promise<KakaoTokenResponse | ApiResponse<null>> => {
   try {
@@ -272,8 +272,10 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) };
-    if (!extraPayload.providerAccountId) delete (extraPayload as any).providerAccountId;
+    const extraPayload = { ...(userData.extra ?? {}) } as Record<string, unknown>;
+    if (!('providerAccountId' in extraPayload)) {
+      // nothing to send
+    }
 
     const payload = {
       email: userData.email,
@@ -288,7 +290,7 @@ export const registerUser = async (
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
-      console.error('[loaf] 요청 실패:', err.response?.data);
+      console.error('[registerUser] 요청 실패:', (err as any).response?.data);
     }
     throw err;
   }
