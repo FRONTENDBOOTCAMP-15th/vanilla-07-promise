@@ -1,7 +1,7 @@
 @import "../../../assets/css/base/global.css";
 
 
-.mybox-container {
+body {
   max-width: 22.5em;
   width: 100%;
   margin: 0 auto;
@@ -54,4 +54,175 @@
 .fav-writers__item p {
   color: #959595;
   font-size: 0.81em;
+}
+
+ /* 최근 본 */
+ .recent-books{
+  margin-inline-start: 1.56em;
+ }
+ 
+ .recent-books__header {
+  margin-block-start: 2.13em;
+ }
+
+
+ .recent-books__title {
+  font-size: 1.19em; 
+  margin-block-end: 0.94em; 
+  display: flex; 
+  align-items: center;
+}
+
+.recent-books__title img{
+  margin-block-end: 0.2em;
+}
+
+.recent-books__list {
+  display: flex; 
+  gap: 2.2em; 
+  overflow-x: auto; 
+  scroll-snap-type: x mandatory; 
+  /* iOS 부드러운 스크롤 */ 
+  -webkit-overflow-scrolling: touch; 
+  /* Firefox 스크롤바 숨김 */ 
+  scrollbar-width: none;
+}
+
+.recent-books__list::-webkit-scrollbar { 
+  /* Chrome, Safari 스크롤바 숨김 */ 
+  display: none; 
+}
+
+.recent-books__item {
+  flex: 0 0 7.68em;
+  display: flex; 
+  scroll-snap-align: start; 
+  flex-direction: column; 
+  text-align: center; 
+  line-height: 1.44em;
+}
+
+
+.recent-books__booktitle {
+  font-size: 0.75em;
+  margin-block-start: 1em;
+}
+
+.recent-books__name {
+  display: flex; 
+  justify-content: center; 
+  gap: 0.23em; 
+  font-size: 0.81em; 
+  color: #959595;
+}
+
+/* 관심 글 섹션 */
+.fav-books {
+  margin-inline-start: 1.56em;
+  margin-block-start: 2.13em;
+}
+
+.fav-books__title {
+  font-size: 1.19em; 
+  margin-block-end: 0.94em; 
+  display: flex; 
+  align-items: center;
+}
+
+.fav-books__title img{
+  margin-block-end: 0.2em;
+}
+
+.fav-books__list {
+  display: flex; 
+  gap: 2.2em; 
+  overflow-x: auto; 
+  scroll-snap-type: x mandatory; 
+  /* iOS 부드러운 스크롤 */ 
+  -webkit-overflow-scrolling: touch; 
+  /* Firefox 스크롤바 숨김 */ 
+  scrollbar-width: none;
+}
+
+.fav-books__list::-webkit-scrollbar { 
+  /* Chrome, Safari 스크롤바 숨김 */ 
+  display: none; 
+}
+
+.fav-books__item {
+  flex: 0 0 7.68em;
+  display: flex; 
+  scroll-snap-align: start; 
+  flex-direction: column; 
+  text-align: center; 
+  line-height: 1.44em;
+}
+
+
+.fav-books__booktitle {
+  font-size: 0.75em;
+  margin-block-start: 1em;
+}
+
+.fav-books__name {
+  display: flex; 
+  justify-content: center; 
+  gap: 0.23em; 
+  font-size: 0.81em; 
+  color: #959595;
+}
+
+/* 내 브런치 섹션 */
+.my-brunch {
+  margin-inline-start: 1.56em;
+  margin-block-start: 2.13em; 
+}
+
+.my-brunch__title {
+  font-size: 1.19em; 
+  margin-block-end: 0.94em; 
+  display: flex; 
+  align-items: center; 
+  border-bottom: 0.06em solid #EEEEEE;
+  margin-inline-start: -1.56em;
+  padding-inline-start: 1.56em;
+  padding-block-end: 0.88em;
+}
+
+.my-brunch__data1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-bottom: 0.06em solid #EEEEEE;
+  margin-inline-start: -1.56em;
+  padding-inline-start: 1.56em;
+  padding-block-end: 0.75em;
+}
+
+.my-brunch__data1 h3 {
+  all: unset; 
+  font-size: 1.06em;
+}
+
+.my-brunch__data1 p {
+  font-size: 0.75em;
+  color: #959595;
+}
+
+.my-brunch__data2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-block-start: 0.88em;
+  margin-block-end: 1.13em;
+}
+
+.my-brunch__data2 h3 {
+  all: unset; 
+  font-size: 1.06em;
+}
+
+.my-brunch__data2 p {
+  font-size: 0.75em;
+  color: #959595;
 }
