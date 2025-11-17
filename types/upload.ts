@@ -16,23 +16,31 @@ export async function uploadImage(file: File): Promise<string> {
   formData.append('attach', file);
 
   const axiosInstance = getAxios();
-  const { data } = await axiosInstance.post<UploadResponse>(
-    '/files/',
-    formData,
-    {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    },
-  );
+  
+  try {
+    const { data } = await axiosInstance.post<UploadResponse>(
+      '/files/',
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
 
-  if (data?.url) return data.url;
-  if (data?.item && data.item.length > 0) {
-    const first = data.item[0];
-    if (first.url) return first.url;
-    if (first.path) return first.path;
+    console.log('[upload] 파일 업로드 응답:', data);
+
+    if (data?.url) return data.url;
+    if (data?.item && Array.isArray(data.item) && data.item.length > 0) {
+      const first = data.item[0];
+      if (first.url) return first.url;
+      if (first.path) return first.path;
+    }
+    if (data?.data?.url) return data.data.url as string;
+
+    throw new Error('이미지 URL을 받지 못했습니다.');
+  } catch (error) {
+    console.error('[upload] 이미지 업로드 실패:', error);
+    throw error;
   }
-  if (data?.data?.url) return data.data.url as string;
-
-  throw new Error('이미지 URL을 받지 못했습니다.');
 }
 
 export interface PostPayload {

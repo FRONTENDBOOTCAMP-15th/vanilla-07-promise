@@ -1,5 +1,5 @@
-import postApi, { type PostPayload } from '../../../types/postApi';
-import { createPostRequest } from '../../../types/upload';
+import postApi from '../../../types/postApi';
+import { api } from '../../../types/apiClient';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
@@ -22,6 +22,95 @@ interface StoredPost {
   content: string;
   images: Array<{ name: string; type: string; size: number }>;
   createdAt: string;
+}
+
+export async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  // 서버 요구사항: 파일 필드는 'attach'
+  formData.append('attach', file);
+
+  try {
+    // multipart/form-data는 FormData 객체를 사용하면
+    // axios가 자동으로 boundary를 포함한 헤더를 설정합니다
+    // 기본 'Content-Type': 'application/json' 헤더를 제거해야 합니다
+    const { data } = await api.post('/files/', formData, {
+      headers: {
+        // FormData 사용 시 Content-Type을 undefined로 설정하면
+        // axios가 자동으로 boundary를 포함한 Content-Type을 설정합니다
+        'Content-Type': undefined,
+      },
+    });
+
+    console.log('[write] 파일 업로드 응답:', data);
+
+    // 백엔드 응답 구조가 예: { ok: true, url: "https://..." }
+    if (data?.url) {
+      return data.url;
+    }
+
+    // item 이나 data.url 형태로 담겨 있을 경우 대응
+    if (data?.item && Array.isArray(data.item) && data.item.length > 0) {
+      const first = data.item[0];
+      if (first.url) return first.url;
+      if (first.path) return first.path;
+    }
+    if (data?.data?.url) return data.data.url;
+    if (data?.item?.url) return data.item.url;
+
+    throw new Error('이미지 URL을 받지 못했습니다.');
+  } catch (err) {
+    console.error('[write] 이미지 업로드 실패:', err);
+    throw err;
+  }
+}
+
+interface CreatePostPayload {
+  _id: number;
+  type: 'brunch';
+  title: string;
+  extra: {
+    subtitle: string;
+    align: string;
+  };
+  content: string;
+  createdAt: string;
+  image: string;
+}
+
+export async function createPostRequest(
+  title: string,
+  subtitle: string,
+  content: string,
+  getAlign: () => string,
+  file?: File,
+): Promise<CreatePostPayload> {
+  let imageUrl = '';
+  if (file) {
+    try {
+      // 업로드 API 호출해서 URL 받아오기
+      imageUrl = await uploadImage(file);
+    } catch (error) {
+      console.warn(
+        '[write] 이미지 업로드 실패, 이미지 없이 게시글 등록:',
+        error,
+      );
+      // 이미지 업로드 실패 시에도 게시글은 등록 가능
+      imageUrl = '';
+    }
+  }
+
+  return {
+    _id: Date.now(),
+    type: 'brunch',
+    title,
+    extra: {
+      subtitle,
+      align: getAlign(),
+    },
+    content,
+    createdAt: new Date().toISOString(),
+    image: imageUrl, // ← 업로드 API에서 받은 URL 저장
+  };
 }
 keyboardIcon?.addEventListener('click', () => {
   contentInput?.focus();
@@ -81,12 +170,12 @@ const validateRequiredFields = (): boolean => {
   return true;
 };
 
-const persistLocally = (payload: PostPayload): void => {
+const persistLocally = (payload: CreatePostPayload): void => {
   const posts = loadPosts();
   const newPost: StoredPost = {
     id: generateId(),
     title: payload.title,
-    subtitle: (payload as unknown as { subtitle?: string }).subtitle ?? '',
+    subtitle: payload.extra.subtitle ?? '',
     content: payload.content,
     images:
       imageInput?.files && imageInput.files.length > 0
@@ -119,27 +208,52 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
       ? imageInput.files[0]
       : undefined;
 
-  const payload: PostPayload = await createPostRequest(
-    title,
-    subtitle,
-    content,
-    () =>
-      document.querySelector('.align-button')?.getAttribute('data-align') ?? '',
-    file,
-  );
-
   try {
-    const response = await postApi.createPost(payload);
+    const payload = await createPostRequest(
+      title,
+      subtitle,
+      content,
+      () =>
+        document.querySelector('.align-button')?.getAttribute('data-align') ??
+        '',
+      file,
+    );
+
+    // CreatePostPayload를 PostPayload로 변환
+    const postPayload = {
+      title: payload.title,
+      content: payload.content,
+      subtitle: payload.extra.subtitle,
+      images: payload.image || undefined,
+    };
+
+    const response = await postApi.createPost(postPayload);
     if (!response.ok) {
       throw new Error(response.message ?? '게시글 등록에 실패했습니다.');
     }
     alert('글이 등록되었습니다.');
-  } catch (error) {
-    console.error('[write] post submission failed, fallback to local', error);
-    persistLocally(payload);
-    alert('네트워크 오류로 로컬에 임시 저장했습니다.');
-  } finally {
     form?.reset();
+  } catch (error) {
+    console.error('[write] post submission failed:', error);
+
+    // payload 생성 실패 시에도 로컬 저장 시도
+    try {
+      const payload = await createPostRequest(
+        title,
+        subtitle,
+        content,
+        () =>
+          document.querySelector('.align-button')?.getAttribute('data-align') ??
+          '',
+        undefined, // 이미지 업로드 실패 시 이미지 없이 저장
+      );
+      persistLocally(payload);
+      alert('네트워크 오류로 로컬에 임시 저장했습니다.');
+      form?.reset();
+    } catch (localError) {
+      console.error('[write] 로컬 저장도 실패:', localError);
+      alert('글 등록에 실패했습니다. 다시 시도해주세요.');
+    }
   }
 };
 

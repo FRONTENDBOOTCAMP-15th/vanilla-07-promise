@@ -29,6 +29,24 @@ export const api = axios.create({
   },
 });
 
+// FormData를 사용하는 요청을 위한 인터셉터 추가
+api.interceptors.request.use(
+  config => {
+    // FormData를 사용하는 경우 (multipart/form-data)
+    // 기본 Content-Type 헤더를 제거하여 axios가 자동으로 boundary를 포함한 헤더를 설정하도록 함
+    if (config.data instanceof FormData) {
+      // 헤더에서 Content-Type 제거 (axios가 자동 설정)
+      if (config.headers) {
+        delete config.headers['Content-Type'];
+      }
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
+
 const LOCAL_USERS_STORAGE_KEY = 'vanilla:signup:users';
 
 export type ProviderVariant = 'local' | 'kakao';

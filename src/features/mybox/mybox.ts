@@ -1,3 +1,6 @@
+import graceImg from "../../../assets/images/mybox-icons/grace.svg";
+import baseImg from "../../../assets/images/mybox-icons/base.svg";
+import tomyorkImg from "../../../assets/images/mybox-icons/tomyork.svg";
 
 interface Writer {
   name: string;
@@ -6,10 +9,10 @@ interface Writer {
 }
 
 const writers: Writer[] = [
-  { name: "그레이스", img: "../../../assets/images/mybox-icons/grace.svg", link: "/writerhome.html" },
-  { name: "베이스", img: "../../../assets/images/mybox-icons/base.svg", link: "/writerhome.html" },
-  { name: "톰요크", img: "../../../assets/images/mybox-icons/tomyork.svg", link: "/writerhome.html" },
-  { name: "그레이스", img: "../../../assets/images/mybox-icons/grace.svg", link: "/writerhome.html" },
+  { name: "그레이스", img: graceImg, link: "../writerhome/writerhome.html" },
+  { name: "베이스", img: baseImg, link: "../writerhome/writerhome.html" },
+  { name: "톰요크", img: tomyorkImg, link: "../writerhome/writerhome.html" },
+  { name: "그레이스", img: graceImg, link: "../writerhome/writerhome.html" },
 ];
 
 const list = document.querySelector(".fav-writers__list") as HTMLUListElement;

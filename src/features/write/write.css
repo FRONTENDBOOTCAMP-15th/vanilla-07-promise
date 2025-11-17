@@ -1,6 +1,7 @@
 @import url('/assets/css/base/global.css');
 
 body {
+  font-family: var(--font-family-pre);
   height: 100dvh;
   display: flex;
   justify-content: center;
