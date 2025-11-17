@@ -9,10 +9,10 @@ interface Writer {
 }
 
 const writers: Writer[] = [
-  { name: "그레이스", img: graceImg, link: "/writerhome.html" },
-  { name: "베이스", img: baseImg, link: "/writerhome.html" },
-  { name: "톰요크", img: tomyorkImg, link: "/writerhome.html" },
-  { name: "그레이스", img: graceImg, link: "/writerhome.html" },
+  { name: "그레이스", img: graceImg, link: "../writerhome/writerhome.html" },
+  { name: "베이스", img: baseImg, link: "../writerhome/writerhome.html" },
+  { name: "톰요크", img: tomyorkImg, link: "../writerhome/writerhome.html" },
+  { name: "그레이스", img: graceImg, link: "../writerhome/writerhome.html" },
 ];
 
 const list = document.querySelector(".fav-writers__list") as HTMLUListElement;
