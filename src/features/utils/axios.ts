@@ -24,6 +24,13 @@ export function getAxios() {
         // delay: 3000,
         ...config.params, // 기존 쿼리스트링 복사
       };
+      
+      // FormData를 사용하는 경우 (multipart/form-data) 기본 Content-Type 헤더 제거
+      // axios가 자동으로 boundary를 포함한 Content-Type을 설정합니다
+      if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+      }
+      
       return config;
     },
     error => {
