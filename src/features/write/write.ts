@@ -11,6 +11,7 @@ const imageInput = document.querySelector<HTMLInputElement>(
 const submitButton = document.querySelector<HTMLButtonElement>('.submit-btn');
 const keyboardIcon =
   document.querySelector<HTMLImageElement>('.right-buttons img');
+const alignButton = document.querySelector<HTMLElement>('.align-button');
 
 const STORAGE_KEY = 'vanilla:posts';
 
@@ -163,6 +164,42 @@ const registerFieldListeners = (): void => {
   contentInput?.addEventListener('input', updateSubmitButtonState);
 };
 
+const initAlignControl = (): void => {
+  if (!alignButton || !contentInput) return;
+
+  const alignments: Array<'left' | 'center' | 'right'> = [
+    'left',
+    'center',
+    'right',
+  ];
+
+  const applyAlign = (align: 'left' | 'center' | 'right'): void => {
+    alignButton.setAttribute('data-align', align);
+    contentInput.style.textAlign = align;
+  };
+
+  const current =
+    (alignButton.getAttribute('data-align') as
+      | 'left'
+      | 'center'
+      | 'right'
+      | null) || 'left';
+  applyAlign(current);
+
+  alignButton.addEventListener('click', e => {
+    e.preventDefault();
+    const now =
+      (alignButton.getAttribute('data-align') as
+        | 'left'
+        | 'center'
+        | 'right'
+        | null) || 'left';
+    const idx = alignments.indexOf(now);
+    const next = alignments[(idx + 1) % alignments.length];
+    applyAlign(next);
+  });
+};
+
 const init = (): void => {
   const backButton =
     document.querySelector<HTMLButtonElement>('header > button');
@@ -179,5 +216,6 @@ const init = (): void => {
 
   registerFieldListeners();
   updateSubmitButtonState();
+  initAlignControl();
 };
 init();
