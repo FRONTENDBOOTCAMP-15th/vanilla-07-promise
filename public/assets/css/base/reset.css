@@ -6,10 +6,13 @@
 
 html,
 body {
-  min-height: 100dvh;
+
+  --body-width :  28.875rem;
+
+  min-block-size: 100dvh;
   font-family: sans-serif;
-  /* max-inline-size: 940px;
-  margin: 0 auto; */
+  max-inline-size: var(--body-width);
+  margin: 0 auto;
 }
 
 ul,
