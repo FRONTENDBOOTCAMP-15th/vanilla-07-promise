@@ -270,6 +270,7 @@ export interface ApiItemResponse<T> {
   message?: string;
   data?: T;
   item?: T;
+  token?: string;
 }
 
 export interface ApiListResponse<T> {
@@ -398,6 +399,10 @@ export const isNameRegisteredInDb = async (
       const status = error.response?.status;
       if (status === 404) {
         return false;
+      }
+      // 서버가 409(Conflict)로 중복을 알리는 경우 → 사용 중인 닉네임
+      if (status === 409) {
+        return true;
       }
     }
     console.error(

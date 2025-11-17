@@ -1,12 +1,13 @@
 import {
   addLocalRegisteredUser,
   isEmailRegisteredLocally,
+  isNicknameRegisteredLocally,
   registerUser,
   type User,
   isNameRegisteredInDb,
   isEmailRegisteredInDb,
 } from '../../../types/apiClient.ts';
-import { saveToken, TEMP_TOKEN } from '../../common/token.ts';
+import { saveToken } from '../../common/token.ts';
 
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
@@ -16,6 +17,8 @@ const KAKAO_REDIRECT_URI = metaEnv.VITE_KAKAO_REDIRECT_URI ?? '';
 
 const form = document.querySelector<HTMLFormElement>('#signup-form');
 
+const nicknameInput =
+  document.querySelector<HTMLInputElement>('#nickname-input');
 const emailInput =
   document.querySelector<HTMLInputElement>('input#email-input');
 const passwordInput =
@@ -51,10 +54,6 @@ const formStatus = document.querySelector<HTMLDivElement>('.form-status');
 // 🔥 닉네임 필드(있으면 사용, 없으면 무시)
 const nicknameField =
   document.querySelector<HTMLElement>("[data-field='nickname']") ?? null;
-const nicknameInput =
-  document.querySelector<HTMLInputElement>('input#nickname-input') ??
-  document.querySelector<HTMLInputElement>('input[name="nickname"]') ??
-  null;
 
 const emailField = document.querySelector<HTMLElement>("[data-field='email']");
 const passwordField = document.querySelector<HTMLElement>(
@@ -213,6 +212,76 @@ function validateEmail(): boolean {
   return true;
 }
 
+function checkNicknameValueValidity(ignoreStateUpdate = false): boolean {
+  if (!nicknameInput) {
+    return false;
+  }
+
+  const value = nicknameInput.value.trim();
+
+  if (value.length === 0) {
+    if (!ignoreStateUpdate) {
+      setFieldState('nickname', 'error', '별명을 입력해주세요.');
+    }
+    return false;
+  }
+
+  if (value.length < 2) {
+    if (!ignoreStateUpdate) {
+      setFieldState('nickname', 'error', '별명은 2자 이상으로 입력해주세요.');
+    }
+    return false;
+  }
+
+  if (value.length > 20) {
+    if (!ignoreStateUpdate) {
+      setFieldState('nickname', 'error', '20자 이하로 입력해주세요.');
+    }
+    return false;
+  }
+
+  const localDuplicated = isNicknameRegisteredLocally(value);
+  if (localDuplicated) {
+    duplicateState.nicknameChecked = false;
+    if (!ignoreStateUpdate) {
+      setFieldState('nickname', 'error', '이미 등록된 별명입니다.');
+      setFormStatus(
+        '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+        'error',
+      );
+    }
+    return false;
+  }
+
+  if (!ignoreStateUpdate) {
+    if (!duplicateState.nicknameChecked) {
+      setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
+    } else {
+      setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
+    }
+  }
+
+  return true;
+}
+
+function validateNickname(): boolean {
+  const valueValid = checkNicknameValueValidity(true);
+
+  if (!valueValid) {
+    checkNicknameValueValidity(false);
+    duplicateState.nicknameChecked = false;
+    return false;
+  }
+
+  if (!duplicateState.nicknameChecked) {
+    setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
+    return false;
+  }
+
+  setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
+  return true;
+}
+
 function validatePassword(updateState = true): boolean {
   if (!passwordInput) return false;
 
@@ -281,9 +350,16 @@ function updateSubmitState(): void {
   const emailValid = checkEmailValueValidity(true);
   const passwordValid = validatePassword(false);
   const confirmValid = validatePasswordConfirm(false);
+  const nicknameValid =
+    nicknameInput === null ? true : checkNicknameValueValidity(true); // 닉네임 입력이 없으면 검증 통과
 
   const canSubmit =
-    emailValid && passwordValid && confirmValid && duplicateState.emailChecked;
+    emailValid &&
+    passwordValid &&
+    confirmValid &&
+    duplicateState.emailChecked &&
+    nicknameValid &&
+    (nicknameInput === null ? true : duplicateState.nicknameChecked); // 닉네임 입력이 있으면 중복확인 필요
 
   submitButton.disabled = !canSubmit;
   submitButton.classList.toggle('is-active', canSubmit);
@@ -300,8 +376,9 @@ async function processRegistration(
   const emailValid = validateEmail();
   const passwordValid = validatePassword();
   const confirmValid = validatePasswordConfirm();
+  const nicknameValid = nicknameInput ? validateNickname() : true;
 
-  if (!(emailValid && passwordValid && confirmValid)) {
+  if (!(emailValid && passwordValid && confirmValid && nicknameValid)) {
     setFormStatus('입력값을 다시 확인해주세요.', 'error');
     updateSubmitState();
     return;
@@ -313,7 +390,15 @@ async function processRegistration(
     return;
   }
 
+  // 닉네임 입력이 있으면 닉네임 중복확인도 체크
+  if (nicknameInput && !duplicateState.nicknameChecked) {
+    setFormStatus('별명 중복확인을 완료해주세요.', 'info');
+    updateSubmitState();
+    return;
+  }
+
   const emailValue = emailInput.value.trim();
+  const nicknameValue = nicknameInput?.value.trim() ?? '';
 
   if (isEmailRegisteredLocally(emailValue)) {
     duplicateState.emailChecked = false;
@@ -322,6 +407,15 @@ async function processRegistration(
       '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
       'error',
     );
+    updateSubmitState();
+    return;
+  }
+
+  // 닉네임이 입력되어 있고, 로컬에 중복된 닉네임이 있으면 체크
+  if (nicknameValue && isNicknameRegisteredLocally(nicknameValue)) {
+    duplicateState.nicknameChecked = false;
+    setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+    setFormStatus('이미 등록된 별명입니다. 다른 별명을 입력해주세요.', 'error');
     updateSubmitState();
     return;
   }
@@ -350,6 +444,55 @@ async function processRegistration(
     return;
   }
 
+  // 닉네임이 입력되어 있으면 서버 중복확인도 체크
+  if (nicknameValue) {
+    try {
+      const nicknameDuplicatedOnServer =
+        await isNameRegisteredInDb(nicknameValue);
+      if (nicknameDuplicatedOnServer) {
+        duplicateState.nicknameChecked = false;
+        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+        setFormStatus(
+          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+          'error',
+        );
+        updateSubmitState();
+        return;
+      }
+    } catch (error) {
+      // 409 에러는 isNameRegisteredInDb에서 이미 처리되므로 여기까지 오면 실제 서버 오류
+      duplicateState.nicknameChecked = false;
+      console.error('[signup] 별명 서버 중복 확인 실패:', error);
+      const axiosError = error as {
+        response?: {
+          status?: number;
+          data?: { message?: string };
+        };
+      };
+
+      // 409 에러는 이미 중복으로 처리됨 (안전장치)
+      if (axiosError?.response?.status === 409) {
+        duplicateState.nicknameChecked = false;
+        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+        setFormStatus(
+          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+          'error',
+        );
+        updateSubmitState();
+        return;
+      }
+
+      const message =
+        axiosError?.response?.data?.message ??
+        (error instanceof Error ? error.message : null) ??
+        '별명 중복확인 중 오류가 발생했습니다.';
+      setFormStatus(message, 'error');
+      setFieldState('nickname', 'info', '잠시 후 다시 시도해주세요.');
+      updateSubmitState();
+      return;
+    }
+  }
+
   setFormStatus('회원가입을 진행 중입니다...', 'info');
 
   trigger?.setAttribute('aria-busy', 'true');
@@ -358,7 +501,7 @@ async function processRegistration(
   try {
     const payload: User = {
       email: emailValue,
-      name: emailValue.split('@')[0], // ← nickname 제거 → 이메일로 이름 대체
+      name: nicknameInput?.value,
       password: passwordInput.value,
       type: memberTypeInput?.value ?? 'user',
       ...(imageInput?.value ? { image: imageInput.value.trim() } : {}),
@@ -379,20 +522,31 @@ async function processRegistration(
       return;
     }
 
-    // ✅ 회원가입 성공 시 토큰이 있으면 세션 스토리지에 저장
-    // 응답에 토큰이 없으면 임시 토큰 사용
-    const responseWithToken = response as typeof response & { token?: string };
+    // ✅ 회원가입 성공 시 서버에서 받은 실제 토큰만 사용
     const userData = response.data ?? response.item;
-    const tokenToSave = responseWithToken.token ?? TEMP_TOKEN;
-    
-    console.log('[signup] ✅ 회원가입 성공 - 토큰 저장 시작...');
-    console.log('[signup] 저장할 토큰:', tokenToSave);
-    
-    saveToken(
-      tokenToSave,
-      userData?.email ?? emailValue,
-      userData?.name,
+    const receivedToken = response.token;
+
+    console.log('[signup] ✅ 회원가입 성공');
+    console.log('[signup] 서버 응답:', response);
+
+    if (!receivedToken) {
+      console.warn(
+        '[signup] ⚠️ 서버에서 토큰을 받지 못했습니다. 로그인 페이지로 이동합니다.',
+      );
+      setFormStatus('회원가입은 완료되었지만 로그인이 필요합니다.', 'info');
+
+      // 약간의 지연 후 로그인 페이지로 이동
+      setTimeout(() => {
+        window.location.href = '/src/features/login/login.html';
+      }, 2000);
+      return;
+    }
+
+    console.log(
+      '[signup] ✅ 서버에서 받은 토큰:',
+      receivedToken.substring(0, 50) + '...',
     );
+    saveToken(receivedToken, userData?.email ?? emailValue, userData?.name);
 
     setFormStatus('회원가입이 완료되었습니다!', 'success');
     form.reset();
@@ -401,7 +555,7 @@ async function processRegistration(
 
     addLocalRegisteredUser({
       email: emailValue,
-      nickname: emailValue.split('@')[0],
+      nickname: nicknameInput?.value.trim() ?? emailValue.split('@')[0],
       provider: 'local',
       type: memberTypeInput?.value ?? 'user',
       password: passwordInput.value,
@@ -482,40 +636,91 @@ function initEventListeners() {
     document.querySelector<HTMLButtonElement>('.field-action-nickname') ??
     getDuplicateCheckButton('nickname');
   nicknameCheckButton?.addEventListener('click', async () => {
-    if (!nicknameInput) {
-      setFieldState('nickname', 'error', '닉네임 입력란을 찾을 수 없어요.');
-      return;
-    }
-    const value = nicknameInput.value.trim();
-    if (!value) {
+    if (!checkNicknameValueValidity()) {
       duplicateState.nicknameChecked = false;
-      setFieldState('nickname', 'error', '닉네임을 입력해주세요.');
+      updateSubmitState();
       return;
     }
+
+    const nicknameValue = nicknameInput?.value.trim() ?? '';
+    if (nicknameValue.length === 0) {
+      duplicateState.nicknameChecked = false;
+      setFieldState('nickname', 'error', '별명을 입력해주세요.');
+      updateSubmitState();
+      return;
+    }
+
+    if (isNicknameRegisteredLocally(nicknameValue)) {
+      duplicateState.nicknameChecked = false;
+      setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+      setFormStatus(
+        '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+        'error',
+      );
+      updateSubmitState();
+      return;
+    }
+
     try {
-      const duplicated = await isNameRegisteredInDb(value);
-      if (duplicated) {
+      const duplicatedOnServer = await isNameRegisteredInDb(nicknameValue);
+      if (duplicatedOnServer) {
         duplicateState.nicknameChecked = false;
-        setFieldState('nickname', 'error', '이미 사용 중인 닉네임입니다.');
+        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+        setFormStatus(
+          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+          'error',
+        );
+        updateSubmitState();
         return;
       }
-      duplicateState.nicknameChecked = true;
-      setFieldState('nickname', 'success', '사용할 수 있는 닉네임입니다.');
-    } catch {
+    } catch (error) {
+      // 409 에러는 isNameRegisteredInDb에서 이미 처리되므로 여기까지 오면 실제 서버 오류
       duplicateState.nicknameChecked = false;
-      setFieldState('nickname', 'info', '중복확인 중 오류가 발생했습니다.');
+      console.error('[signup] 별명 서버 중복 확인 실패:', error);
+      const axiosError = error as {
+        response?: {
+          status?: number;
+          data?: { message?: string };
+        };
+      };
+
+      // 409 에러는 이미 중복으로 처리됨 (안전장치)
+      if (axiosError?.response?.status === 409) {
+        duplicateState.nicknameChecked = false;
+        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
+        setFormStatus(
+          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
+          'error',
+        );
+        updateSubmitState();
+        return;
+      }
+
+      const message =
+        axiosError?.response?.data?.message ??
+        (error instanceof Error ? error.message : null) ??
+        '중복확인 중 오류가 발생했습니다.';
+      setFormStatus(message, 'error');
+      setFieldState('nickname', 'info', '잠시 후 다시 시도해주세요.');
+      updateSubmitState();
+      return;
     }
+
+    duplicateState.nicknameChecked = true;
+    setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
+    setFormStatus('별명 중복확인을 완료했어요.', 'info');
+    updateSubmitState();
   });
 
   // 닉네임 입력 변화 시 상태 초기화(옵션)
   nicknameInput?.addEventListener('input', () => {
     duplicateState.nicknameChecked = false;
-    const value = nicknameInput.value.trim();
-    if (!value) {
-      setFieldState('nickname', 'error', '닉네임을 입력해주세요.');
-    } else {
-      setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
-    }
+    checkNicknameValueValidity();
+    updateSubmitState();
+  });
+
+  nicknameInput?.addEventListener('blur', () => {
+    checkNicknameValueValidity();
   });
 
   passwordInput?.addEventListener('input', () => {
