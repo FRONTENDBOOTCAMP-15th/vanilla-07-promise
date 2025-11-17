@@ -319,17 +319,3 @@ body {
   border: 0;
 }
 
-
-@media (max-width: 550px) {
-  body {
-    padding: 1.5em 1em;
-  }
-
-  .login {
-    padding: 2.5em 1.75em 3em;
-  }
-  .login-options {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
