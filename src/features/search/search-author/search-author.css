@@ -1,0 +1,134 @@
+@import url(/assets/css/base/global.css);
+
+header {
+    display: flex;
+    justify-content: center;
+    padding: 0 0.125em;
+    block-size: 6.25em;
+
+    input {
+      inline-size: 80%;
+      text-align: center;
+      padding: 0.5em;
+      font-size: 1.73em;
+      box-sizing: border-box;
+
+      &:focus::placeholder {
+        opacity: 0;
+      }
+    }
+  }
+
+
+.search-author {
+
+
+  height: 100%;
+  font-weight: var(--font-weight-light);
+
+
+  /* 메뉴 */
+  .menu {
+    border-bottom: 0.0625em solid var(--color-border);
+
+    .tab-list {
+      border-bottom: 1px solid #ccc;
+      display: flex;
+
+      li {
+        flex: 1;
+        text-align: center;
+        margin-block-end: 10px;
+        position: relative;
+      }
+
+      .active {
+        font-weight: 700;
+        color: #00b894;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          inline-size: 100%;
+          block-size: 3px;
+          background-color: #00b894;
+          transform: translateY(12px);
+        }
+      }
+    }
+  }
+
+  main {
+    background: linear-gradient(0deg, #f8f8f8 0%, #f8f8f8 100%), #fff;
+    padding: 13px 20px;
+
+    .result-range {
+      color: #959595;
+      margin: 12px 0;
+      font-size: 12px;
+      block-size: 30px;
+
+      .result-num {
+        font-weight: normal;
+      }
+    }
+
+    ul {
+      li {
+        border-bottom: 1px solid #eee;
+        padding: 18px 0px;
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 80px; /* 마지막 요소가 fixed nav에 가려지지 않도록 */
+        }
+
+        .profile-card {
+          display: flex;
+          gap: 20px;
+
+          .profile-picture {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            overflow: hidden;
+          }
+
+          .author-info {
+            .name {
+              color: #333;
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 300;
+              line-height: 25.5px;
+            }
+
+            .desc {
+              color: #959595;
+              font-size: 12px;
+              line-height: 20px;
+              margin-block-end: 11.25px;
+            }
+
+            .tags {
+              display: flex;
+              gap: 9px;
+
+              .tag {
+                text-align: center;
+                border-radius: 15px;
+                border: 1px solid #eee;
+                background: #fff;
+
+                color: #666;
+                padding: 0px 10px;
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

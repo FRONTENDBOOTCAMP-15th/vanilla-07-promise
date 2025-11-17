@@ -1,4 +1,5 @@
 import postApi, { type PostPayload } from '../../../types/postApi';
+import { createPostRequest } from '../../../types/upload';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
@@ -8,12 +9,9 @@ const imageInput = document.querySelector<HTMLInputElement>(
   'input[name="imageUpload"]',
 );
 const submitButton = document.querySelector<HTMLButtonElement>('.submit-btn');
-const backButton = document.querySelector<HTMLButtonElement>('header > button');
-const alignButton = document.querySelector<HTMLElement>(
-  '.align-button, [aria-label="목록 정렬"]',
-);
 const keyboardIcon =
   document.querySelector<HTMLImageElement>('.right-buttons img');
+const alignButton = document.querySelector<HTMLElement>('.align-button');
 
 const STORAGE_KEY = 'vanilla:posts';
 
@@ -22,11 +20,7 @@ interface StoredPost {
   title: string;
   subtitle: string;
   content: string;
-  images: Array<{
-    name: string;
-    type: string;
-    size: number;
-  }>;
+  images: Array<{ name: string; type: string; size: number }>;
   createdAt: string;
 }
 keyboardIcon?.addEventListener('click', () => {
@@ -41,7 +35,7 @@ const generateId = (): string => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     return crypto.randomUUID();
   }
-  return `${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+  return `${Date.now()}-${Math.random().toString(10).slice(2, 10)}`;
 };
 
 const loadPosts = (): StoredPost[] => {
@@ -64,12 +58,35 @@ const savePosts = (posts: StoredPost[]): void => {
   }
 };
 
+const validateRequiredFields = (): boolean => {
+  const title = titleInput?.value.trim() ?? '';
+  const subtitle = subtitleInput?.value.trim() ?? '';
+  const content = contentInput?.value.trim() ?? '';
+
+  if (!title) {
+    alert('제목을 입력해주세요.');
+    titleInput?.focus();
+    return false;
+  }
+  if (!subtitle) {
+    alert('소제목을 입력해주세요.');
+    subtitleInput?.focus();
+    return false;
+  }
+  if (!content) {
+    alert('내용을 입력해주세요.');
+    contentInput?.focus();
+    return false;
+  }
+  return true;
+};
+
 const persistLocally = (payload: PostPayload): void => {
   const posts = loadPosts();
   const newPost: StoredPost = {
     id: generateId(),
     title: payload.title,
-    subtitle: payload.subtitle ?? '',
+    subtitle: (payload as unknown as { subtitle?: string }).subtitle ?? '',
     content: payload.content,
     images:
       imageInput?.files && imageInput.files.length > 0
@@ -91,27 +108,25 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     return;
   }
 
-  const title = titleInput.value.trim();
+  if (!validateRequiredFields()) return;
+
+  const title = titleInput.value.trim() ?? '';
   const subtitle = subtitleInput?.value.trim() ?? '';
-  const content = contentInput.value.trim();
+  const content = contentInput.value.trim() ?? '';
 
-  if (!title) {
-    alert('제목을 입력해주세요.');
-    titleInput.focus();
-    return;
-  }
+  const file =
+    imageInput?.files && imageInput.files.length > 0
+      ? imageInput.files[0]
+      : undefined;
 
-  if (!content) {
-    alert('내용을 입력해주세요.');
-    contentInput.focus();
-    return;
-  }
-
-  const payload: PostPayload = {
+  const payload: PostPayload = await createPostRequest(
     title,
+    subtitle,
     content,
-    ...(subtitle && { subtitle }),
-  };
+    () =>
+      document.querySelector('.align-button')?.getAttribute('data-align') ?? '',
+    file,
+  );
 
   try {
     const response = await postApi.createPost(payload);
@@ -124,21 +139,22 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     persistLocally(payload);
     alert('네트워크 오류로 로컬에 임시 저장했습니다.');
   } finally {
-    form.reset();
+    form?.reset();
   }
 };
 
 const updateSubmitButtonState = (): void => {
-  if (!submitButton) {
-    return;
-  }
+  if (!submitButton) return;
   const title = titleInput?.value.trim() ?? '';
+  const subtitle = subtitleInput?.value.trim() ?? '';
   const content = contentInput?.value.trim() ?? '';
-
-  if (title && content) {
+  const hasAny = Boolean(title || subtitle || content);
+  if (hasAny) {
     submitButton.classList.add('active');
+    submitButton.removeAttribute('disabled');
   } else {
     submitButton.classList.remove('active');
+    submitButton.setAttribute('disabled', 'true');
   }
 };
 
@@ -148,41 +164,58 @@ const registerFieldListeners = (): void => {
   contentInput?.addEventListener('input', updateSubmitButtonState);
 };
 
+const initAlignControl = (): void => {
+  if (!alignButton || !contentInput) return;
+
+  const alignments: Array<'left' | 'center' | 'right'> = [
+    'left',
+    'center',
+    'right',
+  ];
+
+  const applyAlign = (align: 'left' | 'center' | 'right'): void => {
+    alignButton.setAttribute('data-align', align);
+    contentInput.style.textAlign = align;
+  };
+
+  const current =
+    (alignButton.getAttribute('data-align') as
+      | 'left'
+      | 'center'
+      | 'right'
+      | null) || 'left';
+  applyAlign(current);
+
+  alignButton.addEventListener('click', e => {
+    e.preventDefault();
+    const now =
+      (alignButton.getAttribute('data-align') as
+        | 'left'
+        | 'center'
+        | 'right'
+        | null) || 'left';
+    const idx = alignments.indexOf(now);
+    const next = alignments[(idx + 1) % alignments.length];
+    applyAlign(next);
+  });
+};
+
 const init = (): void => {
-  backButton?.addEventListener('click', event => {
-    event.preventDefault();
-    if (window.history.length > 1) {
+  const backButton =
+    document.querySelector<HTMLButtonElement>('header > button');
+  backButton?.addEventListener('click', e => {
+    e.preventDefault();
+    if (window.history.length > 0) {
       window.history.back();
-    } else {
-      window.location.assign('/');
     }
   });
 
-  if (submitButton && form) {
-    submitButton.addEventListener('click', () => {
-      form.requestSubmit();
-    });
-  }
-
-  form?.addEventListener('submit', event => {
-    void handleSubmit(event);
+  form?.addEventListener('submit', e => {
+    void handleSubmit(e);
   });
-
-  if (alignButton && contentInput) {
-    const alignments: Array<'left' | 'center' | 'right'> = [
-      'left',
-      'center',
-      'right',
-    ];
-    let alignIndex = 0;
-    alignButton.addEventListener('click', () => {
-      alignIndex = (alignIndex + 1) % alignments.length;
-      contentInput.style.textAlign = alignments[alignIndex];
-      alignButton.setAttribute('data-align', alignments[alignIndex]);
-    });
-  }
 
   registerFieldListeners();
   updateSubmitButtonState();
+  initAlignControl();
 };
 init();

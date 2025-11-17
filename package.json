@@ -4,15 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "format": "prettier --write \"./**/*.{js,css,html,json,md}\" && eslint --fix \"./**/*.js\""
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
+    "glob": "^11.0.3",
     "globals": "^16.5.0",
     "prettier": "^3.6.2",
     "typescript": "~5.9.3",

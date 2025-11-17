@@ -6,27 +6,12 @@
     <title>글쓰기</title>
     <link rel="stylesheet" href="./write.css" />
     <script type="module" src="./write.ts"></script>
-    <script type="module" src="/src/common/nav.ts"></script>
+    <script type="module" src="../../common/nav.ts"></script>
   </head>
   <body>
     <div class="container">
       <header>
-        <button>
-          <img src="../../../assets/images/IconCancel.svg" alt="뒤로가기" />
-        </button>
         <h2>글쓰기</h2>
-        <button type="submit" class="submit-btn">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            class="register-icon"
-          >
-            <path d="M23.5 9.5L13.5 21L6.5 13.5" stroke="#444444" />
-          </svg>
-        </button>
       </header>
       <main>
         <form class="post-form">
@@ -46,6 +31,25 @@
           </div>
 
           <div class="form-content">
+            <button class="cancel-btn">
+              <img
+                src="../../../assets/images/post/IconCancel.svg"
+                alt="뒤로가기"
+              />
+            </button>
+            <button type="submit" class="submit-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                class="register-icon"
+              >
+                <path d="M23.5 9.5L13.5 21L6.5 13.5" stroke="#444444" />
+              </svg>
+            </button>
+
             <label for="content" class="sr-only">내용</label>
             <textarea
               id="content"
@@ -58,7 +62,7 @@
             <div class="left-buttons">
               <label class="upload-button" aria-label="사진 첨부">
                 <img
-                  src="../../../assets/images/IconPicture.svg"
+                  src="../../../assets/images/post/IconPicture.svg"
                   alt="사진업로드"
                 />
                 <input
@@ -72,7 +76,7 @@
 
               <label type="button" class="align-button" aria-label="목록 정렬">
                 <img
-                  src="../../../assets/images/IconAlign.svg"
+                  src="../../../assets/images/post/IconAlign.svg"
                   alt="텍스트 정렬방식"
                 />
               </label>
@@ -80,7 +84,7 @@
             <div class="right-buttons">
               <label type="button" aria-label="텍스트 작성">
                 <img
-                  src="../../../assets/images//IconKeyboardUp.svg"
+                  src="../../../assets/images/post/IconKeyboardUp.svg"
                   alt="사진업로드"
                 />
               </label>

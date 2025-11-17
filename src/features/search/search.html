@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>search</title>
+    <link rel="stylesheet" href="./search.css" />
+    <script type="module" src="./search.ts"></script>
+    <script type="module" src="../../common/nav.ts"></script>
+  </head>
+  <body>
+    <div class="search">
+      <header>
+        <label for="search-input" class="sr-only">검색어 입력창</label>
+        <input
+          class="search-input"
+          type="search"
+          placeholder="검색어 입력"
+          aria-label="검색어 입력창"
+        />
+      </header>
+
+      <main>
+        <section class="keyword-group" aria-labelledby="추천 작가 키워드">
+          <h2>추천 작가 키워드</h2>
+          <p>일상의 따뜻한 위로, <mark>그림</mark> 작가를 만나요</p>
+          <ul class="tags">
+            <li>한의사</li>
+            <li>출간작가</li>
+            <li>에세이스트</li>
+          </ul>
+        </section>
+
+        <section class="recent-search" aria-labelledby="최근 검색어 항목">
+          <h2>최근 검색어</h2>
+          <ul class="recent-keyword">
+            <li>
+              사진꿀
+              <button aria-label="사진꿀 검색어 삭제">
+                <img src="../../../assets/images/search/dtButton.svg" alt="" />
+              </button>
+            </li>
+            <li>
+              고양이
+              <button aria-label="고양이 검색어 삭제">
+                <img src="../../../assets/images/search/dtButton.svg" alt="" />
+              </button>
+            </li>
+            <li>
+              여행지
+              <button aria-label="여행지 검색어 삭제">
+                <img src="../../../assets/images/search/dtButton.svg" alt="" />
+              </button>
+            </li>
+            
+          </ul>
+        </section>
+      </main>
+      <brunch-nav></brunch-nav>
+    </div>
+  </body>
+</html>
