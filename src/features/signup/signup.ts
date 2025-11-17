@@ -6,6 +6,7 @@ import {
   isNameRegisteredInDb,
   isEmailRegisteredInDb,
 } from '../../../types/apiClient.ts';
+import { saveToken } from '../../common/token.ts';
 
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
@@ -376,6 +377,20 @@ async function processRegistration(
       }
       setFormStatus(msg, 'error');
       return;
+    }
+
+    // ✅ 회원가입 성공 시 토큰이 있으면 세션 스토리지에 저장
+    const responseWithToken = response as typeof response & { token?: string };
+    if (responseWithToken.token) {
+      const userData = response.data ?? response.item;
+      console.log('[signup] ✅ 회원가입 성공 - 토큰 저장 시작...');
+      saveToken(
+        responseWithToken.token,
+        userData?.email ?? emailValue,
+        userData?.name,
+      );
+    } else {
+      console.log('[signup] ⚠️ 회원가입은 성공했지만 토큰이 응답에 포함되지 않았습니다.');
     }
 
     setFormStatus('회원가입이 완료되었습니다!', 'success');

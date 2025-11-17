@@ -4,6 +4,7 @@ import {
   type LocalRegisteredUser,
   type User,
 } from '../../types/apiClient.ts';
+import { saveToken } from '../../common/token.ts';
 
 
 
@@ -213,7 +214,22 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
     token?: string,
   ): void => {
     const session = buildSessionPayload(userData, emailValue, token);
-    persistLoginSession(session);
+    persistLoginSession(session); // localStorage에도 저장 (호환성 유지)
+    
+    // ✅ 세션 스토리지에 토큰 저장
+    if (token) {
+      console.log('[login] ✅ 로그인 성공 - 토큰 저장 시작...');
+      saveToken(
+        token,
+        userData?.email ?? emailValue,
+        'name' in (userData ?? {})
+          ? (userData as Partial<User>)?.name
+          : (userData as LocalRegisteredUser | undefined)?.nickname,
+      );
+    } else {
+      console.log('[login] ⚠️ 로그인은 성공했지만 토큰이 없습니다.');
+    }
+    
     setFormStatus('로그인 성공! 🎉', 'success');
     saveRememberedLogin(session.email, shouldRemember);
     form.reset();

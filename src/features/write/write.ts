@@ -1,5 +1,6 @@
 import postApi from '../../../types/postApi';
 import { api } from '../../../types/apiClient';
+import { requireAuth } from '../../common/token.ts';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
@@ -315,6 +316,14 @@ const initAlignControl = (): void => {
 };
 
 const init = (): void => {
+  // ✅ 토큰 체크 - 토큰이 없으면 로그인 페이지로 리다이렉트
+  console.log('[write] 🔍 토큰 체크 시작...');
+  if (!requireAuth()) {
+    console.log('[write] ❌ 토큰 인증 실패 - 페이지 초기화 중단');
+    return;
+  }
+  console.log('[write] ✅ 토큰 인증 성공 - 페이지 초기화 계속');
+
   const backButton =
     document.querySelector<HTMLButtonElement>('header > button');
   backButton?.addEventListener('click', e => {

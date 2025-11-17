@@ -1,6 +1,5 @@
 @import url('../../../assets/css/base/global.css');
 
-
 body {
   margin: 0;
   padding-top: 2em;
@@ -193,7 +192,7 @@ body {
   color: #8e8e8e;
   opacity: 0;
   transform: translateY(-2px);
-  transition: 
+  transition:
     color 0.2s ease,
     opacity 0.2s ease,
     transform 0.2s ease;
@@ -263,7 +262,6 @@ body {
   transition: color 0.2s ease;
 }
 
-
 .remember-check.is-active svg {
   fill: var(--color-primary);
   color: var(--color-bg);
@@ -318,4 +316,3 @@ body {
   white-space: nowrap;
   border: 0;
 }
-
