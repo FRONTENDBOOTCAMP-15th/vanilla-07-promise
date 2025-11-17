@@ -366,7 +366,9 @@ export const getUserByName = async (
 };
 
 // ✅ DB 닉네임 중복 여부 확인
-export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
+export const isNameRegisteredInDb = async (
+  name: string,
+): Promise<boolean> => {
   const normalized = name.trim();
   if (!normalized) return false;
   try {
