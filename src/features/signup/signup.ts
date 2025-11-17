@@ -1,11 +1,11 @@
 import {
   addLocalRegisteredUser,
-  isNameRegisteredInDb,
-  isEmailRegisteredInDb,
   isEmailRegisteredLocally,
   registerUser,
   type User,
-} from '../../types/apiClient.ts';
+  isNameRegisteredInDb,
+  isEmailRegisteredInDb,
+} from '../../../types/apiClient.ts';
 
 const metaEnv =
   (import.meta as unknown as { env?: Record<string, string | undefined> })
