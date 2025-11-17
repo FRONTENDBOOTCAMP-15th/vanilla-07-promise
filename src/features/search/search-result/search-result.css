@@ -1,35 +1,35 @@
 @import url(/assets/css/base/global.css);
 
-
-
-
 .search-result {
-  
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
   header {
-      display: flex;
-      justify-content: center;
-      padding: 0 0.125em;
-      block-size: 6.25em;
-  
-      input {
-        inline-size: 80%;
-        text-align: center;
-        padding: 0.5em;
-        font-size: 1.73em;
-        box-sizing: border-box;
-  
-        &:focus::placeholder {
-          opacity: 0;
-        }
+    display: flex;
+    justify-content: center;
+    padding: 0 0.125em;
+    block-size: 6.25em;
+
+    input {
+      inline-size: 80%;
+      text-align: center;
+      padding: 0.5em;
+      font-size: 1.73em;
+      box-sizing: border-box;
+
+      &:focus::placeholder {
+        opacity: 0;
       }
     }
+  }
 
   height: 100%;
   font-weight: var(--font-weight-light);
 
   a {
     font-size: var(--font-md);
-    line-height: 2.25rem; /* 36px */
   }
 
   /* 메뉴 */
@@ -60,16 +60,17 @@
           bottom: 0;
           left: 0;
           inline-size: 100%;
-          block-size: 0.1875rem; /* 3px */
+          block-size: 0.1875rem; 
           background-color: var(--color-primary-dark);
-          transform: translateY(0.75rem); /* 12px */
+          transform: translateY(0.75rem); 
         }
       }
     }
   }
 
-
   main {
+
+    flex: 1;
     background: linear-gradient(0deg, #f8f8f8, #f8f8f8), #fff;
     padding: 0 1rem;
 
@@ -79,7 +80,7 @@
       align-items: center;
       color: var(--color-muted);
       font-size: var(--font-xs);
-      block-size: 3.75em;
+      block-size: 5.75em;
 
       .result-num {
         font-weight: normal;
@@ -88,13 +89,13 @@
       .result-sort {
         display: inline-flex;
         align-items: center;
-        padding: 0 0.6rem 0 0.0625rem; /* 9.698px -> 0.6rem | 1px → 0.0625rem */
+        padding: 0 0.6rem 0 0.0625rem; 
         gap: 2rem;
 
         a {
           display: inline-flex;
           align-items: center;
-          gap: 0.4375rem; /* 7px */
+          gap: 0.4375rem;
           color: var(--color-text);
           font-weight: 300;
         }
@@ -103,9 +104,9 @@
           content: '';
           display: inline-block;
           background-color: var(--color-primary);
-          border-radius: 0.125rem; /* 2px */
-          width: 0.25rem; /* 4px */
-          height: 0.25rem; /* 4px */
+          border-radius: 0.125rem;
+          width: 0.25rem; 
+          height: 0.25rem; 
         }
       }
     }
@@ -113,15 +114,14 @@
     ul {
       display: flex;
       flex-direction: column;
-      gap: 2.1875rem; /* 35px */
+      gap: 0.1875rem;
 
       mark {
         color: var(--color-primary);
       }
 
       li {
-        margin-bottom: 1rem; /* 16px */
-
+        margin-bottom: 1rem; 
         &:last-child {
           margin-bottom: 0;
         }
@@ -136,10 +136,10 @@
           display: flex;
           flex-direction: row-reverse;
           justify-content: space-between;
-          gap: 0.625rem; /* 10px */
+          gap: 0.625rem; 
 
           img {
-            inline-size: 3.75rem; /* 60px */
+            inline-size: 3.75rem; 
             block-size: 3.75rem;
           }
 
@@ -148,33 +148,33 @@
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
             overflow: hidden;
-            block-size: 2.5rem; /* 40px */
+            block-size: 2.5rem;
             color: var(--color-muted);
             font-size: var(--font-xs);
-            line-height: 1.25rem; /* 20px */
+            line-height: 1.25rem; 
           }
 
           .author {
             color: var(--color-muted);
             font-size: var(--font-xs);
-            margin-block: 0.375rem; /* 6px */
-            line-height: 1.21875rem; /* 19.5px */
+            margin-block: 0.375rem;
+            line-height: 1.21875rem; 
 
             .byline {
               color: #bbb;
               font-family: Georgia;
-              font-size: 0.8125rem; /* 13px */
+              font-size: 0.8125rem;
               font-style: italic;
 
               &::before {
                 content: '';
                 display: inline-block;
                 vertical-align: middle;
-                inline-size: 0.125rem; /* 2px */
-                block-size: 0.125rem; /* 2px */
+                inline-size: 0.125rem;
+                block-size: 0.125rem; 
                 border-radius: 1px;
                 background-color: #ddd;
-                margin: 0.3125rem; /* 5px */
+                margin: 0.3125rem; 
               }
             }
           }
