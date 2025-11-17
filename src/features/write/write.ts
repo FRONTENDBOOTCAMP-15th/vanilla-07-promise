@@ -319,10 +319,10 @@ const init = (): void => {
   // ✅ 토큰 체크 - 토큰이 없으면 로그인 페이지로 리다이렉트
   console.log('[write] 🔍 토큰 체크 시작...');
   if (!requireAuth()) {
-    console.log('[write] ❌ 토큰 인증 실패 - 페이지 초기화 중단');
+    console.log('[write] ❌ 토큰 인증 실패 - 로그인 페이지로 리다이렉트');
     return;
   }
-  console.log('[write] ✅ 토큰 인증 성공 - 페이지 초기화 계속');
+  console.log('[write] ✅ 토큰 인증 성공 - 글쓰기 페이지 초기화 계속');
 
   const backButton =
     document.querySelector<HTMLButtonElement>('header > button');

@@ -6,7 +6,21 @@ import {
 } from '../../types/apiClient.ts';
 import { saveToken } from '../../common/token.ts';
 
+/* ================================
+   🔐 로그인 함수 (토큰 자동 저장)
+================================ */
+export async function login(email: string, password: string) {
+  const res = await loginUser({ email, password });
+  // 토큰은 sessionStorage에만 저장 (token.ts의 saveToken 사용)
+  const token = (res as { token?: string }).token;
 
+  if (token) {
+    // sessionStorage에 저장 (saveToken 사용)
+    saveToken(token, email);
+  }
+
+  return res;
+}
 
 const form = document.querySelector<HTMLFormElement>('#login-form');
 const emailInput = document.querySelector<HTMLInputElement>('#email-input');
@@ -121,7 +135,8 @@ function updateSubmitState(): void {
 }
 
 const REMEMBER_KEY = 'vanilla:login:remember';
-const LOGIN_SESSION_KEY = 'vanilla:login:session';
+// LOGIN_SESSION_KEY는 사용하지 않음 - 토큰은 sessionStorage에만 저장
+// const LOGIN_SESSION_KEY = 'vanilla:login:session';
 
 interface RememberPayload {
   email: string;
@@ -168,13 +183,14 @@ function saveRememberedLogin(email: string, remember: boolean): void {
   }
 }
 
-function persistLoginSession(session: LoginSessionPayload): void {
-  try {
-    window.localStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(session));
-  } catch (error) {
-    console.warn('[login] failed to persist session:', error);
-  }
-}
+// localStorage 사용 안 함 - 토큰은 sessionStorage에만 저장
+// function persistLoginSession(session: LoginSessionPayload): void {
+//   try {
+//     window.localStorage.setItem(LOGIN_SESSION_KEY, JSON.stringify(session));
+//   } catch (error) {
+//     console.warn('[login] failed to persist session:', error);
+//   }
+// }
 
 function buildSessionPayload(
   userData: Partial<User> | LocalRegisteredUser | undefined,
@@ -212,13 +228,11 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
   const completeLogin = (
     userData?: Partial<User> | LocalRegisteredUser,
     token?: string,
+    refreshToken?: string,
   ): void => {
-    const session = buildSessionPayload(userData, emailValue, token);
-    persistLoginSession(session); // localStorage에도 저장 (호환성 유지)
-    
-    // ✅ 세션 스토리지에 토큰 저장
+    // ✅ 세션 스토리지에만 토큰 저장 (localStorage 사용 안 함)
     if (token) {
-      console.log('[login] ✅ 로그인 성공 - 토큰 저장 시작...');
+      console.log('[login] ✅ 로그인 성공 - 토큰을 sessionStorage에 저장...');
       saveToken(
         token,
         userData?.email ?? emailValue,
@@ -229,8 +243,14 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
     } else {
       console.log('[login] ⚠️ 로그인은 성공했지만 토큰이 없습니다.');
     }
-    
+
+    // refreshToken은 필요시 별도로 관리 (현재는 accessToken만 저장)
+    if (refreshToken) {
+      console.log('[login] ⚠️ RefreshToken은 현재 저장하지 않습니다.');
+    }
+
     setFormStatus('로그인 성공! 🎉', 'success');
+    const session = buildSessionPayload(userData, emailValue, token);
     saveRememberedLogin(session.email, shouldRemember);
     form.reset();
     setFieldState('email', 'neutral');
@@ -269,7 +289,8 @@ async function handleSubmit(event: SubmitEvent): Promise<void> {
 
     // 🔥 성공
     const remoteUser = response.data ?? response.item;
-    completeLogin(remoteUser, response.token);
+    const refreshToken = (response as { refreshToken?: string }).refreshToken;
+    completeLogin(remoteUser, response.token, refreshToken);
   } catch (error) {
     console.error('[handleSubmit] 로그인 요청 실패:', error);
     const axiosError = error as {

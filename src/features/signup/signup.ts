@@ -17,8 +17,6 @@ const KAKAO_REDIRECT_URI = metaEnv.VITE_KAKAO_REDIRECT_URI ?? '';
 
 const form = document.querySelector<HTMLFormElement>('#signup-form');
 
-const nicknameInput =
-  document.querySelector<HTMLInputElement>('#nickname-input');
 const emailInput =
   document.querySelector<HTMLInputElement>('input#email-input');
 const passwordInput =
@@ -54,6 +52,8 @@ const formStatus = document.querySelector<HTMLDivElement>('.form-status');
 // 🔥 닉네임 필드(있으면 사용, 없으면 무시)
 const nicknameField =
   document.querySelector<HTMLElement>("[data-field='nickname']") ?? null;
+const nicknameInput =
+  document.querySelector<HTMLInputElement>('#nickname-input') ?? null;
 
 const emailField = document.querySelector<HTMLElement>("[data-field='email']");
 const passwordField = document.querySelector<HTMLElement>(
@@ -214,7 +214,7 @@ function validateEmail(): boolean {
 
 function checkNicknameValueValidity(ignoreStateUpdate = false): boolean {
   if (!nicknameInput) {
-    return false;
+    return true; // 닉네임 입력이 없으면 검증 통과
   }
 
   const value = nicknameInput.value.trim();
@@ -265,6 +265,10 @@ function checkNicknameValueValidity(ignoreStateUpdate = false): boolean {
 }
 
 function validateNickname(): boolean {
+  if (!nicknameInput) {
+    return true; // 닉네임 입력이 없으면 검증 통과
+  }
+
   const valueValid = checkNicknameValueValidity(true);
 
   if (!valueValid) {
@@ -501,7 +505,7 @@ async function processRegistration(
   try {
     const payload: User = {
       email: emailValue,
-      name: nicknameInput?.value,
+      name: nicknameValue || emailValue.split('@')[0], // 닉네임이 있으면 닉네임, 없으면 이메일 앞부분
       password: passwordInput.value,
       type: memberTypeInput?.value ?? 'user',
       ...(imageInput?.value ? { image: imageInput.value.trim() } : {}),
@@ -522,49 +526,40 @@ async function processRegistration(
       return;
     }
 
-    // ✅ 회원가입 성공 시 서버에서 받은 실제 토큰만 사용
-    const userData = response.data ?? response.item;
-    const receivedToken = response.token;
-
-    console.log('[signup] ✅ 회원가입 성공');
-    console.log('[signup] 서버 응답:', response);
-
-    if (!receivedToken) {
-      console.warn(
-        '[signup] ⚠️ 서버에서 토큰을 받지 못했습니다. 로그인 페이지로 이동합니다.',
+    // ✅ 회원가입 성공 시 토큰이 있으면 세션 스토리지에 저장
+    const responseWithToken = response as typeof response & { token?: string };
+    if (responseWithToken.token) {
+      const userData = response.data ?? response.item;
+      console.log(
+        '[signup] ✅ 회원가입 성공 - 토큰을 sessionStorage에 저장...',
       );
-      setFormStatus('회원가입은 완료되었지만 로그인이 필요합니다.', 'info');
-
-      // 약간의 지연 후 로그인 페이지로 이동
-      setTimeout(() => {
-        window.location.href = '/src/features/login/login.html';
-      }, 2000);
-      return;
+      saveToken(
+        responseWithToken.token,
+        userData?.email ?? emailValue,
+        userData?.name,
+      );
+    } else {
+      console.log('[signup] ⚠️ 회원가입은 성공했지만 토큰이 없습니다.');
     }
 
-    console.log(
-      '[signup] ✅ 서버에서 받은 토큰:',
-      receivedToken.substring(0, 50) + '...',
+    setFormStatus(
+      '회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...',
+      'success',
     );
-    saveToken(receivedToken, userData?.email ?? emailValue, userData?.name);
-
-    setFormStatus('회원가입이 완료되었습니다!', 'success');
-    form.reset();
-    duplicateState.emailChecked = false;
-    resetFieldStates();
 
     addLocalRegisteredUser({
       email: emailValue,
-      nickname: nicknameInput?.value.trim() ?? emailValue.split('@')[0],
+      nickname: nicknameValue || emailValue.split('@')[0],
       provider: 'local',
       type: memberTypeInput?.value ?? 'user',
       password: passwordInput.value,
     });
 
-    passwordInput.type = 'password';
-    passwordConfirmInput.type = 'password';
-    passwordToggle?.classList.remove('is-visible');
-    passwordConfirmToggle?.classList.remove('is-visible');
+    // ✅ 회원가입 완료 후 로그인 페이지로 리다이렉트
+    setTimeout(() => {
+      window.location.href = '/src/features/login/login.html';
+    }, 1500); // 1.5초 후 이동
+    return; // 리다이렉트되므로 이후 코드 실행 안 함
   } catch {
     setFormStatus('회원가입 처리 중 오류가 발생했습니다.', 'error');
   } finally {

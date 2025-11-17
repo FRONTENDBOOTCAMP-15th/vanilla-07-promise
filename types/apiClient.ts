@@ -22,24 +22,29 @@ const API_SERVER =
 // ✅ Axios 인스턴스 생성 (client-id 및 인증 헤더 포함)
 export const api = axios.create({
   baseURL: API_SERVER,
-  withCredentials: false,
+  withCredentials: true, // ✅ 쿠키 포함 활성화
   headers: {
     'Content-Type': 'application/json',
     'client-id': metaEnv.VITE_CLIENT_ID || 'brunch',
   },
 });
 
-// FormData를 사용하는 요청을 위한 인터셉터 추가
+// ✅ 요청 인터셉터: 토큰 자동 추가 + FormData 처리
 api.interceptors.request.use(
   config => {
-    // FormData를 사용하는 경우 (multipart/form-data)
-    // 기본 Content-Type 헤더를 제거하여 axios가 자동으로 boundary를 포함한 헤더를 설정하도록 함
+    // 1) 토큰 자동 추가
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // 2) FormData를 사용하는 경우 Content-Type 제거 (axios가 자동 설정)
     if (config.data instanceof FormData) {
-      // 헤더에서 Content-Type 제거 (axios가 자동 설정)
       if (config.headers) {
         delete config.headers['Content-Type'];
       }
     }
+
     return config;
   },
   error => {
@@ -204,7 +209,12 @@ export const loginUser = async (payload: {
 }): Promise<ApiResponse<User>> => {
   try {
     const { data } = await api.post<ApiResponse<User>>('/users/login', payload);
-    // 항상 200이므로 throw 없음
+    
+    // ✅ 로그인 성공 시 토큰 저장
+    if (data.ok && data.token) {
+      localStorage.setItem('accessToken', data.token);
+    }
+    
     return data;
   } catch (err) {
     if (isAxiosError(err) && err.response?.data) {
@@ -411,4 +421,9 @@ export const isNameRegisteredInDb = async (
     );
     throw error;
   }
+};
+
+// ✅ 로그아웃 (토큰 제거)
+export const logoutUser = (): void => {
+  localStorage.removeItem('accessToken');
 };
