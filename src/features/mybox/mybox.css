@@ -1,9 +1,15 @@
 @import "../../../assets/css/base/global.css";
 
 
+<<<<<<< HEAD
 body {
   max-width: 22.5em;
   width: 100%;
+=======
+
+.mybox-container {
+  width: 22.5em;
+>>>>>>> 776ed47a67200ecb8f4c78f284090570823304b3
   margin: 0 auto;
 }
 
@@ -32,6 +38,10 @@ body {
   scroll-snap-type: x mandatory;
   /* iOS 부드러운 스크롤 */
   -webkit-overflow-scrolling: touch;
+<<<<<<< HEAD
+=======
+  padding-bottom: 1em;
+>>>>>>> 776ed47a67200ecb8f4c78f284090570823304b3
   /* Firefox 스크롤바 숨김 */
   scrollbar-width: none;
 }
@@ -55,6 +65,7 @@ body {
   color: #959595;
   font-size: 0.81em;
 }
+<<<<<<< HEAD
 
  /* 최근 본 */
  .recent-books{
@@ -226,3 +237,5 @@ body {
   font-size: 0.75em;
   color: #959595;
 }
+=======
+>>>>>>> 776ed47a67200ecb8f4c78f284090570823304b3

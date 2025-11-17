@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>글쓰기</title>
+    <link rel="stylesheet" href="./write.css" />
+    <script type="module" src="./write.ts"></script>
+    <script type="module" src="../../common/nav.ts"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h2>글쓰기</h2>
+      </header>
+      <main>
+        <form class="post-form">
+          <div class="form-title">
+            <label for="title" class="sr-only">제목</label>
+            <input type="text" id="title" name="title" placeholder="제목" />
+          </div>
+
+          <div class="form-subtitle">
+            <label for="subtitle" class="sr-only">소제목</label>
+            <input
+              type="text"
+              id="subtitle"
+              name="subtitle"
+              placeholder="소제목"
+            />
+          </div>
+
+          <div class="form-content">
+            <button class="cancel-btn">
+              <img
+                src="../../../assets/images/post/IconCancel.svg"
+                alt="뒤로가기"
+              />
+            </button>
+            <button type="submit" class="submit-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+                class="register-icon"
+              >
+                <path d="M23.5 9.5L13.5 21L6.5 13.5" stroke="#444444" />
+              </svg>
+            </button>
+
+            <label for="content" class="sr-only">내용</label>
+            <textarea
+              id="content"
+              name="content"
+              placeholder="내용을 입력하세요."
+            ></textarea>
+          </div>
+
+          <section class="editor-toolbar" aria-label="글쓰기 도구">
+            <div class="left-buttons">
+              <label class="upload-button" aria-label="사진 첨부">
+                <img
+                  src="../../../assets/images/post/IconPicture.svg"
+                  alt="사진업로드"
+                />
+                <input
+                  type="file"
+                  name="imageUpload"
+                  accept="image/*"
+                  style="display: none"
+                  multiple
+                />
+              </label>
+
+              <label type="button" class="align-button" aria-label="목록 정렬">
+                <img
+                  src="../../../assets/images/post/IconAlign.svg"
+                  alt="텍스트 정렬방식"
+                />
+              </label>
+            </div>
+            <div class="right-buttons">
+              <label type="button" aria-label="텍스트 작성">
+                <img
+                  src="../../../assets/images/post/IconKeyboardUp.svg"
+                  alt="사진업로드"
+                />
+              </label>
+            </div>
+          </section>
+        </form>
+      </main>
+    </div>
+    <brunch-nav></brunch-nav>
+  </body>
+</html>
