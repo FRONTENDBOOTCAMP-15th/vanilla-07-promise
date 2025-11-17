@@ -1,6 +1,10 @@
 @import url(/assets/css/base/global.css);
 
-header {
+.search-author {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  header {
     display: flex;
     justify-content: center;
     padding: 0 0.125em;
@@ -19,13 +23,8 @@ header {
     }
   }
 
-
-.search-author {
-
-
   height: 100%;
   font-weight: var(--font-weight-light);
-
 
   /* 메뉴 */
   .menu {
@@ -61,6 +60,7 @@ header {
   }
 
   main {
+    flex: 1;
     background: linear-gradient(0deg, #f8f8f8 0%, #f8f8f8 100%), #fff;
     padding: 13px 20px;
 
