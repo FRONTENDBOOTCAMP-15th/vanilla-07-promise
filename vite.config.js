@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
   build: {
@@ -6,6 +7,12 @@ export default defineConfig({
       input: {
         // 메인 페이지
         index: 'index.html',
+        nav: path.resolve(__dirname, './src/common/nav.html'),
+        header: path.resolve(__dirname, './src/common/header.html'),
+        trending: path.resolve(
+          __dirname,
+          './src/features/home/trending-brunch.html',
+        ),
 
         // // 사용자 관련
         // 'user/login': 'src/pages/user/login.html',
