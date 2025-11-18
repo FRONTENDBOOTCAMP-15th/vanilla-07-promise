@@ -1,0 +1,30 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 26.875rem;
+  height: 64px;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+}
+
+.nav-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  flex: 1;
+}
+
+.nav-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}

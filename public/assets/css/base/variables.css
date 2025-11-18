@@ -1,0 +1,18 @@
+:root {
+  /*색상 팔레트*/
+  --color-primary: #00C6BE;
+  --color-secondary: #F8F8F8;
+  --color-tertiary:#AAAAAA;
+  --color-kakao: #FFE500; 
+  --color-text: #333;
+  --color-muted: #D7D7D7; 
+  --color-error: #FC3B75;
+
+  /*폰트*/
+  --font-family-pre: 'Pretendard';
+
+  /*레이아웃*/
+  --border-radius: 4px;
+
+
+}
