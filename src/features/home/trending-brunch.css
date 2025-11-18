@@ -1,11 +1,13 @@
 body {
   display: flex;
   justify-content: center;
+  flex-direction: column;
 }
 
 .container {
+  width: 28.875rem;
   width: 100%;
-  max-width: 26.875rem;
+  margin: 0 auto;
   padding: 6.5rem 1rem 6rem;
   box-sizing: border-box;
 }
