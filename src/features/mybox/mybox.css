@@ -7,7 +7,7 @@
 
 .wrapper{
   margin-block-start: 5.5em;
-  padding: 25px;
+  padding: 1.56em;
 }
 
 .fav-writers__title {
@@ -46,8 +46,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 1em;
   cursor: pointer;
+}
+
+.fav-writers__item img {
+width: 5em;
+height: 5em;
+/* border: 0.06em solid #959595; */
+border-radius: 50%;
 }
 
 .fav-writers__item p {
@@ -56,8 +64,6 @@
 }
 
  /* 최근 본 */
- .recent-books{
- }
  
  .recent-books__header {
   display: flex;              
@@ -158,6 +164,13 @@
   line-height: 1.44em;
 }
 
+.fav-books__item a > img{
+  width: 7.68em;
+  height: 10.75em;
+  justify-items: center;
+  align-items: center;
+  object-fit: cover;
+}
 
 .fav-books__booktitle {
   font-size: 0.75em;
@@ -175,12 +188,7 @@
 /* 내 브런치 섹션 */
 .my-brunch {
   margin-block-start: 2.13em; 
-
-  div {
-    article:last-child {
-      margin-block-end: 8.75em;
-    }
-  }
+  margin-block-end: 8.75em;
 }
 
 .my-brunch__title {
@@ -189,43 +197,36 @@
   display: flex; 
   align-items: center; 
   border-bottom: 0.06em solid #EEEEEE;
+  margin-inline: -1.28em;
+  padding-inline: 1.56em;
   padding-block-end: 0.88em;
 }
 
-.my-brunch__data1 {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  border-bottom: 0.06em solid #EEEEEE;
-  margin-inline-start: -1.56em;
-  padding-inline-start: 1.56em;
-  padding-block-end: 0.75em;
-}
-
-.my-brunch__data1 h3 {
-  all: unset; 
-  font-size: 1.06em;
-}
-
-.my-brunch__data1 p {
-  font-size: 0.75em;
-  color: #959595;
-}
-
-.my-brunch__data2 {
+.my-brunch__item {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   margin-block-start: 0.88em;
   margin-block-end: 1.13em;
+  border-bottom: 0.06em solid #EEEEEE;
+  margin-inline: -1.56em;
+  padding-inline: 1.56em;
+  padding-block-end: 0.75em;
 }
 
-.my-brunch__data2 h3 {
+.my-brunch__item h3 {
   all: unset; 
   font-size: 1.06em;
 }
 
-.my-brunch__data2 p {
+.my-brunch__item p {
   font-size: 0.75em;
   color: #959595;
+}
+
+.my-brunch__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
 }
