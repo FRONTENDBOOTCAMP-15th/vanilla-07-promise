@@ -1,10 +1,17 @@
 import { api, type ApiItemResponse } from './apiClient';
 
 export interface PostPayload {
+  type?: string;
   title: string;
   content: string;
   subtitle?: string;
+  image?: string;
   images?: string;
+  tag?: string;
+  extra?: {
+    subtitle?: string;
+    align?: string;
+  };
 }
 
 export interface PostResponse {
@@ -21,11 +28,23 @@ const postApi = {
   async createPost(
     payload: PostPayload,
   ): Promise<ApiItemResponse<PostResponse>> {
+    try {
+      console.log('[postApi] POST /posts 요청:', payload);
     const { data } = await api.post<ApiItemResponse<PostResponse>>(
       '/posts',
       payload,
-    );
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('[postApi] POST /posts 응답:', data);
     return data;
+    } catch (error) {
+      console.error('[postApi] POST /posts 실패:', error);
+      throw error;
+    }
   },
 
   async updatePost(

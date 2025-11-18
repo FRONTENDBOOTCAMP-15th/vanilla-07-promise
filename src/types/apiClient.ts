@@ -57,6 +57,12 @@ export interface LocalRegisteredUser {
   image?: string;
   type: string;
   password?: string;
+  phone: string;
+  extra: {
+    job: string;
+    biography: string;
+    keyword: string[];
+  };
   provider?: ProviderVariant;
 }
 
@@ -71,6 +77,13 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
     typeof candidate.type === 'string' &&
+    typeof candidate.phone === 'string' &&
+    typeof candidate.extra === 'object' &&
+    candidate.extra !== null &&
+    typeof (candidate.extra as Record<string, unknown>).job === 'string' &&
+    typeof (candidate.extra as Record<string, unknown>).biography ===
+      'string' &&
+    Array.isArray((candidate.extra as Record<string, unknown>).keyword) &&
     (typeof candidate.provider === 'string' ||
       typeof candidate.provider === 'undefined')
   );
@@ -92,9 +105,12 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     return parsed.filter(isValidLocalUser).map(user => ({
       email: normalizeValue((user as LocalRegisteredUser).email),
       nickname: normalizeValue((user as LocalRegisteredUser).nickname),
-      provider: (user as LocalRegisteredUser).provider,
+      image: (user as LocalRegisteredUser).image,
       type: (user as LocalRegisteredUser).type,
       password: (user as LocalRegisteredUser).password,
+      phone: (user as LocalRegisteredUser).phone,
+      extra: (user as LocalRegisteredUser).extra,
+      provider: (user as LocalRegisteredUser).provider,
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -113,8 +129,12 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
         users.map(user => ({
           email: normalizeValue(user.email),
           nickname: normalizeValue(user.nickname),
+          image: user.image,
           type: user.type,
           password: user.password,
+          phone: user.phone,
+          extra: user.extra,
+          provider: user.provider,
         })),
       ),
     );
@@ -131,6 +151,9 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     image: user.image,
     type: user.type,
     password: user.password,
+    phone: user.phone,
+    extra: user.extra,
+    provider: user.provider,
   });
   storeLocalRegisteredUsers(current);
 };
