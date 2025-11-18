@@ -8,7 +8,7 @@ async function getWriterData(){
   try{
     const {data} = await axios.get('/bookmarks/user', {
       headers:{
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjIsInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoiQUIiLCJlbWFpbCI6IncxQG1hcmtldC5jb20iLCJpbWFnZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RkZWRzbHF2di9pbWFnZS91cGxvYWQvdjE3NjI4NDcwMTkvZmViYzE1LXZhbmlsbGEwNy1lY2FkL2NTNDlkYWRMbEYud2VicCIsImxvZ2luVHlwZSI6ImVtYWlsIiwiaWF0IjoxNzYzMzY5MDkyLCJleHAiOjE3NjM0NTU0OTIsImlzcyI6IkZFQkMifQ.3qgPPptY1iWbKBaJWW6xJgtYdsznftQtKOt0PzWzztk"
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjksInR5cGUiOiJzZWxsZXIiLCJuYW1lIjoiQUnrn6wg7J207LGE66y4IiwiZW1haWwiOiJ3M0BnbWFpbC5jb20iLCJpbWFnZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RkZWRzbHF2di9pbWFnZS91cGxvYWQvdjE3NjI4NDcwMTkvZmViYzE1LXZhbmlsbGEwNy1lY2FkLzNrZlRaY2RnMWkud2VicCIsImxvZ2luVHlwZSI6Imtha2FvIiwiaWF0IjoxNzYzNDY0MDI4LCJleHAiOjE3NjM1NTA0MjgsImlzcyI6IkZFQkMifQ.uHbg9U4qVTOh1MpwTr6D1Qi1pP-hCKCMf9SXXjtRAAg"
       }
       });
     console.log(data);
@@ -36,8 +36,17 @@ function renderWriters(writers: FavWriter[]){
   }
 }
 
-const writerData = await getWriterData();
-if(writerData?.ok){
-  renderWriters(writerData.item);
+function renderEmtyFavWriter() {
+  const list = document.querySelector('.fav-writers__list');
+  if(list) {
+    list.innerHTML = `<li class="fav-writers__noItem"><p>등록된 관심 작가가 없습니다.<p></li>`;
+  }
 }
 
+const writerData = await getWriterData();
+
+if (!writerData?.ok || !Array.isArray(writerData.item) || writerData.item.length === 0) {
+  renderEmtyFavWriter();
+}else {
+  renderWriters(writerData.item);
+}

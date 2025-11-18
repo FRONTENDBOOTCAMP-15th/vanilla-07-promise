@@ -61,6 +61,11 @@ border-radius: 50%;
   font-size: 0.81em;
 }
 
+.fav-writers__noItem {
+  color: #959595;
+  font-size: 0.81em;
+}
+
  /* 최근 본 */
  
  .recent-books__header {
