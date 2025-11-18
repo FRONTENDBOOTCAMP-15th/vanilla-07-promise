@@ -10,7 +10,8 @@ body {
   background-color: white;
   overflow: hidden;
   margin: 1.5rem;
-  margin-top: 60px;
+  margin-top: 3.75rem;
+  margin-bottom: 5rem;
 }
 
 /* 헤더 이미지 + 텍스트 */
