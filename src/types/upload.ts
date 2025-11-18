@@ -1,4 +1,4 @@
-import { getAxios } from '../src/features/utils/axios';
+import { getAxios } from '../features/utils/axios';
 
 interface UploadItem {
   path?: string;

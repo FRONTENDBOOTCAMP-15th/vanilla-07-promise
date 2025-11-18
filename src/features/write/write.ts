@@ -1,5 +1,5 @@
-import postApi from '../../../types/postApi';
-import { api } from '../../../types/apiClient';
+import postApi from '../../types/postApi';
+import { api } from '../../types/apiClient';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
