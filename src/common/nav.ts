@@ -5,7 +5,7 @@ class BrunchNav extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <link rel="stylesheet" href="/assets/components/nav.css" />
+     
       <nav class="nav">
         <!-- 홈 페이지 html -->
         <a href="home.html" class="nav-icon" data-name="home">
@@ -30,7 +30,6 @@ class BrunchNav extends HTMLElement {
       </nav>
     `;
   }
-
 }
 
 customElements.define('brunch-nav', BrunchNav);

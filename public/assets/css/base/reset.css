@@ -6,8 +6,7 @@
 
 html,
 body {
-
-  --body-width :  28.875rem;
+  --body-width: 28.875rem;
 
   min-block-size: 100dvh;
   font-family: sans-serif;

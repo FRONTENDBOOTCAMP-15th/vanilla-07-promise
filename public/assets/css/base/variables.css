@@ -1,14 +1,14 @@
 :root {
   /* Colors */
   --color-primary: #00c6be;
-  --color-primary-dark: #00b894; /* 기존 + 통합 */
+  --color-primary-dark: #00b894;
   --color-secondary: #f8f8f8;
   --color-tertiary: #aaaaaa;
 
   --color-kakao: #ffe500;
 
   --color-text: #333;
-  --color-muted: #959595; /* 기존 muted 유지 */
+  --color-muted: #d7d7d7; /* preserved from HEAD */
   --color-border: #ddd;
 
   --color-error: #fc3b75;
@@ -21,12 +21,13 @@
   --font-weight-normal: 400;
   --font-weight-bold: 700;
 
-  /* Font Sizes (기존 값 + 통일) */
+  /* Font Sizes */
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-md: 1rem;
   --font-lg: 1.25rem;
-  --font-xl: 1.73rem; 
+  --font-xl: 1.73rem;
+
   /* Layout & Radius */
   --header-height: 6.25rem;
 
