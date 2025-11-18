@@ -1,4 +1,4 @@
-@import url('../../../public/assets/css/base/global.css');
+@import url('/assets/css/base/global.css');
 
 body {
   margin: 0;
@@ -269,7 +269,7 @@ body {
   height: 20px;
   border-radius: 50%;
   border: 1px solid #bcbcbc;
-  background: url('../../../assets/images/login/loginUnCheckbox.svg') center/contain no-repeat;
+  background: url('/assets/images/login/loginUnCheckbox.svg') center/contain no-repeat;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -278,7 +278,7 @@ body {
 
 /* 체크되었을 때 */
 .login-options input[type="checkbox"]:checked + .remember-check {
-  background: url('../../../assets/images/login/loginCheckbox.svg') center/contain no-repeat;
+  background: url('/assets/images/login/loginCheckbox.svg') center/contain no-repeat;
   box-shadow: 0 6px 12px rgba(47, 162, 145, 0.35);
 }
 .login-link {
