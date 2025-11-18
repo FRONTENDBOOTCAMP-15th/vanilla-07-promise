@@ -213,9 +213,16 @@ export interface User {
   email: string;
   password?: string;
   name?: string;
+  nickname?: string;
   image?: string;
   type?: string;
-  extra?: Record<string, unknown>;
+  phone?: string;
+  extra?: {
+    job?: string;
+    biography?: string;
+    keyword?: string[];
+    [key: string]: unknown;
+  };
 }
 
 // ===================================================
@@ -307,24 +314,44 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) } as Record<
-      string,
-      unknown
-    >;
-    if (!('providerAccountId' in extraPayload)) {
-      // nothing to send
+    // extra 필드 구조화 (job, biography, keyword 포함)
+    const extraPayload: {
+      job?: string;
+      biography?: string;
+      keyword?: string[];
+      [key: string]: unknown;
+    } = {};
+
+    if (userData.extra) {
+      if (userData.extra.job) extraPayload.job = userData.extra.job;
+      if (userData.extra.biography)
+        extraPayload.biography = userData.extra.biography;
+      if (userData.extra.keyword) extraPayload.keyword = userData.extra.keyword;
+      
+      // 다른 extra 필드들도 포함
+      Object.keys(userData.extra).forEach(key => {
+        if (!['job', 'biography', 'keyword'].includes(key)) {
+          extraPayload[key] = userData.extra![key];
+        }
+      });
     }
 
-    const payload = {
+    const payload: Record<string, unknown> = {
       email: userData.email,
-      password: userData.password,
-      name: userData.name,
       type: userData.type ?? 'user',
-      ...(userData.image && { image: userData.image }),
-      ...(Object.keys(extraPayload).length > 0 && { extra: extraPayload }),
     };
 
+    // 필수/선택 필드 추가
+    if (userData.password) payload.password = userData.password;
+    if (userData.name) payload.name = userData.name;
+    if (userData.nickname) payload.nickname = userData.nickname;
+    if (userData.image) payload.image = userData.image;
+    if (userData.phone) payload.phone = userData.phone;
+    if (Object.keys(extraPayload).length > 0) payload.extra = extraPayload;
+
+    console.log('[registerUser] 회원가입 요청:', payload);
     const { data } = await api.post<ApiItemResponse<User>>('/users', payload);
+    console.log('[registerUser] 회원가입 응답:', data);
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
