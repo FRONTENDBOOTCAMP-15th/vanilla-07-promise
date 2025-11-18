@@ -1,4 +1,4 @@
-@import url('../../../public/assets/css/base/global.css');
+@import url('/assets/css/base/global.css');
 body {
   margin: 0;
   min-height: 100dvh;
