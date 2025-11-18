@@ -21,8 +21,6 @@ const input = htmlFiles.reduce((acc, file) => {
   return acc;
 }, {});
 
-
-
 // 루트 index.html 추가
 input['index'] = resolve(__dirname, 'index.html');
 
