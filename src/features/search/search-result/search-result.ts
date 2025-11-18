@@ -163,7 +163,7 @@ async function renderResults(page: number) {
     li.appendChild(figure);
 
     li.addEventListener('click', () => {
-      window.location.href = `/src/features/search/search-author?id=${item._id}`;
+      window.location.href = `/src/features/search/search-author?_id=${item._id}`;
     });
 
     ul.appendChild(li);
