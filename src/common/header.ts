@@ -1,3 +1,5 @@
+import { tokenStore } from "../types/apiClient.ts";
+
 class BrunchHeader extends HTMLElement {
   connectedCallback() {
     this.render();
@@ -45,10 +47,18 @@ class BrunchHeader extends HTMLElement {
     let isLoggedIn = false;
 
     function toggleLogin() {
+
+      const accessToken: string | null  = tokenStore.getAccessToken();
+
       isLoggedIn = !isLoggedIn;
+
       loginBefore.classList.toggle('hidden', isLoggedIn);
       loginAfter.classList.toggle('hidden', !isLoggedIn);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      toggleLogin();
+    })
 
     // 로그인 변환 테스트: 3초 후 로그인 전환
     //추후 변경 예정

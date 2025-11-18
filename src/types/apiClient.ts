@@ -384,9 +384,7 @@ export const getUserByName = async (
 };
 
 // ✅ DB 닉네임 중복 여부 확인
-export const isNameRegisteredInDb = async (
-  name: string,
-): Promise<boolean> => {
+export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
   const normalized = name.trim();
   if (!normalized) return false;
   try {
@@ -406,4 +404,24 @@ export const isNameRegisteredInDb = async (
     );
     throw error;
   }
+};
+
+// ========================================================
+// ⭐ Token Store (SSR 안전 버전)
+// ========================================================
+export const tokenStore = {
+  getAccessToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem('accessToken');
+  },
+
+  setAccessToken(token: string): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem('accessToken', token);
+  },
+
+  clear(): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem('accessToken');
+  },
 };
