@@ -254,6 +254,7 @@ body {
   height: 20px;
   border-radius: 50%;
   border: 1px solid #bcbcbc;
+  background: url('./assets/images/login/loginCheckbox.svg');
   display: inline-flex;
   align-items: center;
   justify-content: center;

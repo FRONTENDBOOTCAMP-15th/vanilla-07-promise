@@ -1,767 +1,195 @@
-import {
-  addLocalRegisteredUser,
-  isEmailRegisteredLocally,
-  isNicknameRegisteredLocally,
-  registerUser,
-  type User,
-  isNameRegisteredInDb,
-  isEmailRegisteredInDb,
-} from '../../../types/apiClient.ts';
-import { saveToken } from '../../common/token.ts';
-
-const metaEnv =
-  (import.meta as unknown as { env?: Record<string, string | undefined> })
-    .env ?? {};
-const KAKAO_REST_API_KEY = metaEnv.VITE_KAKAO_REST_API_KEY ?? '';
-const KAKAO_REDIRECT_URI = metaEnv.VITE_KAKAO_REDIRECT_URI ?? '';
-
-const form = document.querySelector<HTMLFormElement>('#signup-form');
-
-const emailInput =
-  document.querySelector<HTMLInputElement>('input#email-input');
-const passwordInput =
-  document.querySelector<HTMLInputElement>('#password-input');
-const passwordConfirmInput = document.querySelector<HTMLInputElement>(
-  '#password-confirm-input',
-);
-const memberTypeInput =
-  document.querySelector<HTMLSelectElement>('#type-input');
-const imageInput = document.querySelector<HTMLInputElement>('#image-input');
-const providerAccountIdInput =
-  document.querySelector<HTMLInputElement>('#account-id');
-const submitButton =
-  document.querySelector<HTMLButtonElement>('.signup-submit');
-
-const emailCheckButton =
-  document.querySelector<HTMLButtonElement>('.field-action-email') ??
-  getDuplicateCheckButton('email');
-
-const passwordToggle = document.querySelector<HTMLButtonElement>(
-  "[data-toggle='password']",
-);
-const passwordConfirmToggle = document.querySelector<HTMLButtonElement>(
-  "[data-toggle='password-confirm']",
-);
-
-const kakaoLoginButton = document.querySelector<HTMLButtonElement>(
-  "[data-role='kakao-login']",
-);
-
-const formStatus = document.querySelector<HTMLDivElement>('.form-status');
-
-// 🔥 닉네임 필드(있으면 사용, 없으면 무시)
-const nicknameField =
-  document.querySelector<HTMLElement>("[data-field='nickname']") ?? null;
-const nicknameInput =
-  document.querySelector<HTMLInputElement>('#nickname-input') ?? null;
-
-const emailField = document.querySelector<HTMLElement>("[data-field='email']");
-const passwordField = document.querySelector<HTMLElement>(
-  "[data-field='password']",
-);
-const passwordConfirmField = document.querySelector<HTMLElement>(
-  "[data-field='passwordConfirm']",
-);
-
-const fieldElements = {
-  nickname: nicknameField ?? undefined,
-  email: emailField,
-  password: passwordField,
-  passwordConfirm: passwordConfirmField,
-} as const;
-
-type Field = keyof typeof fieldElements;
-type FieldState = 'neutral' | 'success' | 'error' | 'info';
-
-const duplicateState = {
-  nicknameChecked: false,
-  emailChecked: false,
-};
-
-const stateClassMap: Record<Exclude<FieldState, 'neutral'>, string> = {
-  success: 'field-success',
-  error: 'field-error',
-  info: 'field-info',
-};
-
-function getDuplicateCheckButton(
-  field: 'email' | 'nickname',
-): HTMLButtonElement | null {
-  const fieldSelector = `[data-field='${field}']`;
-  const container = document.querySelector<HTMLElement>(fieldSelector);
-  if (!container) return null;
-
-  const actionButton =
-    container.querySelector<HTMLButtonElement>('.field-action');
-  if (actionButton) {
-    return actionButton;
-  }
-
-  const textButton = Array.from(
-    container.querySelectorAll<HTMLButtonElement>('button'),
-  ).find(button => button.textContent?.trim() === '중복확인');
-
-  return textButton ?? null;
-}
-
-function setFieldState(
-  field: Field,
-  state: FieldState = 'neutral',
-  message: string = '',
-): void {
-  const fieldElement = fieldElements[field];
-  if (!fieldElement) return;
-
-  // 기존 상태 제거
-  fieldElement.classList.remove('field-success', 'field-error', 'field-info');
-
-  // neutral이 아닐 때만 상태 클래스 추가
-  if (state !== 'neutral') {
-    fieldElement.classList.add(stateClassMap[state]);
-  }
-
-  // 메시지 적용
-  const messageElement =
-    fieldElement.querySelector<HTMLParagraphElement>('.field-message');
-
-  if (messageElement) {
-    messageElement.textContent = message;
-  }
-}
-
-function resetFieldStates(): void {
-  (Object.keys(fieldElements) as Field[]).forEach(field => {
-    setFieldState(field, 'neutral');
-  });
-}
-
-function setFormStatus(
-  message: string,
-  type: 'success' | 'error' | 'info' = 'info',
-): void {
-  if (!formStatus) return;
-  formStatus.textContent = message;
-  formStatus.classList.remove('is-success', 'is-error');
-  if (type === 'success') {
-    formStatus.classList.add('is-success');
-  } else if (type === 'error') {
-    formStatus.classList.add('is-error');
-  }
-}
-
-function checkEmailValueValidity(ignoreStateUpdate = false): boolean {
-  if (!emailInput) {
-    return false;
-  }
-
-  const value = emailInput.value.trim();
-
-  if (value.length === 0) {
-    if (!ignoreStateUpdate) {
-      setFieldState('email', 'error', '이메일을 입력해주세요.');
-    }
-    return false;
-  }
-
-  if (!emailInput.checkValidity()) {
-    if (!ignoreStateUpdate) {
-      setFieldState('email', 'error', '올바른 이메일 형식이 아니에요.');
-    }
-    return false;
-  }
-
-  const localDuplicated = isEmailRegisteredLocally(value);
-  if (localDuplicated) {
-    duplicateState.emailChecked = false;
-    if (!ignoreStateUpdate) {
-      setFieldState('email', 'error', '이미 등록된 이메일입니다.');
-      setFormStatus(
-        '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-        'error',
-      );
-    }
-    return false;
-  }
-
-  if (!ignoreStateUpdate) {
-    if (!duplicateState.emailChecked) {
-      setFieldState('email', 'info', '중복확인을 진행해주세요.');
-    } else {
-      setFieldState('email', 'success', '사용할 수 있는 이메일입니다.');
-    }
-  }
-
-  return true;
-}
-
-function validateEmail(): boolean {
-  const valueValid = checkEmailValueValidity(true);
-
-  if (!valueValid) {
-    checkEmailValueValidity(false);
-    duplicateState.emailChecked = false;
-    return false;
-  }
-
-  if (!duplicateState.emailChecked) {
-    setFieldState('email', 'info', '중복확인을 진행해주세요.');
-    return false;
-  }
-
-  setFieldState('email', 'success', '사용할 수 있는 이메일입니다.');
-  return true;
-}
-
-function checkNicknameValueValidity(ignoreStateUpdate = false): boolean {
-  if (!nicknameInput) {
-    return true; // 닉네임 입력이 없으면 검증 통과
-  }
-
-  const value = nicknameInput.value.trim();
-
-  if (value.length === 0) {
-    if (!ignoreStateUpdate) {
-      setFieldState('nickname', 'error', '별명을 입력해주세요.');
-    }
-    return false;
-  }
-
-  if (value.length < 2) {
-    if (!ignoreStateUpdate) {
-      setFieldState('nickname', 'error', '별명은 2자 이상으로 입력해주세요.');
-    }
-    return false;
-  }
-
-  if (value.length > 20) {
-    if (!ignoreStateUpdate) {
-      setFieldState('nickname', 'error', '20자 이하로 입력해주세요.');
-    }
-    return false;
-  }
-
-  const localDuplicated = isNicknameRegisteredLocally(value);
-  if (localDuplicated) {
-    duplicateState.nicknameChecked = false;
-    if (!ignoreStateUpdate) {
-      setFieldState('nickname', 'error', '이미 등록된 별명입니다.');
-      setFormStatus(
-        '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-        'error',
-      );
-    }
-    return false;
-  }
-
-  if (!ignoreStateUpdate) {
-    if (!duplicateState.nicknameChecked) {
-      setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
-    } else {
-      setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
-    }
-  }
-
-  return true;
-}
-
-function validateNickname(): boolean {
-  if (!nicknameInput) {
-    return true; // 닉네임 입력이 없으면 검증 통과
-  }
-
-  const valueValid = checkNicknameValueValidity(true);
-
-  if (!valueValid) {
-    checkNicknameValueValidity(false);
-    duplicateState.nicknameChecked = false;
-    return false;
-  }
-
-  if (!duplicateState.nicknameChecked) {
-    setFieldState('nickname', 'info', '중복확인을 진행해주세요.');
-    return false;
-  }
-
-  setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
-  return true;
-}
-
-function validatePassword(updateState = true): boolean {
-  if (!passwordInput) return false;
-
-  const value = passwordInput.value;
-  const ok = value.length >= 8 && /[A-Za-z]/.test(value) && /\d/.test(value);
-
-  if (!updateState) return ok;
-
-  if (!ok) {
-    setFieldState(
-      'password',
-      'error',
-      '대소문자, 숫자 조합 8자 이상이어야 합니다.',
-    );
-  } else {
-    setFieldState('password', 'success', '좋은 비밀번호네요.');
-  }
-
-  return ok;
-}
-
-function validatePasswordConfirm(updateState = true): boolean {
-  if (!passwordInput || !passwordConfirmInput) return false;
-
-  const confirmValue = passwordConfirmInput.value;
-
-  if (!confirmValue) {
-    if (updateState)
-      setFieldState(
-        'passwordConfirm',
-        'error',
-        '비밀번호를 한 번 더 입력해주세요.',
-      );
-    return false;
-  }
-
-  if (!validatePassword(false)) {
-    if (updateState)
-      setFieldState(
-        'passwordConfirm',
-        'info',
-        '먼저 비밀번호를 조건에 맞게 입력해주세요.',
-      );
-    return false;
-  }
-
-  if (passwordInput.value !== confirmValue) {
-    if (updateState)
-      setFieldState(
-        'passwordConfirm',
-        'error',
-        '비밀번호가 일치하지 않습니다.',
-      );
-    return false;
-  }
-
-  if (updateState)
-    setFieldState('passwordConfirm', 'success', '비밀번호가 일치합니다.');
-
-  return true;
-}
-
-function updateSubmitState(): void {
-  if (!submitButton) return;
-
-  const emailValid = checkEmailValueValidity(true);
-  const passwordValid = validatePassword(false);
-  const confirmValid = validatePasswordConfirm(false);
-  const nicknameValid =
-    nicknameInput === null ? true : checkNicknameValueValidity(true); // 닉네임 입력이 없으면 검증 통과
-
-  const canSubmit =
-    emailValid &&
-    passwordValid &&
-    confirmValid &&
-    duplicateState.emailChecked &&
-    nicknameValid &&
-    (nicknameInput === null ? true : duplicateState.nicknameChecked); // 닉네임 입력이 있으면 중복확인 필요
-
-  submitButton.disabled = !canSubmit;
-  submitButton.classList.toggle('is-active', canSubmit);
-}
-
-async function processRegistration(
-  event: Event,
-  trigger: HTMLButtonElement | null,
-) {
-  event.preventDefault();
-
-  if (!form || !emailInput || !passwordInput || !passwordConfirmInput) return;
-
-  const emailValid = validateEmail();
-  const passwordValid = validatePassword();
-  const confirmValid = validatePasswordConfirm();
-  const nicknameValid = nicknameInput ? validateNickname() : true;
-
-  if (!(emailValid && passwordValid && confirmValid && nicknameValid)) {
-    setFormStatus('입력값을 다시 확인해주세요.', 'error');
-    updateSubmitState();
-    return;
-  }
-
-  if (!duplicateState.emailChecked) {
-    setFormStatus('이메일 중복확인을 완료해주세요.', 'info');
-    updateSubmitState();
-    return;
-  }
-
-  // 닉네임 입력이 있으면 닉네임 중복확인도 체크
-  if (nicknameInput && !duplicateState.nicknameChecked) {
-    setFormStatus('별명 중복확인을 완료해주세요.', 'info');
-    updateSubmitState();
-    return;
-  }
-
-  const emailValue = emailInput.value.trim();
-  const nicknameValue = nicknameInput?.value.trim() ?? '';
-
-  if (isEmailRegisteredLocally(emailValue)) {
-    duplicateState.emailChecked = false;
-    setFieldState('email', 'error', '이미 사용 중인 이메일입니다.');
-    setFormStatus(
-      '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-      'error',
-    );
-    updateSubmitState();
-    return;
-  }
-
-  // 닉네임이 입력되어 있고, 로컬에 중복된 닉네임이 있으면 체크
-  if (nicknameValue && isNicknameRegisteredLocally(nicknameValue)) {
-    duplicateState.nicknameChecked = false;
-    setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-    setFormStatus('이미 등록된 별명입니다. 다른 별명을 입력해주세요.', 'error');
-    updateSubmitState();
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import { getAxios } from '../utils/axios';
+import type { DetailRes, LoginUser } from '../utils/types';
+
+// axios 인스턴스
+const axiosInstance = getAxios();  
+
+let nicknameVerified = false;
+let emailVerified = false;
+
+//html 요소
+const nickname = document.querySelector('#nickname-input') as HTMLInputElement;
+const email = document.querySelector('#email-input') as HTMLInputElement;
+const password = document.querySelector('#password-input') as HTMLInputElement;
+const passwordCheck = document.querySelector('#password-confirm-input') as HTMLInputElement;
+const signupForm = document.querySelector('#signup-form') as HTMLFormElement;
+
+const nicknameCheckBtn = document.querySelector('.field-action-nickname') as HTMLButtonElement;
+const emailCheckBtn = document.querySelector('#field-action-email') as HTMLButtonElement;
+
+const iconEyeBtn1 = document.querySelector('.field-icon-button1') as HTMLButtonElement;
+const iconEyeBtn2 = document.querySelector('.field-icon-button2') as HTMLButtonElement;
+
+const nicknameMessage = document.querySelector('#nickname-message') as HTMLParagraphElement;
+const emailMessage = document.querySelector('#email-message') as HTMLParagraphElement;
+const passwordMessage = document.querySelector('#password-message') as HTMLParagraphElement;
+const passwordConfirmMessage = document.querySelector('#password-confirm-message') as HTMLParagraphElement;
+
+// =========================
+// ⭐ 별명 중복 확인
+// =========================
+nicknameCheckBtn.addEventListener('click', checkNickname);
+
+async function checkNickname() {
+  const nicknameValue = nickname.value.trim();
+
+  if (!nicknameValue) {
+    nicknameMessage.textContent = '별명을 입력해주세요';
+    nicknameVerified = false;
     return;
   }
 
   try {
-    const duplicatedOnServer = await isEmailRegisteredInDb(emailValue);
-    if (duplicatedOnServer) {
-      duplicateState.emailChecked = false;
-      setFieldState('email', 'error', '이미 사용 중인 이메일입니다.');
-      setFormStatus(
-        '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-        'error',
-      );
-      updateSubmitState();
-      return;
-    }
-  } catch (error) {
-    duplicateState.emailChecked = false;
-    const message =
-      error instanceof Error
-        ? error.message
-        : '이메일 중복확인 중 오류가 발생했습니다.';
-    setFormStatus(message, 'error');
-    setFieldState('email', 'info', '잠시 후 다시 시도해주세요.');
-    updateSubmitState();
-    return;
-  }
-
-  // 닉네임이 입력되어 있으면 서버 중복확인도 체크
-  if (nicknameValue) {
-    try {
-      const nicknameDuplicatedOnServer =
-        await isNameRegisteredInDb(nicknameValue);
-      if (nicknameDuplicatedOnServer) {
-        duplicateState.nicknameChecked = false;
-        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-        setFormStatus(
-          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-          'error',
-        );
-        updateSubmitState();
-        return;
-      }
-    } catch (error) {
-      // 409 에러는 isNameRegisteredInDb에서 이미 처리되므로 여기까지 오면 실제 서버 오류
-      duplicateState.nicknameChecked = false;
-      console.error('[signup] 별명 서버 중복 확인 실패:', error);
-      const axiosError = error as {
-        response?: {
-          status?: number;
-          data?: { message?: string };
-        };
-      };
-
-      // 409 에러는 이미 중복으로 처리됨 (안전장치)
-      if (axiosError?.response?.status === 409) {
-        duplicateState.nicknameChecked = false;
-        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-        setFormStatus(
-          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-          'error',
-        );
-        updateSubmitState();
-        return;
-      }
-
-      const message =
-        axiosError?.response?.data?.message ??
-        (error instanceof Error ? error.message : null) ??
-        '별명 중복확인 중 오류가 발생했습니다.';
-      setFormStatus(message, 'error');
-      setFieldState('nickname', 'info', '잠시 후 다시 시도해주세요.');
-      updateSubmitState();
-      return;
-    }
-  }
-
-  setFormStatus('회원가입을 진행 중입니다...', 'info');
-
-  trigger?.setAttribute('aria-busy', 'true');
-  if (trigger) trigger.disabled = true;
-
-  try {
-    const payload: User = {
-      email: emailValue,
-      name: nicknameValue || emailValue.split('@')[0], // 닉네임이 있으면 닉네임, 없으면 이메일 앞부분
-      password: passwordInput.value,
-      type: memberTypeInput?.value ?? 'user',
-      ...(imageInput?.value ? { image: imageInput.value.trim() } : {}),
-      ...(providerAccountIdInput?.value
-        ? { extra: { providerAccountId: providerAccountIdInput.value.trim() } }
-        : {}),
-    };
-
-    const response = await registerUser(payload);
-
-    if (!response.ok) {
-      const msg = response.message ?? '회원가입에 실패했습니다.';
-      if (msg.includes('이메일')) {
-        duplicateState.emailChecked = false;
-        setFieldState('email', 'error', msg);
-      }
-      setFormStatus(msg, 'error');
-      return;
-    }
-
-    // ✅ 회원가입 성공 시 토큰이 있으면 세션 스토리지에 저장
-    const responseWithToken = response as typeof response & { token?: string };
-    if (responseWithToken.token) {
-      const userData = response.data ?? response.item;
-      console.log(
-        '[signup] ✅ 회원가입 성공 - 토큰을 sessionStorage에 저장...',
-      );
-      saveToken(
-        responseWithToken.token,
-        userData?.email ?? emailValue,
-        userData?.name,
-      );
-    } else {
-      console.log('[signup] ⚠️ 회원가입은 성공했지만 토큰이 없습니다.');
-    }
-
-    setFormStatus(
-      '회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...',
-      'success',
-    );
-
-    addLocalRegisteredUser({
-      email: emailValue,
-      nickname: nicknameValue || emailValue.split('@')[0],
-      provider: 'local',
-      type: memberTypeInput?.value ?? 'user',
-      password: passwordInput.value,
+    const { data } = await axiosInstance.get<DetailRes<LoginUser>>('/users/name', {
+      params: { name: nicknameValue },
     });
 
-    // ✅ 회원가입 완료 후 로그인 페이지로 리다이렉트
-    setTimeout(() => {
-      window.location.href = '/src/features/login/login.html';
-    }, 1500); // 1.5초 후 이동
-    return; // 리다이렉트되므로 이후 코드 실행 안 함
-  } catch {
-    setFormStatus('회원가입 처리 중 오류가 발생했습니다.', 'error');
-  } finally {
-    trigger?.removeAttribute('aria-busy');
-    if (trigger) trigger.disabled = false;
-    updateSubmitState();
+    if (data.ok === 1) {
+      nicknameMessage.textContent = '사용 가능한 별명입니다.';
+      nicknameVerified = true;
+      return;
+    }
+
+    nicknameVerified = false;
+    nicknameMessage.textContent = '이미 사용 중인 별명입니다.';
+
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      nicknameMessage.textContent = err.response?.data?.message || '서버 오류입니다.';
+      nicknameVerified = false;
+    }
   }
 }
 
-function initEventListeners() {
-  emailInput?.addEventListener('input', () => {
-    duplicateState.emailChecked = false;
-    checkEmailValueValidity();
-    updateSubmitState();
-  });
+// =========================
+// ⭐ 이메일 중복 확인
+// =========================
+emailCheckBtn.addEventListener('click', checkEmail);
 
-  emailInput?.addEventListener('blur', () => {
-    checkEmailValueValidity();
-  });
+async function checkEmail() {
+  const emailValue = email.value.trim();
 
-  emailCheckButton?.addEventListener('click', async () => {
-    if (!checkEmailValueValidity()) {
-      duplicateState.emailChecked = false;
-      updateSubmitState();
+  if (!emailValue) {
+    emailMessage.textContent = '이메일을 입력해주세요.';
+    emailVerified = false;
+    return;
+  }
+
+  if (!emailValue.includes('@')) {
+    emailMessage.textContent = '올바른 이메일 형식이 아닙니다.';
+    emailVerified = false;
+    return;
+  }
+
+  try {
+    const { data } = await axiosInstance.get<DetailRes<LoginUser>>('/users/email', {
+      params: { email: emailValue },
+    });
+
+    if (data.ok === 1) {
+      emailVerified = true;
+      emailMessage.textContent = '사용 가능한 이메일입니다.';
       return;
     }
 
-    const emailValue = emailInput?.value.trim() ?? '';
+    emailVerified = false;
+    emailMessage.textContent = '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.';
 
-    if (isEmailRegisteredLocally(emailValue)) {
-      duplicateState.emailChecked = false;
-      setFieldState('email', 'error', '이미 사용 중인 이메일입니다.');
-      setFormStatus(
-        '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-        'error',
-      );
-      updateSubmitState();
-      return;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      emailVerified = false;
+      emailMessage.textContent = err.response?.data?.message || '서버 오류입니다.';
     }
-
-    try {
-      const duplicatedOnServer = await isEmailRegisteredInDb(emailValue);
-      if (duplicatedOnServer) {
-        duplicateState.emailChecked = false;
-        setFieldState('email', 'error', '이미 사용 중인 이메일입니다.');
-        setFormStatus(
-          '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
-          'error',
-        );
-        updateSubmitState();
-        return;
-      }
-    } catch {
-      duplicateState.emailChecked = false;
-      setFormStatus('중복확인 중 오류가 발생했습니다.', 'error');
-      setFieldState('email', 'info', '잠시 후 다시 시도해주세요.');
-      updateSubmitState();
-      return;
-    }
-
-    duplicateState.emailChecked = true;
-    setFieldState('email', 'success', '사용할 수 있는 이메일입니다.');
-    setFormStatus('이메일 중복확인을 완료했어요.', 'info');
-    updateSubmitState();
-  });
-
-  // 닉네임 중복확인 버튼(옵션)
-  const nicknameCheckButton =
-    document.querySelector<HTMLButtonElement>('.field-action-nickname') ??
-    getDuplicateCheckButton('nickname');
-  nicknameCheckButton?.addEventListener('click', async () => {
-    if (!checkNicknameValueValidity()) {
-      duplicateState.nicknameChecked = false;
-      updateSubmitState();
-      return;
-    }
-
-    const nicknameValue = nicknameInput?.value.trim() ?? '';
-    if (nicknameValue.length === 0) {
-      duplicateState.nicknameChecked = false;
-      setFieldState('nickname', 'error', '별명을 입력해주세요.');
-      updateSubmitState();
-      return;
-    }
-
-    if (isNicknameRegisteredLocally(nicknameValue)) {
-      duplicateState.nicknameChecked = false;
-      setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-      setFormStatus(
-        '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-        'error',
-      );
-      updateSubmitState();
-      return;
-    }
-
-    try {
-      const duplicatedOnServer = await isNameRegisteredInDb(nicknameValue);
-      if (duplicatedOnServer) {
-        duplicateState.nicknameChecked = false;
-        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-        setFormStatus(
-          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-          'error',
-        );
-        updateSubmitState();
-        return;
-      }
-    } catch (error) {
-      // 409 에러는 isNameRegisteredInDb에서 이미 처리되므로 여기까지 오면 실제 서버 오류
-      duplicateState.nicknameChecked = false;
-      console.error('[signup] 별명 서버 중복 확인 실패:', error);
-      const axiosError = error as {
-        response?: {
-          status?: number;
-          data?: { message?: string };
-        };
-      };
-
-      // 409 에러는 이미 중복으로 처리됨 (안전장치)
-      if (axiosError?.response?.status === 409) {
-        duplicateState.nicknameChecked = false;
-        setFieldState('nickname', 'error', '이미 사용 중인 별명입니다.');
-        setFormStatus(
-          '이미 등록된 별명입니다. 다른 별명을 입력해주세요.',
-          'error',
-        );
-        updateSubmitState();
-        return;
-      }
-
-      const message =
-        axiosError?.response?.data?.message ??
-        (error instanceof Error ? error.message : null) ??
-        '중복확인 중 오류가 발생했습니다.';
-      setFormStatus(message, 'error');
-      setFieldState('nickname', 'info', '잠시 후 다시 시도해주세요.');
-      updateSubmitState();
-      return;
-    }
-
-    duplicateState.nicknameChecked = true;
-    setFieldState('nickname', 'success', '사용할 수 있는 별명입니다.');
-    setFormStatus('별명 중복확인을 완료했어요.', 'info');
-    updateSubmitState();
-  });
-
-  // 닉네임 입력 변화 시 상태 초기화(옵션)
-  nicknameInput?.addEventListener('input', () => {
-    duplicateState.nicknameChecked = false;
-    checkNicknameValueValidity();
-    updateSubmitState();
-  });
-
-  nicknameInput?.addEventListener('blur', () => {
-    checkNicknameValueValidity();
-  });
-
-  passwordInput?.addEventListener('input', () => {
-    validatePassword();
-    validatePasswordConfirm();
-    updateSubmitState();
-  });
-
-  passwordConfirmInput?.addEventListener('input', () => {
-    validatePasswordConfirm();
-    updateSubmitState();
-  });
-
-  passwordToggle?.addEventListener('click', () => {
-    togglePasswordVisibility(passwordToggle, passwordInput);
-  });
-
-  passwordConfirmToggle?.addEventListener('click', () => {
-    togglePasswordVisibility(passwordConfirmToggle, passwordConfirmInput);
-  });
-
-  form?.addEventListener('submit', e => {
-    void processRegistration(e, submitButton);
-  });
+  }
 }
 
-function togglePasswordVisibility(
-  btn: HTMLButtonElement | null,
-  input: HTMLInputElement | null,
-) {
-  if (!btn || !input) return;
-  const nextType = input.type === 'password' ? 'text' : 'password';
-  input.type = nextType;
-  const visible = nextType === 'text';
-  btn.classList.toggle('is-visible', visible);
-  btn.setAttribute('aria-pressed', String(visible));
-}
+// =========================
+// ⭐ 비밀번호 숨김/보기
+// =========================
+iconEyeBtn1.addEventListener('click', () => {
+  const isHidden = password.type === 'password';
 
-kakaoLoginButton?.addEventListener('click', () => {
-  const url =
-    `https://kauth.kakao.com/oauth/authorize?response_type=code` +
-    `&client_id=${KAKAO_REST_API_KEY}` +
-    `&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}` +
-    `&scope=account_email,gender`;
-  window.location.href = url;
+  if (isHidden) {
+    password.type = 'text';
+  } else {
+    password.type = 'password';
+  }
 });
 
-initEventListeners();
-updateSubmitState();
+iconEyeBtn2.addEventListener('click', () => {
+  const isHidden = passwordCheck.type === 'password';
+
+  if (isHidden) {
+    passwordCheck.type = 'text';
+  } else {
+    passwordCheck.type = 'password';
+  }
+});
+
+// =========================
+// ⭐ 비밀번호 일치 검사
+// =========================
+function passwordCheckLive() {
+  const pwd1 = password.value;
+  const pwd2 = passwordCheck.value;
+
+  if (pwd1 && (pwd1.length < 8 || pwd1.length > 16)) {
+    passwordConfirmMessage.textContent = '비밀번호는 8~16자여야 합니다.';
+    passwordConfirmMessage.style.color = 'var(--color-error)';
+    return;
+  }
+
+  if (pwd1 === pwd2) {
+    passwordConfirmMessage.textContent = '비밀번호가 일치합니다.';
+    passwordConfirmMessage.style.color = 'var(--color-primary)';
+  } else {
+    passwordConfirmMessage.textContent = '비밀번호가 일치하지 않습니다.';
+    passwordConfirmMessage.style.color = 'var(--color-error)';
+  }
+}
+
+// 비밀번호 입력 시 바로 검사
+password.addEventListener('input', passwordCheckLive);
+passwordCheck.addEventListener('input', passwordCheckLive);
+
+// =========================
+// ⭐ 회원가입
+// =========================
+signupForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const cleanNickname = nickname.value.replace(/\s/g, '');
+  const cleanEmail = email.value.replace(/\s/g, '');
+
+  if (!nicknameVerified) {
+    alert('별명 중복 확인을 해주세요.');
+    return;
+  }
+
+  if (!emailVerified) {
+    alert('이메일 중복 확인을 해주세요.');
+    return;
+  }
+
+  if (password.value !== passwordCheck.value) {
+    alert('비밀번호가 일치하지 않습니다.');
+    return;
+  }
+
+  const signup = {
+    email: cleanEmail,
+    name: cleanNickname,
+    password: password.value,
+    type: 'user',
+  };
+
+  try {
+    await axiosInstance.post<DetailRes<LoginUser>>('/users', signup);
+    alert('회원가입에 성공했습니다. 로그인 페이지로 이동합니다.');
+    location.href = './login.html';
+  } catch (err) {
+    alert(`회원가입 실패: ${err}`);
+  }
+});
