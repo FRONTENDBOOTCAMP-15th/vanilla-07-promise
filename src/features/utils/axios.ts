@@ -10,8 +10,8 @@ export function getAxios() {
       'Content-Type': 'application/json', // 요청 바디의 데이터 타입
       // 설정하지 않으면 크롬일 경우 "application/json, text/plain, */*"
       Accept: 'application/json', // 응답 바디의 데이터 타입이 json이면 좋겠음
-      'Client-Id': 'brunch',
-      // 'Client-Id': 'febc15-vanilla07-ecad',
+      // 'Client-Id': 'brunch',
+      'client-id': 'febc15-vanilla07-ecad',
     },
   });
 
@@ -21,7 +21,7 @@ export function getAxios() {
       console.log('요청 인터셉터 호출', config);
       // 요청이 전달되기 전에 필요한 공통 작업 수행
       config.params = {
-        // delay: 3000,
+        // delay: 15000,
         ...config.params, // 기존 쿼리스트링 복사
       };
       

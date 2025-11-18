@@ -1,6 +1,6 @@
-import graceImg from "../../../assets/images/mybox-icons/grace.svg";
-import baseImg from "../../../assets/images/mybox-icons/base.svg";
-import tomyorkImg from "../../../assets/images/mybox-icons/tomyork.svg";
+import graceImg from "/assets/images/mybox-icons/grace.svg";
+import baseImg from "/assets/images/mybox-icons/base.svg";
+import tomyorkImg from "/assets/images/mybox-icons/tomyork.svg";
 
 interface Writer {
   name: string;

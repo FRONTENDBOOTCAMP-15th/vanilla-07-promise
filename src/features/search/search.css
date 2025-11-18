@@ -43,14 +43,14 @@ header {
 
       h2 {
         color: #bbb;
-        font-size: 1.5em;
+        font-size: 1.2em;
         font-weight: var(--font-weight-normal);
       }
 
       p {
         margin-block: 0.46875em;
         color: var(--color-text);
-        font-size: 2.45em;
+        font-size: 1.45em;
 
         mark {
           color: var(--color-primary);
@@ -89,7 +89,7 @@ header {
           align-items: center;
           padding: 0.0825em 0;
           color: var(--color-text);
-          font-size: 1.1375em;
+          font-size: 1.125em;
         }
 
         &:last-child {
@@ -100,32 +100,4 @@ header {
   }
 }
 
-@media (max-width: 512px) {
-  .search {
-    header input {
-      font-size: 1.865em;
 
-      main {
-        .keyword-group {
-          h2 {
-            font-size: 0.85em;
-          }
-
-          p {
-            font-size: 1.325em;
-          }
-        }
-
-        .recent-search {
-          h2 {
-            font-size: 0.975em;
-          }
-
-          .recent-keyword li {
-            font-size: 1.21875em;
-          }
-        }
-      }
-    }
-  }
-}
