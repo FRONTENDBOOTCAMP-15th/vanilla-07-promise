@@ -1,5 +1,4 @@
-@import url('/assets/css/base/global.css');
-
+@import url('../../../assets/css/base/global.css');
 
 body {
   margin: 0;
@@ -193,7 +192,7 @@ body {
   color: #8e8e8e;
   opacity: 0;
   transform: translateY(-2px);
-  transition: 
+  transition:
     color 0.2s ease,
     opacity 0.2s ease,
     transform 0.2s ease;
@@ -238,39 +237,49 @@ body {
   justify-content: space-between;
   gap: 0.75em;
 }
-.remember {
+
+/* 체크박스를 label로 감싸는 구조 */
+.login-options label {
   display: inline-flex;
   align-items: center;
   gap: 0.625em;
-  padding: 0;
-  border: none;
   font-size: 0.88rem;
   color: #000;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
+/* 실제 체크박스는 숨김 */
+.login-options input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 커스텀 체크박스 디자인 */
+/* 기본 상태 - 체크 안 됨 */
 .remember-check {
   width: 20px;
   height: 20px;
   border-radius: 50%;
   border: 1px solid #bcbcbc;
+  background: url('../../../assets/images/login/loginUnCheckbox.svg') center/contain no-repeat;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.78em;
-  color: #dddddd;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-
-.remember-check.is-active svg {
-  fill: var(--color-primary);
-  color: var(--color-bg);
+/* 체크되었을 때 */
+.login-options input[type="checkbox"]:checked + .remember-check {
+  background: url('../../../assets/images/login/loginCheckbox.svg') center/contain no-repeat;
   box-shadow: 0 6px 12px rgba(47, 162, 145, 0.35);
-}
-.remember.is-active .remember-check {
-  color: #00c6be;
 }
 .login-link {
   color: var(--color-primary);
@@ -318,4 +327,3 @@ body {
   white-space: nowrap;
   border: 0;
 }
-
