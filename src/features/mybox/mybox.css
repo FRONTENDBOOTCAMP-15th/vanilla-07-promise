@@ -25,7 +25,6 @@
 .fav-writers__list {
   
   display: flex;
-  justify-content: center;
   gap: 1.63em;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -45,10 +44,11 @@
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   text-align: center;
   gap: 1em;
   cursor: pointer;
+  object-fit: cover;
 }
 
 .fav-writers__item img {
