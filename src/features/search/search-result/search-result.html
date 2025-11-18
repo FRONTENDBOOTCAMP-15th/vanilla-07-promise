@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./search-result.css" />
+    <script type="module" src="./search-result.ts"></script>
+    <script type="module" src="../../../common/nav.ts"></script>
+    <script type="module" src="../../../components/NoDataSearchPage.ts"></script>
+  </head>
+  <body>
+    <div class="search-result">
+      <header>
+        <label for="search-input" class="sr-only">검색어 입력창</label>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="검색어 입력"
+          aria-label="검색어 입력창"
+        />
+      </header>
+
+      <nav aria-label="검색 결과 탭 메뉴" class="menu">
+        <ul class="tab-list">
+          <li class="write-item active">
+            <a aria-label="검색 단어 기준 글보기" href="./search-result.html">글</a>
+          </li>
+          <li class="author-item">
+            <a aria-label="작가기준 글보기" href="../search-author/search-author.html">작가</a>
+          </li>
+        </ul>
+      </nav>
+      <main>
+      </main>
+      <brunch-nav></brunch-nav>
+    </div>
+  </body>
+</html>

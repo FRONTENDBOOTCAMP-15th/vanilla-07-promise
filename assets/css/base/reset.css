@@ -1,24 +1,30 @@
-*{
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
+html,
+body {
+  min-height: 100dvh;
   font-family: sans-serif;
+  /* max-inline-size: 940px;
+  margin: 0 auto; */
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
 }
 
-button, input {
+button,
+input {
   border: none;
   background: none;
   font: inherit;
@@ -28,4 +34,8 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+mark {
+  background-color: transparent;
 }

@@ -2,9 +2,9 @@
 body {
   margin: 0 auto;
   max-width: 26.875rem;
-  /* display: flex;
+  display: flex;
   flex-direction: column;
-  align-items: center; */
+  align-items: center;
 }
 
 /* header */

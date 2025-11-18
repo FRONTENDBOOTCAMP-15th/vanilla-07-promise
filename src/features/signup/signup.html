@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./signup.css" />
+    <script type="module" src="./signup.ts"></script>
+  </head>
+  <body>
+    <main class="sign-up" aria-labelledby="signupHeading">
+      <h1 id="signup-heading" class="signup-title">회원가입</h1>
+
+      <form action="" id="signup-form" class="signup-form" novalidate>
+        <section class="field" data-field="nickname">
+          <div class="field-header">
+            <label for="nickname-input" class="field-label">별명</label>
+            <button
+              type="button"
+              class="field-action field-action-nickname is-active"
+              data-action="nickname-check"
+            >중복확인
+            </button>
+          </div>
+          <input
+            type="text"
+            class="field-input"
+            id="nickname-input"
+            name="nickname"
+            placeholder="사용할 별명을 입력하세요"
+            autocomplete="nickname"
+            minlength="2"
+            max="20"
+            required
+          />            
+          <p class="field-message" id="nickname-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" data-field="email">
+          <div class="field-header">
+            <label for="emailInput" class="field-label" id="email-input">이메일</label>
+            <button
+              type="button"
+              class="field-action field-action-email is-active"
+              data-action="email-check"
+            >
+              중복확인
+            </button>
+          </div>
+          <input
+            type="email"
+            class="field-input"
+            id="email-input"
+            name="email"
+            placeholder="이메일을 입력하세요"
+            autocomplete="email"
+            required
+          />
+          <p class="field-message" id="email-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" id="password-section" data-field="password">
+          <div class="field-header">
+            <label for="passwordInput" class="field-label">비밀번호</label>
+            <button
+              type="button"
+              class="field-icon-button"
+              data-toggle="password"
+              aria-controls="passwordInput"
+              aria-label="비밀번호 보기"
+            ></button>
+          </div>
+          <input
+            type="password"
+            class="field-input"
+            id="password-input"
+            name="password"
+            placeholder="영문, 숫자 조합 8자 이상"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+          <p class="field-message" id="password-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" data-field="passwordConfirm">
+          <div class="field-header">
+            <label for="passwordConfirmInput" class="field-label"
+              >비밀번호 확인</label
+            >
+            <button
+              type="button"
+              class="field-icon-button"
+              data-toggle="password-confirm"
+              aria-controls="passwordConfirmInput"
+              aria-label="비밀번호 보기"
+            ></button>
+          </div>
+          <input
+            type="password"
+            class="field-input"
+            id="password-confirm-input"
+            name="passwordConfirm"
+            placeholder="비밀번호를 한 번 더 입력하세요"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+          <p
+            class="field-message"
+            id="password-confirm-message"
+            aria-live="polite"
+          ></p>
+        </section>
+
+        <section class="field">
+          <div class="field-header">
+            <label for="imageInput" class="field-label">프로필 이미지</label>
+          </div>
+          <input
+            type="url"
+            class="field-input"
+            id="image-input"
+            name="image"
+            placeholder="프로필 이미지 URL (선택)"
+            autocomplete="url"
+          />
+          <p class="field-message" aria-live="polite">
+            이미지를 등록하지 않아도 괜찮아요.
+          </p>
+        </section>
+
+        <div class="form-status" role="status" aria-live="polite"></div>
+
+        <button type="submit" class="signup-submit is-active">회원가입</button>
+      </form>
+    </main>
+  </body>
+</html>

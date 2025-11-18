@@ -1,18 +1,51 @@
 :root {
-  /*색상 팔레트*/
-  --color-primary: #00C6BE;
-  --color-secondary: #F8F8F8;
-  --color-tertiary:#AAAAAA;
-  --color-kakao: #FFE500; 
+  /* Colors */
+  --color-primary: #00c6be;
+  --color-primary-dark: #00b894;
+  --color-secondary: #f8f8f8;
+  --color-tertiary: #aaaaaa;
+
+  --color-kakao: #ffe500;
+
   --color-text: #333;
-  --color-muted: #D7D7D7; 
-  --color-error: #FC3B75;
+  --color-muted: #d7d7d7; /* preserved from HEAD */
+  --color-border: #ddd;
 
-  /*폰트*/
+  --color-error: #fc3b75;
+
+  /* Typography */
   --font-family-pre: 'Pretendard';
+  --font-family-base: 'Pretendard', sans-serif;
 
-  /*레이아웃*/
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+
+  /* Font Sizes */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-md: 1rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.73rem;
+
+  /* Layout & Radius */
+  --header-height: 6.25rem;
+
+  --border-width: 0.0625em;
   --border-radius: 4px;
+  --radius-sm: 0.25em;
+  --radius-md: 0.5em;
+  --radius-lg: 1.25em;
 
+  /* Spacing System */
+  --gap-xs: 0.25em;
+  --gap-sm: 0.5em;
+  --gap-md: 1em;
+  --gap-lg: 2em;
 
+  --space-xxs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
 }

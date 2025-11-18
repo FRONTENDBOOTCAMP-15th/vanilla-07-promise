@@ -1,4 +1,3 @@
-
 /* 1️⃣ Reset + box-sizing */
 *,
 *::before,
@@ -11,8 +10,8 @@
 /* 2️⃣ Root 변수 (컬러, 폰트 크기 등) */
 :root {
   --color-bg: #ffffff;
-  --color-text: #1B1B1B;
-  --color-border: #00C6BE;
+  --color-text: #1b1b1b;
+  --color-border: #00c6be;
   --radius: 4px;
   --transition: 0.2s ease-in-out;
 }
@@ -20,7 +19,7 @@
 /* 3️⃣ 기본 글꼴 & 배경 */
 html,
 body {
-  height: 100%;
+  min-height: 100dvh;
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -63,7 +62,9 @@ textarea {
 button {
   cursor: pointer;
   border-radius: var(--radius);
-  transition: background var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition);
 }
 
 /* 8️⃣ 유틸리티 클래스 */
@@ -72,4 +73,15 @@ button {
 }
 .hidden {
   display: none !important;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
