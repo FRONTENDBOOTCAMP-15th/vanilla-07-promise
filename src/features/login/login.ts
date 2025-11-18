@@ -1,6 +1,6 @@
 import {AxiosError} from 'axios';
 import {getAxios} from '../utils/axios';
-import type { DetailRes, LoginUser } from '../utils/types';
+import type { DetailRes, LoginUser } from '../utils/types.ts';
 
 
 const axios = getAxios();
