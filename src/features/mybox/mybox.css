@@ -44,7 +44,6 @@
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   text-align: center;
   gap: 1em;
   cursor: pointer;
@@ -54,11 +53,15 @@
 .fav-writers__item img {
 width: 5em;
 height: 5em;
-/* border: 0.06em solid #959595; */
 border-radius: 50%;
 }
 
 .fav-writers__item p {
+  color: #959595;
+  font-size: 0.81em;
+}
+
+.fav-writers__noItem {
   color: #959595;
   font-size: 0.81em;
 }
