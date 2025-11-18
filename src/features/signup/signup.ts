@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getAxios } from '../utils/axios';
-import type { DetailRes, LoginUser } from '../utils/types';
+import type { DetailRes, LoginUser } from '../utils/types.ts';
 
 // axios 인스턴스
 const axiosInstance = getAxios();  
