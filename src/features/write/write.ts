@@ -26,18 +26,12 @@ interface StoredPost {
 
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
-  // 서버 요구사항: 파일 필드는 'attach'
-  formData.append('attach', file);
+  formData.append('file', file);
 
   try {
-    // multipart/form-data는 FormData 객체를 사용하면
-    // axios가 자동으로 boundary를 포함한 헤더를 설정합니다
-    // 기본 'Content-Type': 'application/json' 헤더를 제거해야 합니다
-    const { data } = await api.post('/files/', formData, {
+    const { data } = await api.post('/files', formData, {
       headers: {
-        // FormData 사용 시 Content-Type을 undefined로 설정하면
-        // axios가 자동으로 boundary를 포함한 Content-Type을 설정합니다
-        'Content-Type': undefined,
+        'Content-Type': 'multipart/form-data',
       },
     });
 
@@ -49,13 +43,13 @@ export async function uploadImage(file: File): Promise<string> {
     }
 
     // item 이나 data.url 형태로 담겨 있을 경우 대응
+    if (data?.item?.url) return data.item.url;
     if (data?.item && Array.isArray(data.item) && data.item.length > 0) {
       const first = data.item[0];
       if (first.url) return first.url;
       if (first.path) return first.path;
     }
     if (data?.data?.url) return data.data.url;
-    if (data?.item?.url) return data.item.url;
 
     throw new Error('이미지 URL을 받지 못했습니다.');
   } catch (err) {
@@ -66,7 +60,7 @@ export async function uploadImage(file: File): Promise<string> {
 
 interface CreatePostPayload {
   _id: number;
-  type: 'brunch';
+  type: 'febc15-vanilla07-ecad';
   title: string;
   extra: {
     subtitle: string;
@@ -86,22 +80,13 @@ export async function createPostRequest(
 ): Promise<CreatePostPayload> {
   let imageUrl = '';
   if (file) {
-    try {
-      // 업로드 API 호출해서 URL 받아오기
-      imageUrl = await uploadImage(file);
-    } catch (error) {
-      console.warn(
-        '[write] 이미지 업로드 실패, 이미지 없이 게시글 등록:',
-        error,
-      );
-      // 이미지 업로드 실패 시에도 게시글은 등록 가능
-      imageUrl = '';
-    }
+    // 업로드 API 호출해서 URL 받아오기
+    imageUrl = await uploadImage(file);
   }
 
   return {
     _id: Date.now(),
-    type: 'brunch',
+    type: 'febc15-vanilla07-ecad',
     title,
     extra: {
       subtitle,
@@ -112,6 +97,7 @@ export async function createPostRequest(
     image: imageUrl, // ← 업로드 API에서 받은 URL 저장
   };
 }
+
 keyboardIcon?.addEventListener('click', () => {
   contentInput?.focus();
 });
@@ -221,13 +207,17 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
 
     // CreatePostPayload를 PostPayload로 변환
     const postPayload = {
+      type: payload.type,
       title: payload.title,
       content: payload.content,
-      subtitle: payload.extra.subtitle,
-      images: payload.image || undefined,
+      image: payload.image || undefined,
+      extra: payload.extra,
     };
 
+    console.log('[write] 게시글 등록 요청:', postPayload);
     const response = await postApi.createPost(postPayload);
+    console.log('[write] 게시글 등록 응답:', response);
+
     if (!response.ok) {
       throw new Error(response.message ?? '게시글 등록에 실패했습니다.');
     }

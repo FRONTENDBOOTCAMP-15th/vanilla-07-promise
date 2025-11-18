@@ -281,7 +281,8 @@ body {
   background: url('/assets/images/login/loginCheckbox.svg') center/contain no-repeat;
   box-shadow: 0 6px 12px rgba(47, 162, 145, 0.35);
 }
-.login-link {
+.login-link,
+.signup-link {
   color: var(--color-primary);
 }
 .login-submit {

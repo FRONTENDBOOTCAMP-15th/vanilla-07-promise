@@ -57,6 +57,12 @@ export interface LocalRegisteredUser {
   image?: string;
   type: string;
   password?: string;
+  phone: string;
+  extra: {
+    job: string;
+    biography: string;
+    keyword: string[];
+  };
   provider?: ProviderVariant;
 }
 
@@ -71,6 +77,13 @@ const isValidLocalUser = (item: unknown): item is LocalRegisteredUser => {
     typeof candidate.email === 'string' &&
     typeof candidate.nickname === 'string' &&
     typeof candidate.type === 'string' &&
+    typeof candidate.phone === 'string' &&
+    typeof candidate.extra === 'object' &&
+    candidate.extra !== null &&
+    typeof (candidate.extra as Record<string, unknown>).job === 'string' &&
+    typeof (candidate.extra as Record<string, unknown>).biography ===
+      'string' &&
+    Array.isArray((candidate.extra as Record<string, unknown>).keyword) &&
     (typeof candidate.provider === 'string' ||
       typeof candidate.provider === 'undefined')
   );
@@ -92,9 +105,12 @@ export const loadLocalRegisteredUsers = (): LocalRegisteredUser[] => {
     return parsed.filter(isValidLocalUser).map(user => ({
       email: normalizeValue((user as LocalRegisteredUser).email),
       nickname: normalizeValue((user as LocalRegisteredUser).nickname),
-      provider: (user as LocalRegisteredUser).provider,
+      image: (user as LocalRegisteredUser).image,
       type: (user as LocalRegisteredUser).type,
       password: (user as LocalRegisteredUser).password,
+      phone: (user as LocalRegisteredUser).phone,
+      extra: (user as LocalRegisteredUser).extra,
+      provider: (user as LocalRegisteredUser).provider,
     }));
   } catch (error) {
     console.warn('[apiClient] Failed to load local registered users:', error);
@@ -113,8 +129,12 @@ const storeLocalRegisteredUsers = (users: LocalRegisteredUser[]): void => {
         users.map(user => ({
           email: normalizeValue(user.email),
           nickname: normalizeValue(user.nickname),
+          image: user.image,
           type: user.type,
           password: user.password,
+          phone: user.phone,
+          extra: user.extra,
+          provider: user.provider,
         })),
       ),
     );
@@ -131,6 +151,9 @@ export const addLocalRegisteredUser = (user: LocalRegisteredUser): void => {
     image: user.image,
     type: user.type,
     password: user.password,
+    phone: user.phone,
+    extra: user.extra,
+    provider: user.provider,
   });
   storeLocalRegisteredUsers(current);
 };
@@ -190,9 +213,16 @@ export interface User {
   email: string;
   password?: string;
   name?: string;
+  nickname?: string;
   image?: string;
   type?: string;
-  extra?: Record<string, unknown>;
+  phone?: string;
+  extra?: {
+    job?: string;
+    biography?: string;
+    keyword?: string[];
+    [key: string]: unknown;
+  };
 }
 
 // ===================================================
@@ -284,24 +314,44 @@ export const registerUser = async (
   userData: User,
 ): Promise<ApiItemResponse<User>> => {
   try {
-    const extraPayload = { ...(userData.extra ?? {}) } as Record<
-      string,
-      unknown
-    >;
-    if (!('providerAccountId' in extraPayload)) {
-      // nothing to send
+    // extra 필드 구조화 (job, biography, keyword 포함)
+    const extraPayload: {
+      job?: string;
+      biography?: string;
+      keyword?: string[];
+      [key: string]: unknown;
+    } = {};
+
+    if (userData.extra) {
+      if (userData.extra.job) extraPayload.job = userData.extra.job;
+      if (userData.extra.biography)
+        extraPayload.biography = userData.extra.biography;
+      if (userData.extra.keyword) extraPayload.keyword = userData.extra.keyword;
+      
+      // 다른 extra 필드들도 포함
+      Object.keys(userData.extra).forEach(key => {
+        if (!['job', 'biography', 'keyword'].includes(key)) {
+          extraPayload[key] = userData.extra![key];
+        }
+      });
     }
 
-    const payload = {
+    const payload: Record<string, unknown> = {
       email: userData.email,
-      password: userData.password,
-      name: userData.name,
       type: userData.type ?? 'user',
-      ...(userData.image && { image: userData.image }),
-      ...(Object.keys(extraPayload).length > 0 && { extra: extraPayload }),
     };
 
+    // 필수/선택 필드 추가
+    if (userData.password) payload.password = userData.password;
+    if (userData.name) payload.name = userData.name;
+    if (userData.nickname) payload.nickname = userData.nickname;
+    if (userData.image) payload.image = userData.image;
+    if (userData.phone) payload.phone = userData.phone;
+    if (Object.keys(extraPayload).length > 0) payload.extra = extraPayload;
+
+    console.log('[registerUser] 회원가입 요청:', payload);
     const { data } = await api.post<ApiItemResponse<User>>('/users', payload);
+    console.log('[registerUser] 회원가입 응답:', data);
     return data;
   } catch (err) {
     if (isAxiosError(err)) {
@@ -384,9 +434,7 @@ export const getUserByName = async (
 };
 
 // ✅ DB 닉네임 중복 여부 확인
-export const isNameRegisteredInDb = async (
-  name: string,
-): Promise<boolean> => {
+export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
   const normalized = name.trim();
   if (!normalized) return false;
   try {
@@ -406,4 +454,24 @@ export const isNameRegisteredInDb = async (
     );
     throw error;
   }
+};
+
+// ========================================================
+// ⭐ Token Store (SSR 안전 버전)
+// ========================================================
+export const tokenStore = {
+  getAccessToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem('accessToken');
+  },
+
+  setAccessToken(token: string): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem('accessToken', token);
+  },
+
+  clear(): void {
+    if (typeof window === 'undefined') return;
+    window.localStorage.removeItem('accessToken');
+  },
 };
