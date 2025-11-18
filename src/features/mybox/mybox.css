@@ -1,16 +1,13 @@
-@import "../../../assets/css/base/global.css";
+@import "/assets/css/base/global.css";
 
 
-body {
-  max-width: 22.5em;
-  width: 100%;
-  margin: 0 auto;
-}
+
 
 /* 관심 작가 섹션 */
-.fav-writers {
-  padding-block-start: 2.125em;
-  padding-inline-start: 1.56em;
+
+.wrapper{
+  margin-block-start: 5.5em;
+  padding: 25px;
 }
 
 .fav-writers__title {
@@ -26,7 +23,9 @@ body {
 
 /* 슬라이드 */
 .fav-writers__list {
+  
   display: flex;
+  justify-content: center;
   gap: 1.63em;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -58,18 +57,19 @@ body {
 
  /* 최근 본 */
  .recent-books{
-  margin-inline-start: 1.56em;
  }
  
  .recent-books__header {
-  margin-block-start: 2.13em;
+  display: flex;              
+  align-items: center;        
+  margin-block-start: 2.13em; 
+  margin-block-end: 0.94em;
+  height: 2.5rem;     
  }
 
 
  .recent-books__title {
   font-size: 1.19em; 
-  margin-block-end: 0.94em; 
-  display: flex; 
   align-items: center;
 }
 
@@ -94,6 +94,7 @@ body {
 }
 
 .recent-books__item {
+  object-fit: fill;
   flex: 0 0 7.68em;
   display: flex; 
   scroll-snap-align: start; 
@@ -118,7 +119,6 @@ body {
 
 /* 관심 글 섹션 */
 .fav-books {
-  margin-inline-start: 1.56em;
   margin-block-start: 2.13em;
 }
 
@@ -174,8 +174,13 @@ body {
 
 /* 내 브런치 섹션 */
 .my-brunch {
-  margin-inline-start: 1.56em;
   margin-block-start: 2.13em; 
+
+  div {
+    article:last-child {
+      margin-block-end: 8.75em;
+    }
+  }
 }
 
 .my-brunch__title {
@@ -184,8 +189,6 @@ body {
   display: flex; 
   align-items: center; 
   border-bottom: 0.06em solid #EEEEEE;
-  margin-inline-start: -1.56em;
-  padding-inline-start: 1.56em;
   padding-block-end: 0.88em;
 }
 
