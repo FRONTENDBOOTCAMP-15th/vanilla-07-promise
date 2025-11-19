@@ -26,39 +26,27 @@ interface StoredPost {
 
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
-  // 서버 요구사항: 파일 필드는 'attach'
-  formData.append('attach', file);
+  formData.append('file', file);
 
   try {
-    // FormData 사용 시 Content-Type을 undefined로 설정하면
-    // axios가 자동으로 boundary를 포함한 Content-Type을 설정합니다
-    const { data } = await api.post('/files/', formData, {
+    const { data } = await api.post('/files', formData, {
       headers: {
-        'Content-Type':'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
       },
     });
 
-    console.log('[write] 파일 업로드 응답:', data);
-
-    // 백엔드 응답 구조에 따라 URL 추출
-    if (data?.url) return data.url;
-    
-    if (data?.item) {
-      if (Array.isArray(data.item) && data.item.length > 0) {
-        const first = data.item[0];
-        if (first.url) return first.url;
-        if (first.path) return first.path;
-      } else if (typeof data.item === 'object') {
-        if (data.item.url) return data.item.url;
-        if (data.item.path) return data.item.path;
-      }
+    // 백엔드 응답 구조가 예: { ok: true, url: "https://..." }
+    if (data?.url) {
+      return data.url;
     }
-    
+
+    // item 이나 data.url 형태로 담겨 있을 경우 대응
+    if (data?.item?.url) return data.item.url;
     if (data?.data?.url) return data.data.url;
 
     throw new Error('이미지 URL을 받지 못했습니다.');
   } catch (err) {
-    console.error('[write] 이미지 업로드 실패:', err);
+    console.error('이미지 업로드 실패:', err);
     throw err;
   }
 }
@@ -85,17 +73,8 @@ export async function createPostRequest(
 ): Promise<CreatePostPayload> {
   let imageUrl = '';
   if (file) {
-    try {
-      // 업로드 API 호출해서 URL 받아오기
-      imageUrl = await uploadImage(file);
-    } catch (error) {
-      console.warn(
-        '[write] 이미지 업로드 실패, 이미지 없이 게시글 등록:',
-        error,
-      );
-      // 이미지 업로드 실패 시에도 게시글은 등록 가능
-      imageUrl = '';
-    }
+    // 업로드 API 호출해서 URL 받아오기
+    imageUrl = await uploadImage(file);
   }
 
   return {

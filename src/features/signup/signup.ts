@@ -3,7 +3,7 @@ import { getAxios } from '../utils/axios';
 import type { DetailRes, LoginUser } from '../utils/types.ts';
 
 // axios 인스턴스
-const axiosInstance = getAxios();  
+const axiosInstance = getAxios();
 
 let nicknameVerified = false;
 let emailVerified = false;
@@ -12,23 +12,45 @@ let emailVerified = false;
 const nickname = document.querySelector('#nickname-input') as HTMLInputElement;
 const email = document.querySelector('#email-input') as HTMLInputElement;
 const password = document.querySelector('#password-input') as HTMLInputElement;
-const passwordCheck = document.querySelector('#password-confirm-input') as HTMLInputElement;
+const passwordCheck = document.querySelector(
+  '#password-confirm-input',
+) as HTMLInputElement;
 const signupForm = document.querySelector('#signup-form') as HTMLFormElement;
 
-const nicknameCheckBtn = document.querySelector('.field-action-nickname') as HTMLButtonElement;
-const emailCheckBtn = document.querySelector('#field-action-email') as HTMLButtonElement;
+const nicknameCheckBtn = document.querySelector(
+  '.field-action-nickname',
+) as HTMLButtonElement;
+const emailCheckBtn = document.querySelector(
+  '#field-action-email',
+) as HTMLButtonElement;
 
-const iconEyeBtn1 = document.querySelector('.field-icon-button1') as HTMLButtonElement;
-const iconEyeBtn2 = document.querySelector('.field-icon-button2') as HTMLButtonElement;
+const iconEyeBtn1 = document.querySelector(
+  '.field-icon-button1',
+) as HTMLButtonElement;
+const iconEyeBtn2 = document.querySelector(
+  '.field-icon-button2',
+) as HTMLButtonElement;
 
-const nicknameMessage = document.querySelector('#nickname-message') as HTMLParagraphElement;
-const emailMessage = document.querySelector('#email-message') as HTMLParagraphElement;
-const passwordConfirmMessage = document.querySelector('#password-confirm-message') as HTMLParagraphElement;
+const nicknameMessage = document.querySelector(
+  '#nickname-message',
+) as HTMLParagraphElement;
+const emailMessage = document.querySelector(
+  '#email-message',
+) as HTMLParagraphElement;
+const passwordConfirmMessage = document.querySelector(
+  '#password-confirm-message',
+) as HTMLParagraphElement;
 
 // 필드 요소 가져오기
-const nicknameField = document.querySelector('[data-field="nickname"]') as HTMLElement;
-const emailField = document.querySelector('[data-field="email"]') as HTMLElement;
-const passwordConfirmField = document.querySelector('[data-field="password-confirm"]') as HTMLElement;
+const nicknameField = document.querySelector(
+  '[data-field="nickname"]',
+) as HTMLElement;
+const emailField = document.querySelector(
+  '[data-field="email"]',
+) as HTMLElement;
+const passwordConfirmField = document.querySelector(
+  '[data-field="password-confirm"]',
+) as HTMLElement;
 
 // =========================
 // ⭐ 필드 상태 업데이트 헬퍼 함수
@@ -37,18 +59,18 @@ function updateFieldState(
   field: HTMLElement | null,
   message: HTMLElement | null,
   state: 'success' | 'error' | 'info' | 'clear',
-  text: string = ''
+  text: string = '',
 ) {
   if (!field || !message) return;
 
   // 모든 상태 클래스 제거
   field.classList.remove('field-success', 'field-error', 'field-info');
-  
+
   // 새로운 상태 클래스 추가
   if (state !== 'clear') {
     field.classList.add(`field-${state}`);
   }
-  
+
   // 메시지 텍스트 업데이트
   message.textContent = text;
 }
@@ -62,25 +84,42 @@ async function checkNickname() {
   const nicknameValue = nickname.value.trim();
 
   if (!nicknameValue) {
-    updateFieldState(nicknameField, nicknameMessage, 'error', '별명을 입력해주세요');
+    updateFieldState(
+      nicknameField,
+      nicknameMessage,
+      'error',
+      '별명을 입력해주세요',
+    );
     nicknameVerified = false;
     return;
   }
 
   try {
-    const { data } = await axiosInstance.get<DetailRes<LoginUser>>('/users/name', {
-      params: { name: nicknameValue },
-    });
+    const { data } = await axiosInstance.get<DetailRes<LoginUser>>(
+      '/users/name',
+      {
+        params: { name: nicknameValue },
+      },
+    );
 
     if (data.ok === 1) {
-      updateFieldState(nicknameField, nicknameMessage, 'success', '사용 가능한 별명입니다.');
+      updateFieldState(
+        nicknameField,
+        nicknameMessage,
+        'success',
+        '사용 가능한 별명입니다.',
+      );
       nicknameVerified = true;
       return;
     }
 
     nicknameVerified = false;
-    updateFieldState(nicknameField, nicknameMessage, 'error', '이미 사용 중인 별명입니다.');
-
+    updateFieldState(
+      nicknameField,
+      nicknameMessage,
+      'error',
+      '이미 사용 중인 별명입니다.',
+    );
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const errorMessage = err.response?.data?.message || '서버 오류입니다.';
@@ -105,31 +144,53 @@ async function checkEmail() {
   const emailValue = email.value.trim();
 
   if (!emailValue) {
-    updateFieldState(emailField, emailMessage, 'error', '이메일을 입력해주세요.');
+    updateFieldState(
+      emailField,
+      emailMessage,
+      'error',
+      '이메일을 입력해주세요.',
+    );
     emailVerified = false;
     return;
   }
 
   if (!emailValue.includes('@')) {
-    updateFieldState(emailField, emailMessage, 'error', '올바른 이메일 형식이 아닙니다.');
+    updateFieldState(
+      emailField,
+      emailMessage,
+      'error',
+      '올바른 이메일 형식이 아닙니다.',
+    );
     emailVerified = false;
     return;
   }
 
   try {
-    const { data } = await axiosInstance.get<DetailRes<LoginUser>>('/users/email', {
-      params: { email: emailValue },
-    });
+    const { data } = await axiosInstance.get<DetailRes<LoginUser>>(
+      '/users/email',
+      {
+        params: { email: emailValue },
+      },
+    );
 
     if (data.ok === 1) {
       emailVerified = true;
-      updateFieldState(emailField, emailMessage, 'success', '사용 가능한 이메일입니다.');
+      updateFieldState(
+        emailField,
+        emailMessage,
+        'success',
+        '사용 가능한 이메일입니다.',
+      );
       return;
     }
 
     emailVerified = false;
-    updateFieldState(emailField, emailMessage, 'error', '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.');
-
+    updateFieldState(
+      emailField,
+      emailMessage,
+      'error',
+      '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
+    );
   } catch (err) {
     if (axios.isAxiosError(err)) {
       emailVerified = false;
@@ -173,15 +234,30 @@ function passwordCheckLive() {
 
   // 비밀번호 길이 검증
   if (pwd1 && (pwd1.length < 8 || pwd1.length > 16)) {
-    updateFieldState(passwordConfirmField, passwordConfirmMessage, 'error', '비밀번호는 8~16자여야 합니다.');
+    updateFieldState(
+      passwordConfirmField,
+      passwordConfirmMessage,
+      'error',
+      '비밀번호는 8~16자여야 합니다.',
+    );
     return;
   }
 
   // 비밀번호 일치 검사
   if (pwd1 === pwd2 && pwd1.length >= 8) {
-    updateFieldState(passwordConfirmField, passwordConfirmMessage, 'success', '비밀번호가 일치합니다.');
+    updateFieldState(
+      passwordConfirmField,
+      passwordConfirmMessage,
+      'success',
+      '비밀번호가 일치합니다.',
+    );
   } else {
-    updateFieldState(passwordConfirmField, passwordConfirmMessage, 'error', '비밀번호가 일치하지 않습니다.');
+    updateFieldState(
+      passwordConfirmField,
+      passwordConfirmMessage,
+      'error',
+      '비밀번호가 일치하지 않습니다.',
+    );
   }
 }
 
@@ -192,7 +268,7 @@ passwordCheck.addEventListener('input', passwordCheckLive);
 // =========================
 // ⭐ 회원가입
 // =========================
-signupForm.addEventListener('submit', async (event) => {
+signupForm.addEventListener('submit', async event => {
   event.preventDefault();
 
   const cleanNickname = nickname.value.trim();
@@ -235,7 +311,8 @@ signupForm.addEventListener('submit', async (event) => {
     location.href = '../login/login.html';
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const errorMessage = err.response?.data?.message || '회원가입에 실패했습니다.';
+      const errorMessage =
+        err.response?.data?.message || '회원가입에 실패했습니다.';
       alert(errorMessage);
     } else {
       alert('알 수 없는 오류가 발생했습니다.');
