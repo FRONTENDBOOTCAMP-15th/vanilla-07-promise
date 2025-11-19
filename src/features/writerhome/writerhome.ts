@@ -99,6 +99,7 @@ function renderWriteLists(lists: WriteList[]) {
             </p>
             <div class="write-list__data">
               <p>댓글${list.repliesCount}</p>
+              <img src="../../../assets/images/writerhome/round.svg"></img>
               <p>${formatDate(list.createdAt)}</p>
             </div>
           </li>

@@ -141,7 +141,7 @@ h3 {
 
 .write-list__data {
   display: flex;
-  gap: 0.8em;
+  gap: 0.5em;
   font-size: 0.75em;
   color: #959595;
 }
