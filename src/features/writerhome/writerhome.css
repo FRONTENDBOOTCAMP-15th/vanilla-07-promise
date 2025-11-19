@@ -9,6 +9,7 @@ body {
 .writerhome-container {
   margin-inline-start: 1.25em;
   margin-inline-end: 1.25em;
+  margin-block-start: 7em;
 }
 /* 작가 카드 섹션 */
 .writercard {
@@ -19,6 +20,13 @@ body {
 .writer-card__profile {
   display: flex;
   justify-content: space-between;
+}
+
+.writer-card__profile img {
+  width: 5em;
+  height: 5em;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .writer-card__info {
@@ -88,7 +96,7 @@ body {
   gap: 0.63em;
   margin-block-start: 1.29em;
   padding-block-end: 1.13em;
-  border-bottom: 0.06em solid #EEE;
+  border-bottom: 0.06em solid #eee;
   margin-inline: -1.25em;
   padding-inline: 1.25em;
 }
@@ -101,7 +109,7 @@ body {
 }
 
 .write-list__item a:hover {
-  text-shadow: 0 0.13em 0.19em #D9D9D9;
+  text-shadow: 0 0.13em 0.19em #d9d9d9;
 }
 
 h3 {
@@ -113,7 +121,7 @@ h3 {
 
 .write-list__item > p {
   font-size: 0.75em;
-  color:#959595;
+  color: #959595;
 }
 
 .write-list__data {
