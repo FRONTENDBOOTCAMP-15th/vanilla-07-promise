@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./mybox.css" />
-    <script type="module" src="./mybox.ts" defer></script>
+    <script type="module" src="/src/features/mybox/mybox.ts" defer></script>
     <title>mybox</title>
   </head>
   <body>
     <!-- 헤더 -->
     <brunch-header></brunch-header>
-    <script type="module" src="/src/common/header.ts"></script>
-
+    <script type="module" src="../../common/header.ts"></script>
+    
     <!-- 관심 작가 -->
     <div class="wrapper">
       <section class="fav-writers">
@@ -19,16 +19,16 @@
           <h2 class="fav-writers__title">
             관심 작가
             <img
-              src="/assets/images/mybox-icons/next.svg"
-              alt="더보기"
+            src="/assets/images/mybox-icons/next.svg"
+            alt="더보기"
             />
           </h2>
         </header>
-
+        
         <ul class="fav-writers__list">
         </ul>
       </section>
-
+      
       <!-- 최근 본 -->
       <section class="recent-books">
         <header class="recent-books__header">
@@ -36,123 +36,80 @@
             최근 본
           </h2>
           <img
-            src="/assets/images/mybox-icons/next.svg"
-            alt="더보기"
+          src="/assets/images/mybox-icons/next.svg"
+          alt="더보기"
           />
         </header>
         <ul class="recent-books__list">
           <li class="recent-books__item">
             <img
-              src="/assets/images/mybox-icons/book1.svg"
-              alt="강남 안에, 강북 남자"
+            src="/assets/images/mybox-icons/book1.svg"
+            alt="강남 안에, 강북 남자"
             />
             <p class="recent-books__booktitle">강남 안에, 강북 남자</p>
             <p class="recent-books__name">
               <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
+              src="/assets/images/mybox-icons/by.svg"
+              alt=""
               />눅눅한 과자
             </p>
           </li>
           <li class="recent-books__item">
             <img
-              src="/assets/images/mybox-icons/book2.svg"
-              alt="서울에서 혼자 밥해먹고 사는 사람"
+            src="/assets/images/mybox-icons/book2.svg"
+            alt="서울에서 혼자 밥해먹고 사는 사람"
             />
             <p class="recent-books__booktitle">
               서울에서 혼자 밥해먹고 사는 사람
             </p>
             <p class="recent-books__name">
               <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
+              src="/assets/images/mybox-icons/by.svg"
+              alt=""
               />이학위
             </p>
           </li>
           <li class="recent-books__item">
             <img
-              src="/assets/images/mybox-icons/book3.svg"
-              alt="이과 남편과 문과 아내의 실화극"
+            src="/assets/images/mybox-icons/book3.svg"
+            alt="이과 남편과 문과 아내의 실화극"
             />
             <p class="recent-books__booktitle">
               이과 남편과 문과 아내의 실화극
             </p>
             <p class="recent-books__name">
               <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
+              src="/assets/images/mybox-icons/by.svg"
+              alt=""
               />빛날현
             </p>
           </li>
         </ul>
       </section>
-
+      
       <!-- 관심 글 -->
       <section class="fav-books">
         <header class="rfav-books__header">
           <h2 class="fav-books__title">
             관심 글
             <img
-              src="/assets/images/mybox-icons/next.svg"
-              alt="더보기"
+            src="/assets/images/mybox-icons/next.svg"
+            alt="더보기"
             />
           </h2>
         </header>
         <ul class="fav-books__list">
-          <li class="recent-books__item">
-            <img
-              src="/assets/images/mybox-icons/book1.svg"
-              alt="강남 안에, 강북 남자"
-            />
-            <p class="recent-books__booktitle">강남 안에, 강북 남자</p>
-            <p class="recent-books__name">
-              <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
-              />눅눅한 과자
-            </p>
-          </li>
-          <li class="recent-books__item">
-            <img
-              src="/assets/images/mybox-icons/book2.svg"
-              alt="서울에서 혼자 밥해먹고 사는 사람"
-            />
-            <p class="recent-books__booktitle">
-              서울에서 혼자 밥해먹고 사는 사람
-            </p>
-            <p class="recent-books__name">
-              <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
-              />이학위
-            </p>
-          </li>
-          <li class="recent-books__item">
-            <img
-              src="/assets/images/mybox-icons/book3.svg"
-              alt="이과 남편과 문과 아내의 실화극"
-            />
-            <p class="recent-books__booktitle">
-              이과 남편과 문과 아내의 실화극
-            </p>
-            <p class="recent-books__name">
-              <img
-                src="/assets/images/mybox-icons/by.svg"
-                alt=""
-              />빛날현
-            </p>
-          </li>
         </ul>
       </section>
-
+      
       <!-- my brunch -->
       <section class="my-brunch">
         <header class="my-brunch__header">
           <h2 class="my-brunch__title">
             내 브런치
             <img
-              src="/assets/images/mybox-icons/next.svg"
-              alt="더보기"
+            src="/assets/images/mybox-icons/next.svg"
+            alt="더보기"
             />
           </h2>
         </header>
@@ -171,6 +128,7 @@
     </div>
     <!-- 네비 -->
     <brunch-nav></brunch-nav>
-    <script type="module" src="/src/common/nav.ts"></script>
+    <script type="module" src="../../common/nav.ts"></script> 
+    
   </body>
 </html>
