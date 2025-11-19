@@ -1,5 +1,9 @@
 @import url(/assets/css/base/global.css);
 
+.highlight{
+ color:  var(--color-primary);
+}
+
 .search-author {
   display: flex;
   flex-direction: column;

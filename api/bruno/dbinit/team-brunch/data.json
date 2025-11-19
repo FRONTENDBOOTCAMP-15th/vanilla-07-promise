@@ -1,48 +1,107 @@
 {
   "user": [
     {
-      "email": "admin@fesp.shop",
+      "email": "heart@naver.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "무지",
-      "type": "admin",
-      "loginType": "email",
-      "image": "uploadFiles/user-muzi.webp",
+      "name": "하트핑",
+      "type": "user",
+      "loginType": "kakao",
+      "image": "uploadFiles/user-heartping.webp",
       "extra": {
-        "job": "관리자"
+        "job": "",
+        "biography": "",
+        "keyword": []
       }
     },
     {
-      "email": "w1@market.com",
+      "email": "joy@daum.net",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "AB",
-      "type": "seller",
+      "name": "조이핑",
+      "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-neo.webp",
+      "image": "uploadFiles/user-joyping.webp",
       "extra": {
-        "job": "마케터",
-        "biography": "서른살, 새내기 취준생",
-        "keyword": [
-          "취업",
-          "노션",
-          "포트폴리오"
-        ]
+        "job": "",
+        "biography": "",
+        "keyword": []
       }
     },
     {
-      "email": "w2@market.com",
+      "email": "sparkle@gmail.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "자기반성",
-      "type": "seller",
-      "loginType": "email",
-      "image": "uploadFiles/user-jayg.webp",
+      "name": "스파클핑",
+      "type": "user",
+      "loginType": "kakao",
+      "image": "uploadFiles/user-sparkleping.webp",
       "extra": {
-        "job": "자기탐구인문학 크리에이터",
-        "biography": "공상가, AB형, ENFP 성향을 똑 닮은 딸을 키우고 있는 해외맘. 세상의 모든 할머니, 엄마와 딸을 응원합니다. 열심히 일하며 생명체를 키워나가고 있습니다. 자기 탐구 인문학자",
-        "keyword": [
-          "인문학",
-          "공상가",
-          "엄마"
-        ]
+        "job": "",
+        "biography": "",
+        "keyword": []
+      }
+    },
+    {
+      "email": "love@hotmail.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "러브핑",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user-loveping.webp",
+      "extra": {
+        "job": "",
+        "biography": "",
+        "keyword": []
+      }
+    },
+    {
+      "email": "twinkle@hanmail.net",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "트윙클핑",
+      "type": "user",
+      "loginType": "kakao",
+      "image": "uploadFiles/user-twinklingping.webp",
+      "extra": {
+        "job": "",
+        "biography": "",
+        "keyword": []
+      }
+    },
+    {
+      "email": "flower@yahoo.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "플라워핑",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user-flowerping.webp",
+      "extra": {
+        "job": "",
+        "biography": "",
+        "keyword": []
+      }
+    },
+    {
+      "email": "cook@gmail.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "쿡핑",
+      "type": "user",
+      "loginType": "kakao",
+      "image": "uploadFiles/user-cookping.webp",
+      "extra": {
+        "job": "",
+        "biography": "",
+        "keyword": []
+      }
+    },
+    {
+      "email": "dream@outlook.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "드림핑",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user-dreamping.webp",
+      "extra": {
+        "job": "",
+        "biography": "",
+        "keyword": []
       }
     },
     {
@@ -55,79 +114,11 @@
       "extra": {
         "job": "edifice 매니저",
         "biography": "프롬프트 기획 전문가 & GPT전문강사, 강연자",
-        "keyword": [
-          "AI",
-          "GPT",
-          "프롬프트",
-          "강사"
-        ]
+        "keyword": ["AI", "GPT", "프롬프트", "강사"]
       }
-    },
-    {
-      "email": "heart@naver.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "하트핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-heartping.webp"
-    },
-    {
-      "email": "joy@daum.net",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "조이핑",
-      "type": "user",
-      "loginType": "email",
-      "image": "uploadFiles/user-joyping.webp"
-    },
-    {
-      "email": "sparkle@gmail.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "스파클핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-sparkleping.webp"
-    },
-    {
-      "email": "love@hotmail.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "러브핑",
-      "type": "user",
-      "loginType": "email",
-      "image": "uploadFiles/user-loveping.webp"
-    },
-    {
-      "email": "twinkle@hanmail.net",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "트윙클핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-twinklingping.webp"
-    },
-    {
-      "email": "flower@yahoo.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "플라워핑",
-      "type": "user",
-      "loginType": "email",
-      "image": "uploadFiles/user-flowerping.webp"
-    },
-    {
-      "email": "cook@gmail.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "쿡핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-cookping.webp"
-    },
-    {
-      "email": "dream@outlook.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "드림핑",
-      "type": "user",
-      "loginType": "email",
-      "image": "uploadFiles/user-dreamping.webp"
     }
   ],
+
   "post": [
     {
       "type": "brunch",

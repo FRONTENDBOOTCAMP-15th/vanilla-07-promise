@@ -8,6 +8,24 @@ let currentPage = 1;
 let isLoading = false;
 let totalPages = 1;
 
+//검색창 keyword 입력
+const searchInput = document.querySelector('#search-input') as HTMLInputElement;
+const main = document.querySelector('main')!;
+
+//글 작가 버튼
+const writeBtn = document.querySelector('.keyword-btn') as HTMLAnchorElement;
+const authorBtn = document.querySelector('.author-btn') as HTMLAnchorElement;
+
+// 글, 작가 버튼 클릭 시 이동
+[writeBtn, authorBtn].forEach(btn => {
+  btn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+      btn.href = `${btn.href.split('?')[0]}?keyword=${encodeURIComponent(query)}`;
+    }
+  });
+});
+
 function getKeyword(): string {
   return new URLSearchParams(window.location.search).get('keyword') || '';
 }
@@ -17,7 +35,7 @@ function getKeyword(): string {
 async function RequestResults(page: number): Promise<ApiResponse> {
   const axios = getAxios();
   const keyword = getKeyword();
-  const limit = 10;
+  const limit = 5;
   try {
     const response = await axios.get<ApiResponse>(`/posts`, {
       params: {
@@ -45,15 +63,12 @@ async function RequestResults(page: number): Promise<ApiResponse> {
   }
 }
 
-const searchInput = document.querySelector('#search-input') as HTMLInputElement;
-const main = document.querySelector('main')!;
-
 // 검색창 엔터 이벤트
 searchInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const keyword = searchInput.value.trim();
     if (!keyword) {
-      alert('값을 입력해주세요');
+      window.location.href = window.location.origin + window.location.pathname;
       return;
     }
     goSearch(keyword);
