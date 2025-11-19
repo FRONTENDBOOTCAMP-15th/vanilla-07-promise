@@ -29,9 +29,15 @@ export const api = axios.create({
   },
 });
 
-// FormData를 사용하는 요청을 위한 인터셉터 추가
+// FormData를 사용하는 요청 및 인증 토큰을 위한 인터셉터 추가
 api.interceptors.request.use(
   config => {
+    // 인증 토큰 자동 추가
+    const accessToken = tokenStore.getAccessToken();
+    if (accessToken && config.headers) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     // FormData를 사용하는 경우 (multipart/form-data)
     // 기본 Content-Type 헤더를 제거하여 axios가 자동으로 boundary를 포함한 헤더를 설정하도록 함
     if (config.data instanceof FormData) {

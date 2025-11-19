@@ -150,25 +150,25 @@
           </label>
           <input type="text" 
           class="field-input"
-          placeholder="keyword"/>
+          placeholder="keyword(초코, 별, 사탕)"/>
+        </section>
+
+        <section class="field">
+          <label for="image-input" class="field-label">프로필 이미지</label>
+          <input 
+            type="file" 
+            id="image-input"
+            class="field-input"
+            accept="image/*"
+          />
+          <img 
+            id="image-preview" 
+            src="" 
+            alt="프로필 이미지 미리보기" 
+            style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;"
+          />
         </section>
         
-        <section class="field">
-          <div class="field-header">
-            <label for="imageInput" class="field-label">프로필 이미지</label>
-          </div>
-          <input
-            type="url"
-            class="field-input"
-            id="image-input"
-            name="image"
-            placeholder="프로필 이미지 URL (선택)"
-            autocomplete="url"
-          />
-          <p class="field-message" aria-live="polite">
-            이미지를 등록하지 않아도 괜찮아요.
-          </p>
-        </section>
 
         <div class="form-status" role="status" aria-live="polite"></div>
 

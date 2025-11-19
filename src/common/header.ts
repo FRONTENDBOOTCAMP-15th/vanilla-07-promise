@@ -4,9 +4,28 @@ class BrunchHeader extends HTMLElement {
     this.initEvents();
   }
 
-  render() {
+  async render() {
     const accessToken = localStorage.getItem('accessToken');
     const isLoggedIn = !!accessToken;
+
+    // 기본 프로필 이미지 URL
+    let profileImageUrl = '/assets/images/default-user.png';
+
+    // 로그인 상태일 때 사용자 정보 가져오기
+    if (isLoggedIn) {
+      try {
+        const { api } = await import('../types/apiClient');
+        const res = await api.get('/users/me');
+        const user = res.data.data ?? res.data.item;
+        if (user?.image) {
+          profileImageUrl = user.image;
+        }
+      } catch (err) {
+        console.error('프로필 이미지 로드 실패:', err);
+        // 에러 발생 시 기본 이미지 사용
+      }
+    }
+
     this.innerHTML = `
       <link rel="stylesheet" href="/assets/components/header.css" />
       <header class="header">
@@ -33,8 +52,10 @@ class BrunchHeader extends HTMLElement {
 
         <!-- 로그인 후 -->
         <div class="login-a ${!isLoggedIn ? 'hidden' : ''}">
-          <img src="/assets/images/notice.svg" alt="알림" class="notice" />
-          <img src="/assets/images/login-picture.png" alt="프로필 이미지" class="profile" />
+          <a href="/src/features/mypage/mypage.html">
+            <img src="/assets/images/notice.svg" alt="알림" class="notice" />
+            <img src="${profileImageUrl}" alt="프로필 이미지" class="profile" />
+          </a>
         </div>
       </header>
     `;
@@ -52,6 +73,33 @@ class BrunchHeader extends HTMLElement {
     window.addEventListener('loginStateChanged', () => {
       this.render();
     });
+
+    // 프로필 이미지 변경 이벤트 리스너
+    window.addEventListener('profileImageChanged', () => {
+      this.updateProfileImage();
+    });
+  }
+
+  // 프로필 이미지만 업데이트하는 메서드
+  async updateProfileImage() {
+    const profileImg = this.querySelector('.profile') as HTMLImageElement;
+    if (!profileImg) return;
+
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) return;
+
+    try {
+      const { api } = await import('../types/apiClient');
+      const res = await api.get('/users/me');
+      const user = res.data.data ?? res.data.item;
+      if (user?.image) {
+        profileImg.src = user.image;
+      } else {
+        profileImg.src = '/assets/images/default-user.png';
+      }
+    } catch (err) {
+      console.error('프로필 이미지 업데이트 실패:', err);
+    }
   }
 }
 
