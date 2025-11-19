@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="./search-author.css" />
     <script type="module" src="./search-author.ts"></script>
     <script type="module" src="../../../common/nav.ts"></script>
+    <script
+      type="module"
+      src="../../../components/NoDataSearchPage.ts"
+    ></script>
   </head>
 
   <body>
@@ -25,6 +29,7 @@
         <ul class="tab-list" role="tablist">
           <li role="presentation" class="write-item">
             <a
+              class="keyword-btn"
               role="tab"
               aria-selected="false"
               aria-controls="panel-posts"
@@ -36,6 +41,7 @@
 
           <li role="presentation" class="author-item active">
             <a
+              class="author-btn"
               role="tab"
               aria-selected="true"
               aria-controls="panel-authors"
@@ -47,9 +53,11 @@
         </ul>
       </nav>
 
-      <main id="panel-authors" role="tabpanel" aria-labelledby="tab-authors">
-      
-      </main>
+      <main
+        id="panel-authors"
+        role="tabpanel"
+        aria-labelledby="tab-authors"
+      ></main>
 
       <brunch-nav></brunch-nav>
     </div>

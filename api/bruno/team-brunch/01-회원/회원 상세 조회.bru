@@ -5,7 +5,18 @@ meta {
 }
 
 get {
-  url: {{url}}/users/2
-  body: none
+  url: {{url}}/users
+  body: json
   auth: none
+}
+
+params:query {
+  ~limit: 3
+  ~page: 1
+  ~custom: {'extra.keyword':'프론트엔드'}
+  ~name: 이승규
+}
+
+body:file {
+  ~file: @file()
 }

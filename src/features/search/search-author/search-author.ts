@@ -8,6 +8,25 @@ let currentPage = 1;
 let isLoading = false;
 let totalPages = 1;
 
+//검색창 keyword 입력
+const searchInput = document.querySelector('#search-input') as HTMLInputElement;
+const main = document.querySelector('main')!;
+
+//글 작가 버튼
+const writeBtn = document.querySelector('.keyword-btn') as HTMLAnchorElement;
+const authorBtn = document.querySelector('.author-btn') as HTMLAnchorElement;
+
+// 글, 작가 버튼 클릭 시 이동
+[writeBtn, authorBtn].forEach(btn => {
+  btn.addEventListener('click', () => {
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      saveRecentKeyword(keyword);
+      btn.href = `${btn.href.split('?')[0]}?keyword=${encodeURIComponent(keyword)}`;
+    }
+  });
+});
+
 function getKeyword(): string {
   return new URLSearchParams(window.location.search).get('keyword') || '';
 }
@@ -17,27 +36,27 @@ function getKeyword(): string {
 async function RequestResults(page: number): Promise<UsersResponse> {
   const axios = getAxios();
   const searchKeyword = getKeyword();
-  const limit = 4;
+  const limit = 10;
+
+  const custom = {
+    $or: [
+      { name: { $regex: searchKeyword, $options: 'i' } },
+      { 'extra.keyword': { $regex: searchKeyword, $options: 'i' } },
+      { 'extra.biography': { $regex: searchKeyword, $options: 'i' } },
+    ],
+  };
 
   try {
     const response = await axios.get<UsersResponse>('/users', {
       params: {
+        type: 'user',
+        custom: JSON.stringify(custom),
         page,
         limit,
       },
     });
 
-    const keyword = searchKeyword.trim().toLowerCase();
-
-    const filtered = response.data.item.filter(item => {
-      return (
-        item.name.toLowerCase().includes(keyword) ||
-        item.extra.biography.toLowerCase().includes(keyword) ||
-        item.extra.keyword.some(k => k.toLowerCase().includes(keyword))
-      );
-    });
-
-    return { ...response.data, item: filtered };
+    return response.data;
   } catch (error) {
     console.error('검색 결과 가져오기 실패', error);
 
@@ -53,9 +72,6 @@ async function RequestResults(page: number): Promise<UsersResponse> {
     };
   }
 }
-
-const searchInput = document.querySelector('#search-input') as HTMLInputElement;
-const main = document.querySelector('main')!;
 
 // 검색창 엔터 이벤트
 searchInput?.addEventListener('keydown', e => {
@@ -100,17 +116,17 @@ async function renderResults(page: number) {
 
     const h3 = document.createElement('h3');
     h3.className = 'result-num';
-    h3.textContent = `작가 검색 결과 검색 결과 ${response.item.length}건`;
+    h3.textContent = `작가 검색 결과 검색 결과 ${response.pagination.total}건`;
 
     resultRange.appendChild(h3);
     main.appendChild(resultRange);
 
     const ul = document.createElement('ul');
-    ul.id = 'result-list';
+    ul.className = 'result-list';
     main.appendChild(ul);
   }
 
-  const ul = document.querySelector('#result-list')!;
+  const ul = document.querySelector('.result-list')!;
 
   const keyword = getKeyword();
 
@@ -128,13 +144,11 @@ async function renderResults(page: number) {
     const figure = document.createElement('figure');
     figure.className = 'profile-picture';
 
-    if (item.image) {
-      const img = document.createElement('img');
-      img.src = item.image;
-      img.alt = `${item.name} 프로필 사진`;
-      img.className = 'avatar';
-      figure.appendChild(img);
-    }
+    const img = document.createElement('img');
+    img.src = item.image || '/assets/images/search/defaultProfil.webp';
+    img.alt = `${item.name} 프로필 사진`;
+    img.className = 'avatar';
+    figure.appendChild(img);
 
     // section
     const section = document.createElement('section');
@@ -221,7 +235,11 @@ function saveRecentKeyword(keyword: string) {
   const maxId = list.length > 0 ? Math.max(...list.map(item => item.id)) : 0;
 
   const newList: Recent[] = [{ id: maxId + 1, title: keyword }, ...filtered];
-  localStorage.setItem('recentList', JSON.stringify(newList));
+
+  // 최대 10개까지만 유지 (오래된 항목 제거)
+  const limitedList = newList.slice(0, 10);
+
+  localStorage.setItem('recentList', JSON.stringify(limitedList));
 }
 
 // 검색 단어 표기 하이라이트

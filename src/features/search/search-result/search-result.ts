@@ -19,9 +19,10 @@ const authorBtn = document.querySelector('.author-btn') as HTMLAnchorElement;
 // 글, 작가 버튼 클릭 시 이동
 [writeBtn, authorBtn].forEach(btn => {
   btn.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    if (query) {
-      btn.href = `${btn.href.split('?')[0]}?keyword=${encodeURIComponent(query)}`;
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      saveRecentKeyword(keyword);
+      btn.href = `${btn.href.split('?')[0]}?keyword=${encodeURIComponent(keyword)}`;
     }
   });
 });
@@ -35,7 +36,7 @@ function getKeyword(): string {
 async function RequestResults(page: number): Promise<ApiResponse> {
   const axios = getAxios();
   const keyword = getKeyword();
-  const limit = 5;
+  const limit = 10;
   try {
     const response = await axios.get<ApiResponse>(`/posts`, {
       params: {
@@ -68,6 +69,7 @@ searchInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const keyword = searchInput.value.trim();
     if (!keyword) {
+      saveRecentKeyword(keyword);
       window.location.href = window.location.origin + window.location.pathname;
       return;
     }
@@ -167,18 +169,16 @@ async function renderResults(page: number) {
     figcaption.appendChild(address);
     figure.appendChild(figcaption);
 
-    if (item.user.image) {
-      const img = document.createElement('img');
-      img.src = item.user.image;
-      img.alt = item.title;
-      figure.appendChild(img);
-    }
+    const img = document.createElement('img');
+    img.src = item.user.image || '/assets/images/search/defaultProfil.webp';
+    img.alt = item.title;
+    figure.appendChild(img);
 
     li.appendChild(titleEl);
     li.appendChild(figure);
 
     li.addEventListener('click', () => {
-      window.location.href = `/src/features/search/search-author?_id=${item._id}`;
+      window.location.href = `/src/features/detail/detail?_id=${item._id}`;
     });
 
     ul.appendChild(li);
@@ -214,7 +214,11 @@ function saveRecentKeyword(keyword: string) {
   const maxId = list.length > 0 ? Math.max(...list.map(item => item.id)) : 0;
 
   const newList: Recent[] = [{ id: maxId + 1, title: keyword }, ...filtered];
-  localStorage.setItem('recentList', JSON.stringify(newList));
+
+  // 최대 10개까지만 유지 (오래된 항목 제거)
+  const limitedList = newList.slice(0, 10);
+
+  localStorage.setItem('recentList', JSON.stringify(limitedList));
 }
 
 // 검색 단어 표기 하이라이트

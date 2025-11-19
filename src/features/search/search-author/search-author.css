@@ -79,13 +79,13 @@
       }
     }
 
-    ul {
+    .result-list {
       li {
         border-bottom: 1px solid #eee;
         padding: 18px 0px;
         &:last-child {
           border-bottom: none;
-          padding-bottom: 80px; /* 마지막 요소가 fixed nav에 가려지지 않도록 */
+          padding-bottom: 8em; 
         }
 
         .profile-card {

@@ -27,9 +27,6 @@
   height: 100%;
   font-weight: var(--font-weight-light);
 
-  a {
-    font-size: var(--font-md);
-  }
 
   /* 메뉴 */
   .menu {
@@ -119,9 +116,10 @@
       }
 
       li {
+        cursor: pointer;
         margin-bottom: 1rem;
         &:last-child {
-          margin-bottom: 8em;
+          margin-bottom: 9em;
         }
 
         strong {
