@@ -25,7 +25,7 @@ export const api = axios.create({
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
-    'client-id': metaEnv.VITE_CLIENT_ID || 'brunch',
+    'client-id': metaEnv.VITE_CLIENT_ID || 'febc15-vanilla07-ecad',
   },
 });
 
