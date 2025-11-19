@@ -351,10 +351,6 @@ signupForm.addEventListener('submit', async event => {
 
   const signupData: User = {
     email: cleanEmail,
-  const signupData: User = {
-    email: cleanEmail,
-    name: cleanNickname,
-    nickname: cleanNickname,
     password: password.value,
     name: cleanNickname,
     type: 'user',
