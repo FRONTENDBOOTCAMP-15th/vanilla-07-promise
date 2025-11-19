@@ -45,7 +45,7 @@ export async function uploadImage(file: File): Promise<string> {
 
 export interface PostPayload {
   _id: number;
-  type: 'febc15-vanilla07-ecad';
+  type: 'brunch';
   title: string;
   extra: {
     subtitle: string;
@@ -70,7 +70,7 @@ export async function createPostRequest(
 
   return {
     _id: Date.now(),
-    type: 'febc15-vanilla07-ecad',
+    type: 'brunch',
     title,
     extra: {
       subtitle,
