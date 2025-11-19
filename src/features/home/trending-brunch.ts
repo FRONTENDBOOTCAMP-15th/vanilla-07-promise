@@ -32,12 +32,12 @@ function createPostElement(post: Post, index: number): string {
       <div>${index + 1}</div>
       <div class="trending-content">
          <h2>
-        <a href="/src/features/detail/detail.html?id=${post._id}">
+        <a href="/src/features/detail/detail.html?_id=${post._id}">
           ${post.title}
         </a>
       </h2>
         <span>by ${post.user?.name}</span>
-        <a href="/src/features/detail/detail.html?id=${post._id}">
+        <a href="/src/features/detail/detail.html?_id=${post._id}">
           ${cleanContent}...
         </a>
       </div>
