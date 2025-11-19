@@ -7,3 +7,15 @@ export interface FavWriter {
     "image": string
   }
 }
+
+// 관심 글
+export interface FavPost {
+  "post": {
+    "_id": number,
+    "image": string,
+    "title": string,
+    "user": {
+      "name": string,
+    }
+  }
+}
