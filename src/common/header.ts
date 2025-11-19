@@ -55,7 +55,7 @@ class BrunchHeader extends HTMLElement {
   }
 }
 
-customElements.define('brunch-header', BrunchHeader);
+// customElements.define('brunch-header', BrunchHeader);
 
 // 로그인/로그아웃 시 호출할 헬퍼 함수들
 export function setLogin(token: string) {
@@ -67,3 +67,5 @@ export function setLogout() {
   localStorage.removeItem('accessToken');
   window.dispatchEvent(new Event('loginStateChanged'));
 }
+
+customElements.define('brunch-header', BrunchHeader);
