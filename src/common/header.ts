@@ -67,4 +67,3 @@ export function setLogout() {
   localStorage.removeItem('accessToken');
   window.dispatchEvent(new Event('loginStateChanged'));
 }
-customElements.define('brunch-header', BrunchHeader);
