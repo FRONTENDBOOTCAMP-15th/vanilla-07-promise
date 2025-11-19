@@ -14,7 +14,7 @@
       <form action="" id="signup-form" class="signup-form" novalidate>
         <section class="field" data-field="nickname">
           <div class="field-header">
-            <label for="nickname-input" class="field-label">별명</label>
+            <label for="nickname-input" class="field-label nickname">별명</label>
             <button
               type="button"
               class="field-action field-action-nickname is-active"
@@ -38,10 +38,11 @@
 
         <section class="field" data-field="email">
           <div class="field-header">
-            <label for="emailInput" class="field-label" id="email-input">이메일</label>
+            <label for="email-input" class="field-label" id="email-label">이메일</label>
             <button
               type="button"
-              class="field-action field-action-email is-active"
+              class="field-action is-active"
+              id="field-action-email"
               data-action="email-check"
             >
               중복확인
@@ -64,7 +65,7 @@
             <label for="passwordInput" class="field-label">비밀번호</label>
             <button
               type="button"
-              class="field-icon-button"
+              class="field-icon-button1 field-icon-button"
               data-toggle="password"
               aria-controls="passwordInput"
               aria-label="비밀번호 보기"
@@ -90,7 +91,7 @@
             >
             <button
               type="button"
-              class="field-icon-button"
+              class="field-icon-button2 field-icon-button"
               data-toggle="password-confirm"
               aria-controls="passwordConfirmInput"
               aria-label="비밀번호 보기"
@@ -113,6 +114,45 @@
           ></p>
         </section>
 
+        <section class="field">
+          <label for="phone-input" class="field-label">
+          </label>
+          <input type="text"
+          class="field-input" placeholder="phone"/>
+        </section>
+
+        <section class="field">
+          <label for="address-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="address"/>
+        </section>
+
+        <section class="field">
+          <label for="job-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="job"/>
+        </section>
+
+        <section class="field">
+          <label for="biography-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="biography"/>
+        </section>
+
+        <section class="field">
+          <label for="keyword-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="keyword"/>
+        </section>
+        
         <section class="field">
           <div class="field-header">
             <label for="imageInput" class="field-label">프로필 이미지</label>
