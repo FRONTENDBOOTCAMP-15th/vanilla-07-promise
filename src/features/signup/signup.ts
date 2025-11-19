@@ -53,6 +53,20 @@ const passwordConfirmField = document.querySelector(
   '[data-field="password-confirm"]',
 ) as HTMLElement;
 
+// 추가 필드 요소
+const jobInput = document.querySelector(
+  'input[placeholder="job"]',
+) as HTMLInputElement;
+const biographyInput = document.querySelector(
+  'input[placeholder="biography"]',
+) as HTMLInputElement;
+const keywordInput = document.querySelector(
+  'input[placeholder="keyword"]',
+) as HTMLInputElement;
+const imageInput = document.querySelector(
+  '#image-input',
+) as HTMLInputElement;
+
 // =========================
 // ⭐ 필드 상태 업데이트 헬퍼 함수
 // =========================
@@ -329,12 +343,27 @@ signupForm.addEventListener('submit', async event => {
     return;
   }
 
+  // keyword를 배열로 변환 (쉼표 또는 공백으로 구분)
+  const keywordValue = keywordInput?.value.trim() || '';
+  const keywordArray = keywordValue
+    ? keywordValue.split(/[,\s]+/).filter(k => k.length > 0)
+    : [];
+
+  const signupData: User = {
+    email: cleanEmail,
   const signupData: User = {
     email: cleanEmail,
     name: cleanNickname,
     nickname: cleanNickname,
     password: password.value,
+    name: cleanNickname,
     type: 'user',
+    image: imageInput?.value.trim() || '',
+    extra: {
+      job: jobInput?.value.trim() || '',
+      biography: biographyInput?.value.trim() || '',
+      keyword: keywordArray,
+    },
   };
 
   try {
