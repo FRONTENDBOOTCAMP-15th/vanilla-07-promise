@@ -1,4 +1,5 @@
-import { api, type ApiItemResponse } from './apiClient.ts';
+import { api, type ApiItemResponse } from './apiClient';
+import { uploadImage } from './upload';
 
 export interface PostPayload {
   type?: string;
@@ -29,20 +30,43 @@ const postApi = {
     payload: PostPayload,
   ): Promise<ApiItemResponse<PostResponse>> {
     try {
-      console.log('[postApi] POST /posts 요청:', payload);
-    const { data } = await api.post<ApiItemResponse<PostResponse>>(
-      '/posts',
-      payload,
+      console.log(
+        '[postApi] POST /posts 요청:',
+        JSON.stringify(payload, null, 2),
+      );
+      console.log(
+        '[postApi] 이미지 필드 확인 - image:',
+        payload.image,
+        'images:',
+        payload.images,
+      );
+
+      const { data } = await api.post<ApiItemResponse<PostResponse>>(
+        '/posts',
+        payload,
         {
           headers: {
             'Content-Type': 'application/json',
           },
         },
       );
-      console.log('[postApi] POST /posts 응답:', data);
-    return data;
+
+      console.log('[postApi] POST /posts 응답:', JSON.stringify(data, null, 2));
+      console.log(
+        '[postApi] 응답된 이미지 필드 - images:',
+        data?.data?.images || data?.item?.images,
+      );
+
+      return data;
     } catch (error) {
       console.error('[postApi] POST /posts 실패:', error);
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as {
+          response?: { data?: unknown; status?: number };
+        };
+        console.error('[postApi] 응답 상태:', axiosError.response?.status);
+        console.error('[postApi] 응답 데이터:', axiosError.response?.data);
+      }
       throw error;
     }
   },
@@ -64,33 +88,6 @@ const postApi = {
   },
 };
 
-export async function uploadImage(file: File): Promise<string> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  try {
-    const { data } = await api.post('/files', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    // 백엔드 응답 구조가 예: { ok: true, url: "https://..." }
-    if (data?.url) {
-      return data.url;
-    }
-
-    // item 이나 data.url 형태로 담겨 있을 경우 대응
-    if (data?.item?.url) return data.item.url;
-    if (data?.data?.url) return data.data.url;
-
-    throw new Error('이미지 URL을 받지 못했습니다.');
-  } catch (err) {
-    console.error('이미지 업로드 실패:', err);
-    throw err;
-  }
-}
-
 export async function createPostRequest(
   title: string,
   subtitle: string,
@@ -106,7 +103,7 @@ export async function createPostRequest(
 
   return {
     _id: Date.now(),
-    type: 'brunch',
+    type: 'febc15-vanilla07-ecad',
     title,
     extra: {
       subtitle,

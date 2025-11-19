@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { getAxios } from '../utils/axios';
-import type { DetailRes, LoginUser } from '../utils/types.ts';
-
-// axios 인스턴스
-const axiosInstance = getAxios();
+import {
+  getUserByName,
+  getUserByEmail,
+  registerUser,
+  type User,
+} from '../../types/apiClient';
 
 let nicknameVerified = false;
 let emailVerified = false;
@@ -95,35 +96,53 @@ async function checkNickname() {
   }
 
   try {
-    const { data } = await axiosInstance.get<DetailRes<LoginUser>>(
-      '/users/name',
-      {
-        params: { name: nicknameValue },
-      },
-    );
+    const response = await getUserByName(nicknameValue);
 
-    if (data.ok === 1) {
+    // ok가 true이고 사용자가 없으면 사용 가능 (404 응답이거나 ok가 false)
+    if (response.ok && (response.data || response.item)) {
+      // 사용자가 존재함 - 이미 사용 중
+      nicknameVerified = false;
       updateFieldState(
         nicknameField,
         nicknameMessage,
-        'success',
-        '사용 가능한 별명입니다.',
+        'error',
+        '이미 사용 중인 별명입니다.',
       );
-      nicknameVerified = true;
       return;
     }
 
-    nicknameVerified = false;
+    // 사용 가능한 별명
     updateFieldState(
       nicknameField,
       nicknameMessage,
-      'error',
-      '이미 사용 중인 별명입니다.',
+      'success',
+      '사용 가능한 별명입니다.',
     );
+    nicknameVerified = true;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      const errorMessage = err.response?.data?.message || '서버 오류입니다.';
-      updateFieldState(nicknameField, nicknameMessage, 'error', errorMessage);
+      const status = err.response?.status;
+      // 404는 사용자가 없다는 의미이므로 사용 가능
+      if (status === 404) {
+        updateFieldState(
+          nicknameField,
+          nicknameMessage,
+          'success',
+          '사용 가능한 별명입니다.',
+        );
+        nicknameVerified = true;
+      } else {
+        const errorMessage = err.response?.data?.message || '서버 오류입니다.';
+        updateFieldState(nicknameField, nicknameMessage, 'error', errorMessage);
+        nicknameVerified = false;
+      }
+    } else {
+      updateFieldState(
+        nicknameField,
+        nicknameMessage,
+        'error',
+        '서버 오류입니다.',
+      );
       nicknameVerified = false;
     }
   }
@@ -166,36 +185,48 @@ async function checkEmail() {
   }
 
   try {
-    const { data } = await axiosInstance.get<DetailRes<LoginUser>>(
-      '/users/email',
-      {
-        params: { email: emailValue },
-      },
-    );
+    const response = await getUserByEmail(emailValue);
 
-    if (data.ok === 1) {
-      emailVerified = true;
+    // ok가 true이고 사용자가 있으면 이미 등록됨
+    if (response.ok && (response.data || response.item)) {
+      emailVerified = false;
       updateFieldState(
         emailField,
         emailMessage,
-        'success',
-        '사용 가능한 이메일입니다.',
+        'error',
+        '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
       );
       return;
     }
 
-    emailVerified = false;
+    // 사용 가능한 이메일
+    emailVerified = true;
     updateFieldState(
       emailField,
       emailMessage,
-      'error',
-      '이미 등록된 이메일입니다. 다른 이메일을 입력해주세요.',
+      'success',
+      '사용 가능한 이메일입니다.',
     );
   } catch (err) {
     if (axios.isAxiosError(err)) {
+      const status = err.response?.status;
+      // 404는 사용자가 없다는 의미이므로 사용 가능
+      if (status === 404) {
+        emailVerified = true;
+        updateFieldState(
+          emailField,
+          emailMessage,
+          'success',
+          '사용 가능한 이메일입니다.',
+        );
+      } else {
+        emailVerified = false;
+        const errorMessage = err.response?.data?.message || '서버 오류입니다.';
+        updateFieldState(emailField, emailMessage, 'error', errorMessage);
+      }
+    } else {
       emailVerified = false;
-      const errorMessage = err.response?.data?.message || '서버 오류입니다.';
-      updateFieldState(emailField, emailMessage, 'error', errorMessage);
+      updateFieldState(emailField, emailMessage, 'error', '서버 오류입니다.');
     }
   }
 }
@@ -298,17 +329,23 @@ signupForm.addEventListener('submit', async event => {
     return;
   }
 
-  const signup = {
+  const signupData: User = {
     email: cleanEmail,
     name: cleanNickname,
+    nickname: cleanNickname,
     password: password.value,
     type: 'user',
   };
 
   try {
-    await axiosInstance.post<DetailRes<LoginUser>>('/users', signup);
-    alert('회원가입에 성공했습니다. 로그인 페이지로 이동합니다.');
-    location.href = '../login/login.html';
+    const response = await registerUser(signupData);
+
+    if (response.ok) {
+      alert('회원가입에 성공했습니다. 로그인 페이지로 이동합니다.');
+      location.href = '../login/login.html';
+    } else {
+      alert(response.message || '회원가입에 실패했습니다.');
+    }
   } catch (err) {
     if (axios.isAxiosError(err)) {
       const errorMessage =

@@ -1,5 +1,5 @@
-import postApi from '../../types/postApi.ts';
-import { api } from '../../types/apiClient.ts';
+import postApi from '../../types/postApi';
+import { uploadImage } from '../../types/upload';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
@@ -22,93 +22,6 @@ interface StoredPost {
   content: string;
   images: Array<{ name: string; type: string; size: number }>;
   createdAt: string;
-}
-
-export async function uploadImage(file: File): Promise<string> {
-  const formData = new FormData();
-  formData.append('file', file);
-  
-  // 백엔드가 요구할 수 있는 추가 필드
-  formData.append('type', 'febc15-vanilla07-ecad');
-
-  try {
-    const { data } = await api.post('/files', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    console.log('[write] 파일 업로드 응답:', data);
-
-    // 백엔드 응답 구조가 예: { ok: true, url: "https://..." }
-    if (data?.url) {
-      return data.url;
-    }
-
-    // item 이나 data.url 형태로 담겨 있을 경우 대응
-    if (data?.item?.url) return data.item.url;
-    if (data?.item && Array.isArray(data.item) && data.item.length > 0) {
-      const first = data.item[0];
-      if (first.url) return first.url;
-      if (first.path) return first.path;
-    }
-    if (data?.data?.url) return data.data.url;
-
-    throw new Error('이미지 URL을 받지 못했습니다.');
-  } catch (err: unknown) {
-    console.error('[write] 이미지 업로드 실패:', err);
-    
-    // 에러 상세 정보 출력
-    if (err && typeof err === 'object' && 'response' in err) {
-      const axiosError = err as { response?: { data?: unknown; status?: number } };
-      if (axiosError.response) {
-        console.error('응답 데이터:', axiosError.response.data);
-        console.error('응답 상태:', axiosError.response.status);
-      }
-    }
-    
-    throw err;
-  }
-}
-
-interface CreatePostPayload {
-  _id: number;
-  type: 'febc15-vanilla07-ecad';
-  title: string;
-  extra: {
-    subtitle: string;
-    align: string;
-  };
-  content: string;
-  createdAt: string;
-  image: string;
-}
-
-export async function createPostRequest(
-  title: string,
-  subtitle: string,
-  content: string,
-  getAlign: () => string,
-  file?: File,
-): Promise<CreatePostPayload> {
-  let imageUrl = '';
-  if (file) {
-    // 업로드 API 호출해서 URL 받아오기
-    imageUrl = await uploadImage(file);
-  }
-
-  return {
-    _id: Date.now(),
-    type: 'febc15-vanilla07-ecad',
-    title,
-    extra: {
-      subtitle,
-      align: getAlign(),
-    },
-    content,
-    createdAt: new Date().toISOString(),
-    image: imageUrl, // ← 업로드 API에서 받은 URL 저장
-  };
 }
 
 keyboardIcon?.addEventListener('click', () => {
@@ -197,7 +110,7 @@ const persistLocally = (
 const handleSubmit = async (event: SubmitEvent): Promise<void> => {
   event.preventDefault();
   if (!form || !titleInput || !contentInput) return;
-  
+
   if (!validateRequiredFields()) return;
 
   const title = titleInput.value.trim();
@@ -207,7 +120,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
 
   try {
     let imageUrl = '';
-    
+
     // 이미지가 있을 때만 업로드 시도
     if (file) {
       try {
@@ -219,31 +132,67 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
       }
     }
 
-    const postPayload = {
+    const postPayload: {
+      type: string;
+      title: string;
+      subtitle: string;
+      content: string;
+      image?: string;
+      images?: string;
+      extra: {
+        subtitle: string;
+        align: string;
+      };
+    } = {
       type: 'febc15-vanilla07-ecad',
       title,
       subtitle,
       content,
-      image: imageUrl || undefined,
-      extra: { 
-        subtitle, 
-        align: document.querySelector('.align-button')?.getAttribute('data-align') ?? 'left' 
+      extra: {
+        subtitle,
+        align:
+          document.querySelector('.align-button')?.getAttribute('data-align') ??
+          'left',
       },
     };
 
-    console.log('[write] 게시글 등록 요청:', postPayload);
+    // 이미지 URL이 있을 때만 image와 images 필드 추가
+    // 백엔드는 'image' 필드를 기대하지만, 호환성을 위해 'images'도 함께 전송
+    if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '') {
+      const trimmedUrl = imageUrl.trim();
+      // image 필드를 우선적으로 설정 (백엔드가 기대하는 필드)
+      postPayload.image = trimmedUrl;
+      // images 필드도 함께 전송 (호환성)
+      postPayload.images = trimmedUrl;
+      console.log('[write] ✅ 이미지 URL 포함:', trimmedUrl);
+      console.log(
+        '[write] ✅ 이미지 필드 확인 - image:',
+        postPayload.image,
+        'images:',
+        postPayload.images,
+      );
+    } else {
+      console.warn('[write] ⚠️ 이미지 URL 없음 - 이미지 없이 게시글 등록');
+      console.warn('[write] ⚠️ imageUrl 값:', imageUrl);
+      // 이미지가 없어도 게시글은 등록 가능
+    }
+
+    console.log(
+      '[write] 게시글 등록 요청:',
+      JSON.stringify(postPayload, null, 2),
+    );
     const response = await postApi.createPost(postPayload);
-    console.log('[write] 게시글 등록 응답:', response);
-    
+    console.log('[write] 게시글 등록 응답:', JSON.stringify(response, null, 2));
+
     if (!response.ok) {
       throw new Error(response.message ?? '게시글 등록에 실패했습니다.');
     }
-    
+
     alert('글이 등록되었습니다.');
     form?.reset();
   } catch (error) {
     console.error('[write] post submission failed:', error);
-    
+
     // 네트워크 오류 시 로컬 저장 시도
     try {
       persistLocally(title, subtitle, content);
