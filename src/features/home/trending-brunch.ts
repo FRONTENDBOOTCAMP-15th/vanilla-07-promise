@@ -23,7 +23,8 @@ function stripHtmlTags(html: string): string {
 
 // HTML 문자열로 반환
 function createPostElement(post: Post, index: number): string {
-  const imageUrl = post.user?.image || post.image;
+  const imageUrl =
+    post.user?.image || post.image || '/assets/images/trending-10.png';
   const cleanContent = stripHtmlTags(post.content).slice(0, 40);
 
   return `
