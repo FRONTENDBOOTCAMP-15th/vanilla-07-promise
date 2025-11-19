@@ -6,7 +6,7 @@ import { getAxios } from '../utils/axios';
 
 function getWriterId(): number {
   const params = new URLSearchParams(location.search);
-  return Number(params.get('id'));
+  return Number(params.get('_id'));
 }
 
 async function getWriterInfoData() {
@@ -32,13 +32,18 @@ async function getWriterInfoData() {
 
 function renderWriterInfo(Info: WriterInfo) {
   const list = document.querySelector('.writer-card__profile');
+  const noImg =
+    Info.image && Info.image.startsWith('http')
+      ? Info.image
+      : '/assets/images/mybox-icons/no-img.svg';
+
   if (list) {
     list.innerHTML = `
     <div class="writer-card__info">
     <p class="writer-card__name">${Info.name}</p>
     <p class="writer-card__job">${Info.extra?.job ?? ''}</p>
     </div>
-    <img src=${Info.image} alt="작가프로필" />
+    <img src=${noImg} alt="작가프로필" />
     `;
   }
 }
