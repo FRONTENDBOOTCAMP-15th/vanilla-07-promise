@@ -314,7 +314,9 @@ passwordCheck.addEventListener('input', passwordCheckLive);
 // =========================
 // ⭐ 이미지 미리보기
 // =========================
-imageInput.addEventListener('change', e => {
+let imageUrl = '';
+
+imageInput.addEventListener('change', async e => {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (file) {
     // 파일 크기 검증 (5MB 제한)
@@ -322,6 +324,7 @@ imageInput.addEventListener('change', e => {
       alert('이미지 크기는 5MB 이하여야 합니다.');
       imageInput.value = '';
       imagePreview.style.display = 'none';
+      imageUrl = '';
       return;
     }
 
@@ -330,20 +333,25 @@ imageInput.addEventListener('change', e => {
       alert('이미지 파일만 업로드 가능합니다.');
       imageInput.value = '';
       imagePreview.style.display = 'none';
+      imageUrl = '';
       return;
     }
 
-    // 미리보기 표시
-    const reader = new FileReader();
-    reader.onload = event => {
-      if (event.target?.result) {
-        imagePreview.src = event.target.result as string;
-        imagePreview.style.display = 'block';
-      }
-    };
-    reader.readAsDataURL(file);
+    // 이미지 업로드 및 미리보기 표시
+    try {
+      imageUrl = await uploadImage(file);
+      imagePreview.src = imageUrl;
+      imagePreview.style.display = 'block';
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+      alert('이미지 업로드에 실패했습니다.');
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+      imageUrl = '';
+    }
   } else {
     imagePreview.style.display = 'none';
+    imageUrl = '';
   }
 });
 
@@ -385,18 +393,6 @@ signupForm.addEventListener('submit', async event => {
   const keywordArray = keywordValue
     ? keywordValue.split(/[,\s]+/).filter(k => k.length > 0)
     : [];
-
-  // 이미지 업로드 (선택사항)
-  let imageUrl = '';
-  const imageFile = imageInput?.files?.[0];
-  if (imageFile) {
-    try {
-      imageUrl = await uploadImage(imageFile);
-    } catch (err) {
-      console.error('이미지 업로드 실패:', err);
-      alert('이미지 업로드에 실패했습니다. 이미지 없이 회원가입을 진행합니다.');
-    }
-  }
 
   const signupData: User = {
     email: cleanEmail,
