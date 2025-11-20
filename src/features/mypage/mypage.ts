@@ -124,9 +124,3 @@ async function updateProfile() {
     alert(errorMessage);
   }
 }
-
-// 🔹 이벤트 연결
-updateBtn?.addEventListener("click", updateProfile);
-
-// 🔹 최초 실행
-loadUserInfo();

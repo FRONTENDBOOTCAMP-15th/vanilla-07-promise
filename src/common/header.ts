@@ -9,15 +9,13 @@ class BrunchHeader extends HTMLElement {
     const isLoggedIn = !!accessToken;
 
     // 기본 프로필 이미지 URL
-    let profileImageUrl = '/assets/images/default-user.png';
+    let profileImageUrl = '/assets/images/start.btn.svg';
 
-    // 로그인 상태일 때 사용자 정보 가져오기
-    if (isLoggedIn) {
+
+if (isLoggedIn) {
       try {
-        const { api } = await import('../types/apiClient');
-        const res = await api.get('/users/me');
-        const user = res.data.data ?? res.data.item;
-        if (user?.image) {
+        const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+        if (user.image) {
           profileImageUrl = user.image;
         }
       } catch (err) {
@@ -25,7 +23,6 @@ class BrunchHeader extends HTMLElement {
         // 에러 발생 시 기본 이미지 사용
       }
     }
-
     this.innerHTML = `
       <link rel="stylesheet" href="/assets/components/header.css" />
       <header class="header">
