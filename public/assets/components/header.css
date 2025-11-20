@@ -47,6 +47,10 @@ body {
   gap: 0.75rem;
 }
 
+.search {
+  margin-left: 10rem;
+}
+
 /* 프로필 이미지 */
 .profile img {
   width: 1.85rem;

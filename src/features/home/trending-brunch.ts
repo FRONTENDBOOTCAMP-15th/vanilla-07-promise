@@ -23,7 +23,8 @@ function stripHtmlTags(html: string): string {
 
 // HTML 문자열로 반환
 function createPostElement(post: Post, index: number): string {
-  const imageUrl = post.user?.image || post.image;
+  const imageUrl =
+    post.user?.image || post.image || '/assets/images/trending-10.png';
   const cleanContent = stripHtmlTags(post.content).slice(0, 40);
 
   return `
@@ -31,12 +32,12 @@ function createPostElement(post: Post, index: number): string {
       <div>${index + 1}</div>
       <div class="trending-content">
          <h2>
-        <a href="/src/features/detail/detail.html?id=${post._id}">
+        <a href="/src/features/detail/detail.html?_id=${post._id}">
           ${post.title}
         </a>
       </h2>
         <span>by ${post.user?.name}</span>
-        <a href="/src/features/detail/detail.html?id=${post._id}">
+        <a href="/src/features/detail/detail.html?_id=${post._id}">
           ${cleanContent}...
         </a>
       </div>

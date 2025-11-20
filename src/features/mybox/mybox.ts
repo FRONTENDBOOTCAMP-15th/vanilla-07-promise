@@ -33,7 +33,7 @@ function renderWriters(writers: FavWriter[]) {
 
     return `
     <li class="fav-writers__item">
-      <a href="../writerhome/writerhome.html">
+      <a href="../writerhome/writerhome.html?_id=${writer.user._id}">
         <img src="${noImg}" alt="${writer.user.name}" />
         <p>${writer.user.name}</p>
       </a>

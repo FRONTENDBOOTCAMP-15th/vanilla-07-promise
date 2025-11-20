@@ -53,6 +53,11 @@
   object-fit: contain;
 }
 
+.fav-writers__item a > img[src*='no-img'] {
+  padding: 1em 1em;
+  border-radius: 0;
+}
+
 .fav-writers__item p {
   color: #959595;
   font-size: 0.81em;
@@ -106,6 +111,14 @@
   flex-direction: column;
   text-align: center;
   line-height: 1.44em;
+}
+
+.recent-books__item a > img {
+  width: 7.68em;
+  height: 10.75em;
+  justify-items: center;
+  align-items: center;
+  object-fit: cover;
 }
 
 .recent-books__booktitle {
@@ -170,6 +183,11 @@
   object-fit: cover;
 }
 
+.fav-books__item a > img[src*='no-img'] {
+  padding: 1.9em 1.9em;
+  object-fit: contain;
+}
+
 .fav-books__noItem {
   color: #959595;
   font-size: 0.81em;
@@ -212,7 +230,7 @@
   margin-block-start: 0.88em;
   margin-block-end: 1.13em;
   border-bottom: 0.06em solid #eeeeee;
-  margin-inline: -1.56em;
+  margin-inline: -1.28em;
   padding-inline: 1.56em;
   padding-block-end: 0.75em;
 }
@@ -227,8 +245,11 @@
   color: #959595;
 }
 
-.my-brunch__item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+.my-brunch__item p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
