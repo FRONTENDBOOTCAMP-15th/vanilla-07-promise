@@ -63,6 +63,7 @@ header {
         gap: var(--gap-sm);
 
         li {
+          
           padding: 0.25em 1em;
           border-radius: var(--radius-lg);
           color: #959595;
@@ -83,6 +84,7 @@ header {
 
       .recent-keyword {
         li {
+          cursor: pointer;
           margin-top: 1.2em;
           display: flex;
           justify-content: space-between;
