@@ -142,7 +142,7 @@ async function renderResults(page: number) {
     li.appendChild(figure);
 
     li.addEventListener('click', () => {
-      window.location.href = `/src/features/detail/detail?_id=${item._id}`;
+      window.location.href = `/src/features/detail/detail?id=${item._id}`;
     });
 
     ul.appendChild(li);
