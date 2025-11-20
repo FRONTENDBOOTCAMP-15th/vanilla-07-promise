@@ -1,37 +1,40 @@
 @import url(/assets/css/base/global.css);
 
-body {
-}
-
-header {
-  display: flex;
-  justify-content: center;
-  padding: 0 0.125em;
-  block-size: 6.25em;
-  border-bottom: 0.0625em solid var(--color-border);
-
-  input {
-    inline-size: 80%;
-    text-align: center;
-    padding: 0.5em;
-    font-size: 1.73em;
-    box-sizing: border-box;
-
-    &:focus::placeholder {
-      opacity: 0;
-    }
-  }
-}
-
 .search {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  block-size: 100%;
+
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-light);
 
+  header {
+    display: flex;
+    justify-content: center;
+    padding: 0px 0.125em;
+    block-size: 6.25em;
+    border-bottom: 0.0625em solid var(--color-border);
+
+    input {
+      inline-size: 80%;
+      text-align: center;
+      padding: 0.5em;
+      font-size: 1.73em;
+      box-sizing: border-box;
+
+      &:focus::placeholder {
+        opacity: 0;
+      }
+    }
+  }
+
   main {
-    block-size: 14.375em;
+    flex: 1;
+    background: linear-gradient(0deg, #f8f8f8, #f8f8f8), #fff;
     display: flex;
     flex-direction: column;
+    padding: 27px 20px;
 
     .keyword-group,
     .recent-search {
@@ -43,12 +46,13 @@ header {
 
       h2 {
         color: #bbb;
-        font-size: 1.2em;
+        font-size: 0.85em;
         font-weight: var(--font-weight-normal);
       }
 
       p {
-        margin-block: 0.46875em;
+        margin-block-start: 0.75em; 
+        margin-block-end: 0.5625em; 
         color: var(--color-text);
         font-size: 1.45em;
 
@@ -63,7 +67,6 @@ header {
         gap: var(--gap-sm);
 
         li {
-          
           padding: 0.25em 1em;
           border-radius: var(--radius-lg);
           color: #959595;
@@ -79,13 +82,13 @@ header {
       h2 {
         color: #828282;
         font-weight: var(--font-weight-normal);
-        font-size: 0.95em;
+        font-size: 0.85em;
       }
 
       .recent-keyword {
         li {
+          block-size: 2.72em;
           cursor: pointer;
-          margin-top: 1.2em;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -101,5 +104,3 @@ header {
     }
   }
 }
-
-
