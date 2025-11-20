@@ -53,6 +53,11 @@
   object-fit: contain;
 }
 
+.fav-writers__item a > img[src*='no-img'] {
+  padding: 1em 1em;
+  border-radius: 0;
+}
+
 .fav-writers__item p {
   color: #959595;
   font-size: 0.81em;
@@ -106,6 +111,14 @@
   flex-direction: column;
   text-align: center;
   line-height: 1.44em;
+}
+
+.recent-books__item a > img {
+  width: 7.68em;
+  height: 10.75em;
+  justify-items: center;
+  align-items: center;
+  object-fit: cover;
 }
 
 .recent-books__booktitle {
@@ -168,6 +181,11 @@
   justify-items: center;
   align-items: center;
   object-fit: cover;
+}
+
+.fav-books__item a > img[src*='no-img'] {
+  padding: 1.9em 1.9em;
+  object-fit: contain;
 }
 
 .fav-books__noItem {
