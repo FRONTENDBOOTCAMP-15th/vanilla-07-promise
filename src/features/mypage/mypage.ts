@@ -95,7 +95,7 @@ async function updateProfile() {
 
   try {
     // 인터셉터가 Content-Type과 Authorization 헤더를 자동으로 처리
-    const res = await api.patch("/users/{_id}", updateData);
+    const res = await api.patch(`/users/${id}`, updateData);
     const data = res.data;
 
     // 응답에 토큰이 있으면 저장
