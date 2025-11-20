@@ -14,6 +14,7 @@ class BrunchNav extends HTMLElement {
         left: 50%; /* 화면 가운데 기준 */
         transform: translateX(-50%);
         inline-size: 100%;
+        block-size:100px;
         max-width: 460px;
         background-color: #ffffff;
         border-top: 1px solid #eee;

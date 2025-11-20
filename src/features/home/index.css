@@ -1,0 +1,165 @@
+/* ===== trending-brunch.css 내용 ===== */
+@import url(/assets/css/base/global.css);
+body {
+  margin: 0 auto;
+  max-width: var(--body-width);
+}
+
+.container {
+  padding: 0 20px;
+}
+
+.title {
+  height: 2.5625em;
+  margin-block-start: 6.25em;
+  margin-block-end: 1.875em;
+  gap: 0.5rem;
+}
+
+.title img {
+  width: 120px;
+}
+
+.title h1 {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.trending-book {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  justify-content: space-between;
+}
+
+.trending-book div {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #111;
+  min-width: 20px;
+}
+
+.trending-book-content {
+  flex: 1;
+}
+
+
+.trending-book h2 a{
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 400;
+  color: #111111;
+}
+
+.trending-book h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  font-weight: 600;
+  color: #111111;
+}
+
+.trending-book span:nth-of-type(1) {
+  display: block;
+  font-size: 0.875rem;
+  color: #999;
+  font-style: italic;
+  margin: 0.25rem 0;
+}
+
+.trending-book span:nth-of-type(2) {
+  display: block;
+  font-size: 0.875rem;
+  color: #555;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trending-book img {
+  object-fit: fill;
+  width: 6.3em;
+  height: 6.12em;
+  
+}
+
+.trending-book a {
+  line-height: 19px;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #666666;
+}
+
+/* ===== top-author.css 내용 ===== */
+.top-authors {
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+  width: 100%;
+  max-width: 26.875rem;
+  margin: 0 auto;
+}
+
+.top-authors h2 {
+  font-size: 1.1875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: left;
+  padding-left: 0.5rem;
+  border-bottom: none;
+}
+
+.author-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+
+  margin-block-end: 3.125em;
+}
+
+.author-card {
+  padding: 2.1rem 0.8rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* 프로필 이미지 */
+.author-card .profile {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+/* 프로필 이름 */
+.author-card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.author-card .job {
+  font-size: 0.85rem;
+  color: #959595;
+  margin-bottom: 0.75rem;
+}
+
+.author-card .prev {
+  font-size: 0.85rem;
+  color: #666666;
+  line-height: 1.4;
+}
+
+/* 십자선 */
+.author-card:nth-child(1),
+.author-card:nth-child(2) {
+  border-bottom: 1px solid #dddddd;
+}
+
+.author-card:nth-child(1),
+.author-card:nth-child(3) {
+  border-right: 1px solid #dddddd;
+}

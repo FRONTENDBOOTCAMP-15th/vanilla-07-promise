@@ -5,10 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>promise-brunch-dev</title>
-    <link rel="stylesheet" href="/src/features/home/trending-brunch.css" />
-    <link rel="stylesheet" href="/src/features/home/top-author.css" />
+    <link rel="stylesheet" href="/src/features/home/index.css" />
+    <script type="module" src="/src/common/header.ts"></script>
+    <script type="module" src="/src/features/home/index.ts"></script>
+    <script type="module" src="/src/common/nav.ts"></script>
   </head>
   <body>
+    <brunch-header></brunch-header>
     <div class="container">
       <div class="title">
         <img src="../../../assets/images/Today's Pick.svg" alt="Today's Pick" />
@@ -22,11 +25,6 @@
       <h2><span class="highlight">Top 구독 작가</span></h2>
       <div class="author-cards" id="author-list"></div>
     </section>
-    <script type="module" src="/src/features/home/trending-brunch.ts"></script>
-    <script type="module" src="/src/features/home/top-author.ts"></script>
-    <brunch-header></brunch-header>
-    <script type="module" src="/src/common/header.ts"></script>
     <brunch-nav></brunch-nav>
-    <script type="module" src="/src/common/nav.ts"></script>
   </body>
 </html>
