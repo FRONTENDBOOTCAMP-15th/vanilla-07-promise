@@ -5,14 +5,18 @@ class BrunchHeader extends HTMLElement {
   }
 
   async render() {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('accessToken');
+
+    //user image 가져오기
+    const userString = sessionStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+
     const isLoggedIn = !!accessToken;
 
     // 기본 프로필 이미지 URL
     let profileImageUrl = '/assets/images/start.btn.svg';
 
-
-if (isLoggedIn) {
+    if (isLoggedIn) {
       try {
         const user = JSON.parse(sessionStorage.getItem('user') || '{}');
         if (user.image) {
@@ -51,7 +55,7 @@ if (isLoggedIn) {
         <div class="login-a ${!isLoggedIn ? 'hidden' : ''}">
           <a href="/src/features/mypage/mypage.html">
             <img src="/assets/images/notice.svg" alt="알림" class="notice" />
-            <img src="${profileImageUrl}" alt="프로필 이미지" class="profile" />
+            <img src="${isLoggedIn ? user.image : profileImageUrl}" alt="프로필 이미지" class="profile" />
           </a>
         </div>
       </header>

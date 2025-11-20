@@ -1,0 +1,29 @@
+meta {
+  name: 파일api
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{url}}/files
+  body: file
+  auth: bearer
+}
+
+headers {
+  Content-Type: multipart/form-data
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+  attach
+  }
+}
+
+body:file {
+  file: @file(C:\Users\LSK\Desktop\test.jpeg) @contentType(image/jpeg)
+}

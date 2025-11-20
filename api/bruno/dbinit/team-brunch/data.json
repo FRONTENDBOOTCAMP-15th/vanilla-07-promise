@@ -1,250 +1,263 @@
 {
   "user": [
     {
-      "email": "heart@naver.com",
+      "email": "user1@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "하트핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-heartping.webp",
-      "extra": {
-        "job": "감성 콘텐츠 크리에이터",
-        "biography": "따뜻한 감성을 전하는 소셜 콘텐츠 제작자입니다.",
-        "keyword": ["감성", "콘텐츠", "소셜", "크리에이터"]
-      }
-    },
-    {
-      "email": "joy@daum.net",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "조이핑",
+      "name": "사용자1",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-joyping.webp",
+      "image": "uploadFiles/user1.webp",
       "extra": {
-        "job": "커뮤니티 매니저",
-        "biography": "사람들과 소통하며 즐거움을 나누는 일을 좋아합니다.",
-        "keyword": ["커뮤니티", "소통", "즐거움", "매니저"]
+        "job": "마케터",
+        "biography": "25살, 신입 개발자",
+        "keyword": ["개발", "노트", "포트폴리오"]
       }
     },
     {
-      "email": "sparkle@gmail.com",
+      "email": "user2@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "스파클핑",
+      "name": "사용자2",
       "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-sparkleping.webp",
+      "loginType": "email",
+      "image": "uploadFiles/user2.webp",
       "extra": {
-        "job": "라이프스타일 블로거",
-        "biography": "작은 일상 속 반짝임을 기록하고 공유합니다.",
-        "keyword": ["라이프스타일", "블로그", "일상", "반짝임"]
+        "job": "디자이너",
+        "biography": "28살, 프리랜서 디자이너",
+        "keyword": ["포토샵", "일러스트", "브랜딩"]
       }
     },
     {
-      "email": "love@hotmail.com",
+      "email": "user3@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "러브핑",
+      "name": "사용자3",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-loveping.webp",
+      "image": "uploadFiles/user3.webp",
       "extra": {
-        "job": "커플 컨설턴트",
-        "biography": "사랑과 관계를 돕는 컨설팅 활동을 합니다.",
-        "keyword": ["사랑", "관계", "컨설턴트", "상담"]
+        "job": "학생",
+        "biography": "22살, 대학생",
+        "keyword": ["공부", "책", "스터디"]
       }
     },
     {
-      "email": "twinkle@hanmail.net",
+      "email": "user4@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "트윙클핑",
+      "name": "사용자4",
       "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-twinklingping.webp",
+      "loginType": "email",
+      "image": "uploadFiles/user4.webp",
       "extra": {
-        "job": "포토그래퍼",
-        "biography": "빛과 색을 담는 사진 작업을 즐깁니다.",
-        "keyword": ["사진", "포토그래피", "빛", "예술"]
+        "job": "개발자",
+        "biography": "30살, 경력 5년차 개발자",
+        "keyword": ["JavaScript", "React", "Node.js"]
       }
     },
     {
-      "email": "flower@yahoo.com",
+      "email": "user5@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "플라워핑",
+      "name": "사용자5",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-flowerping.webp",
+      "image": "uploadFiles/user5.webp",
       "extra": {
-        "job": "플로리스트",
-        "biography": "꽃과 식물로 사람들에게 행복을 전합니다.",
-        "keyword": ["꽃", "식물", "플로리스트", "디자인"]
+        "job": "프리랜서",
+        "biography": "27살, 영상 편집자",
+        "keyword": ["영상", "편집", "유튜브"]
       }
     },
     {
-      "email": "cook@gmail.com",
+      "email": "user6@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "쿡핑",
+      "name": "사용자6",
       "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-cookping.webp",
+      "loginType": "email",
+      "image": "uploadFiles/user6.webp",
       "extra": {
-        "job": "요리 유튜버",
-        "biography": "맛있고 즐거운 요리 콘텐츠를 만드는 걸 좋아합니다.",
-        "keyword": ["요리", "유튜브", "레시피", "콘텐츠"]
+        "job": "마케터",
+        "biography": "33살, 광고회사 근무",
+        "keyword": ["SNS", "광고", "마케팅"]
       }
     },
     {
-      "email": "dream@outlook.com",
+      "email": "user7@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "드림핑",
+      "name": "사용자7",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-dreamping.webp",
+      "image": "uploadFiles/user7.webp",
       "extra": {
-        "job": "창작가",
-        "biography": "상상력과 꿈을 담은 다양한 창작 활동을 합니다.",
-        "keyword": ["창작", "꿈", "상상력", "예술"]
+        "job": "학생",
+        "biography": "21살, 대학 2학년",
+        "keyword": ["공부", "알바", "게임"]
       }
     },
     {
-      "email": "w3@gmail.com",
+      "email": "user8@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "AI러 이채문",
-      "type": "seller",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-apeach.webp",
-      "extra": {
-        "job": "edifice 매니저",
-        "biography": "프롬프트 기획 전문가 & GPT전문강사, 강연자",
-        "keyword": ["AI", "GPT", "프롬프트", "강사"]
-      }
-    },
-    {
-      "email": "sunny@naver.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "써니핑",
+      "name": "사용자8",
       "type": "user",
       "loginType": "email",
-      "image": "",
+      "image": "uploadFiles/user8.webp",
       "extra": {
-        "job": "여행 블로거",
-        "biography": "다양한 장소를 여행하며 경험을 기록합니다.",
-        "keyword": ["여행", "블로그", "사진", "모험"]
+        "job": "개발자",
+        "biography": "29살, 풀스택 개발자",
+        "keyword": ["React", "Node.js", "Python"]
       }
     },
     {
-      "email": "star@daum.net",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "스타핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "",
-      "extra": {
-        "job": "음악 프로듀서",
-        "biography": "사운드와 멜로디로 감동을 전하는 음악 제작자입니다.",
-        "keyword": ["음악", "프로듀서", "사운드", "작곡"]
-      }
-    },
-    {
-      "email": "moon@gmail.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "문핑",
+      "email": "user9@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자9",
       "type": "user",
       "loginType": "email",
-      "image": "",
+      "image": "uploadFiles/user9.webp",
       "extra": {
-        "job": "웹디자이너",
-        "biography": "사용자 경험과 디자인을 중요하게 생각합니다.",
-        "keyword": ["웹", "디자인", "UI", "UX"]
+        "job": "프리랜서",
+        "biography": "26살, 그래픽 디자이너",
+        "keyword": ["디자인", "포트폴리오", "브랜딩"]
       }
     },
     {
-      "email": "cloud@hotmail.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "클라우딩",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "",
-      "extra": {
-        "job": "앱 개발자",
-        "biography": "편리하고 직관적인 앱을 만드는 개발자입니다.",
-        "keyword": ["앱", "개발", "프로그래밍", "모바일"]
-      }
-    },
-    {
-      "email": "rainbow@hanmail.net",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "레인보핑",
+      "email": "user10@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자10",
       "type": "user",
       "loginType": "email",
-      "image": "",
+      "image": "uploadFiles/user10.webp",
       "extra": {
-        "job": "일러스트레이터",
-        "biography": "다채로운 색과 그림으로 이야기를 전달합니다.",
-        "keyword": ["일러스트", "그림", "아트", "디자인"]
+        "job": "마케터",
+        "biography": "31살, 마케팅 전문가",
+        "keyword": ["광고", "SNS", "분석"]
       }
     },
     {
-      "email": "coffee@yahoo.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "커피핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "",
-      "extra": {
-        "job": "카페 매니저",
-        "biography": "커피와 사람을 사랑하는 카페 운영자입니다.",
-        "keyword": ["커피", "카페", "매니지먼트", "서비스"]
-      }
-    },
-    {
-      "email": "book@gmail.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "북핑",
+      "email": "user11@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자11",
       "type": "user",
       "loginType": "email",
-      "image": "",
+      "image": "uploadFiles/user11.webp",
       "extra": {
-        "job": "작가",
-        "biography": "이야기와 글쓰기를 통해 세상과 소통합니다.",
-        "keyword": ["책", "글쓰기", "스토리", "작가"]
+        "job": "학생",
+        "biography": "23살, 대학 4학년",
+        "keyword": ["스터디", "공부", "자격증"]
       }
     },
     {
-      "email": "ocean@naver.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "오션핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "",
-      "extra": {
-        "job": "환경운동가",
-        "biography": "바다와 지구 환경 보호에 힘쓰고 있습니다.",
-        "keyword": ["환경", "보호", "지구", "운동"]
-      }
-    },
-    {
-      "email": "tech@gmail.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "테크핑",
+      "email": "user12@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자12",
       "type": "user",
       "loginType": "email",
-      "image": "",
+      "image": "uploadFiles/user12.webp",
       "extra": {
-        "job": "AI 연구원",
-        "biography": "최신 기술과 인공지능 연구에 열정을 가지고 있습니다.",
-        "keyword": ["AI", "연구", "기술", "혁신"]
+        "job": "개발자",
+        "biography": "34살, 프론트엔드 개발자",
+        "keyword": ["JavaScript", "CSS", "HTML"]
       }
     },
     {
-      "email": "spark@gmail.com",
-      "password": "$2b$10$dummyhashedpassword",
-      "name": "스파크핑",
+      "email": "user13@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자13",
       "type": "user",
-      "loginType": "kakao",
-      "image": "",
+      "loginType": "email",
+      "image": "uploadFiles/user13.webp",
       "extra": {
-        "job": "스타트업 창업가",
-        "biography": "새로운 아이디어로 세상을 바꾸는 스타트업을 운영합니다.",
-        "keyword": ["창업", "스타트업", "아이디어", "혁신"]
+        "job": "프리랜서",
+        "biography": "28살, 영상 편집자",
+        "keyword": ["영상", "편집", "유튜브"]
+      }
+    },
+    {
+      "email": "user14@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자14",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user14.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "32살, 광고회사 근무",
+        "keyword": ["SNS", "광고", "분석"]
+      }
+    },
+    {
+      "email": "user15@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자15",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user15.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "24살, 대학생",
+        "keyword": ["스터디", "독서", "코딩"]
+      }
+    },
+    {
+      "email": "user16@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자16",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user16.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "29살, 백엔드 개발자",
+        "keyword": ["Node.js", "Database", "API"]
+      }
+    },
+    {
+      "email": "user17@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자17",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user17.webp",
+      "extra": {
+        "job": "프리랜서",
+        "biography": "30살, 그래픽 디자이너",
+        "keyword": ["디자인", "포트폴리오", "브랜딩"]
+      }
+    },
+    {
+      "email": "user18@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자18",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user18.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "31살, 마케팅 전문가",
+        "keyword": ["광고", "SNS", "분석"]
+      }
+    },
+    {
+      "email": "user19@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자19",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user19.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "23살, 대학 4학년",
+        "keyword": ["스터디", "공부", "자격증"]
+      }
+    },
+    {
+      "email": "user20@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자20",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user20.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "34살, 프론트엔드 개발자",
+        "keyword": ["JavaScript", "CSS", "HTML"]
       }
     }
   ],
@@ -965,3 +978,4 @@
     }
   ]
 }
+

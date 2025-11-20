@@ -468,16 +468,16 @@ export const isNameRegisteredInDb = async (name: string): Promise<boolean> => {
 export const tokenStore = {
   getAccessToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return window.localStorage.getItem('accessToken');
+    return window.sessionStorage.getItem('accessToken');
   },
 
   setAccessToken(token: string): void {
     if (typeof window === 'undefined') return;
-    window.localStorage.setItem('accessToken', token);
+    window.sessionStorage.setItem('accessToken', token);
   },
 
   clear(): void {
     if (typeof window === 'undefined') return;
-    window.localStorage.removeItem('accessToken');
+    window.sessionStorage.removeItem('accessToken');
   },
 };
