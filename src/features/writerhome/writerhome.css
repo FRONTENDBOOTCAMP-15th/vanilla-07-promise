@@ -92,6 +92,10 @@ body {
 }
 
 /* 글 리스트 섹션 */
+.write-list {
+  margin-block-end: 15em;
+}
+
 .write-list__items {
   margin-block-start: 2.54em;
 }

@@ -37,7 +37,7 @@ function renderWriterInfo(Info: WriterInfo) {
   const noImg =
     Info.image && Info.image.startsWith('http')
       ? Info.image
-      : '/assets/images/mybox-icons/no-img.svg';
+      : '/assets/images/search/defaultProfil.webp';
 
   if (list) {
     list.innerHTML = `
@@ -94,15 +94,14 @@ function renderWriteLists(lists: WriteList[]) {
   const result = lists.map(list => {
     return `
     <li class="write-list__item">
-            <a href="../detail/detail.html">${list.title}</a>
-            <p>${list.content}
-            </p>
-            <div class="write-list__data">
-              <p>댓글${list.repliesCount}</p>
-              <img src="../../../assets/images/writerhome/round.svg"></img>
-              <p>${formatDate(list.createdAt)}</p>
-            </div>
-          </li>
+      <a href="/src/features/detail/detail.html?id=${list.user._id}">${list.title}</a>
+        <p>${list.content}</p>
+          <div class="write-list__data">
+            <p>댓글${list.repliesCount}</p>
+            <img src="/assets/images/writerhome/round.svg"></img>
+            <p>${formatDate(list.createdAt)}</p>
+          </div>
+    </li>
     `;
   });
   console.log(result);
