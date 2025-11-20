@@ -233,6 +233,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     }
     alert('글이 등록되었습니다.');
     form?.reset();
+    location.href = '../writerhome/writerhome.html';
     
     // 생성된 게시글의 ID를 사용하여 detail 페이지로 이동
     const postId = response.item?._id;
