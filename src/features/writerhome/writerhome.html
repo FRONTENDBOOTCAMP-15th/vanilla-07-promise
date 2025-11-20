@@ -1,73 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko-KR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="./writerhome.css" />
-  <!-- <script type="module" src="./writerhome.ts"></script> -->
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./writerhome.css" />
+    <script type="module" src="./writerhome.ts"></script>
+  </head>
+  <body>
+    <!-- 헤더 -->
+    <brunch-header></brunch-header>
+    <script type="module" src="../../common/header.ts"></script>
 
-  <!-- 작가카드 -->
-<div class="writerhome-container">
-  <section class="writer-card">
-    <div class="writer-card__profile">
-      <div class="writer-card__info">
-        <p class="writer-card__name">AB</p>
-        <p class="writer-card__job">기획자</p>
-      </div>
-      <img src="../../../assets/images/writerhome/writerprofile.svg" alt="작가프로필" />
+    <!-- 작가카드 -->
+    <div class="writerhome-container">
+      <section class="writer-card">
+        <div class="writer-card__profile"></div>
+
+        <!-- 구독 버튼 -->
+        <div class="writer-subscribe">
+          <div class="writer-subscribe__info">
+            <div>
+              <p class="writer-subscribe__subscriber">구독자</p>
+              <p class="writer-subscribe__subcount">30</p>
+            </div>
+            <div>
+              <p class="writer-subscribe__favwriter">관심작가</p>
+              <p class="writer-subscribe__favcount">16</p>
+            </div>
+          </div>
+          <button class="writer-subscribe__button">
+            <img src="../../../assets/images/writerhome/check.svg" alt="" />
+            구독중
+          </button>
+        </div>
+      </section>
+
+      <!-- 글 리스트 -->
+      <section class="write-list">
+        <ul>
+          <li class="write-list__item">
+            <a href="">취준은 처음이라</a>
+            <h3>[취업특강] 노션 포트폴리오 만들기</h3>
+            <p>
+              with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시
+              필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...
+            </p>
+            <div class="write-list__data">
+              <p>댓글0</p>
+              <p>Jul 02.2024</p>
+            </div>
+          </li>
+          <li class="write-list__item">
+            <a href="">취준은 처음이라</a>
+            <h3>[취업특강] 노션 포트폴리오 만들기</h3>
+            <p>
+              with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시
+              필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...
+            </p>
+            <div class="write-list__data">
+              <p>댓글0</p>
+              <p>Jul 02.2024</p>
+            </div>
+          </li>
+          <li class="write-list__item">
+            <a href="">취준은 처음이라</a>
+            <h3>[취업특강] 노션 포트폴리오 만들기</h3>
+            <p>
+              with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시
+              필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...
+            </p>
+            <div class="write-list__data">
+              <p>댓글0</p>
+              <p>Jul 02.2024</p>
+            </div>
+          </li>
+        </ul>
+      </section>
     </div>
-
-    <!-- 구독 버튼 -->
-      <div class="writer-subscribe">
-        <div class="writer-subscribe__info">
-          <div>
-            <p class="writer-subscribe__subscriber">구독자</p>
-            <p class="writer-subscribe__subcount">30</p>
-          </div>
-          <div>
-            <p class="writer-subscribe__favwriter">관심작가</p>
-            <p class="writer-subscribe__favcount">16</p>
-          </div>
-      </div>
-        <button class="writer-subscribe__button"><img src="../../../assets/images/writerhome/check.svg" alt="" /> 구독중</button>
-      </div>
-    </section>
-  
-    <!-- 글 리스트 -->
-    <section class="write-list">
-      <ul>
-        <li class="write-list__item">
-          <a href="">취준은 처음이라</a>
-          <h3>[취업특강] 노션 포트폴리오 만들기</h3>
-          <P>with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시 필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...</P>
-          <div class="write-list__data">
-            <p>댓글0</p>
-            <p>Jul 02.2024</p>
-          </div>
-        </li>
-        <li class="write-list__item">
-          <a href="">취준은 처음이라</a>
-          <h3>[취업특강] 노션 포트폴리오 만들기</h3>
-          <P>with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시 필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...</P>
-          <div class="write-list__data">
-            <p>댓글0</p>
-            <p>Jul 02.2024</p>
-          </div>
-        </li>
-        <li class="write-list__item">
-          <a href="">취준은 처음이라</a>
-          <h3>[취업특강] 노션 포트폴리오 만들기</h3>
-          <P>with 노슈니, 슈크림 마을, 마포청년나루 | 취업 준비를 위해 반드시 필요한 것 세가지. 자기소개서, 이력서, 포트폴리오. 그중에서 최...</P>
-          <div class="write-list__data">
-            <p>댓글0</p>
-            <p>Jul 02.2024</p>
-          </div>
-        </li>
-      </ul>
-    </section>
-  </div>
-</body>
+  </body>
 </html>
