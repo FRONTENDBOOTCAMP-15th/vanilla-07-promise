@@ -8,6 +8,25 @@ let currentPage = 1;
 let isLoading = false;
 let totalPages = 1;
 
+//검색창 keyword 입력
+const searchInput = document.querySelector('#search-input') as HTMLInputElement;
+const main = document.querySelector('main')!;
+
+//글 작가 버튼
+const writeBtn = document.querySelector('.keyword-btn') as HTMLAnchorElement;
+const authorBtn = document.querySelector('.author-btn') as HTMLAnchorElement;
+
+// 글, 작가 버튼 클릭 시 이동
+[writeBtn, authorBtn].forEach(btn => {
+  btn.addEventListener('click', () => {
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      saveRecentKeyword(keyword);
+      btn.href = `${btn.href.split('?')[0]}?keyword=${encodeURIComponent(keyword)}`;
+    }
+  });
+});
+
 function getKeyword(): string {
   return new URLSearchParams(window.location.search).get('keyword') || '';
 }
@@ -45,15 +64,13 @@ async function RequestResults(page: number): Promise<ApiResponse> {
   }
 }
 
-const searchInput = document.querySelector('#search-input') as HTMLInputElement;
-const main = document.querySelector('main')!;
-
 // 검색창 엔터 이벤트
 searchInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const keyword = searchInput.value.trim();
     if (!keyword) {
-      alert('값을 입력해주세요');
+      saveRecentKeyword(keyword);
+      window.location.href = window.location.origin + window.location.pathname;
       return;
     }
     goSearch(keyword);
@@ -152,18 +169,16 @@ async function renderResults(page: number) {
     figcaption.appendChild(address);
     figure.appendChild(figcaption);
 
-    if (item.user.image) {
-      const img = document.createElement('img');
-      img.src = item.user.image;
-      img.alt = item.title;
-      figure.appendChild(img);
-    }
+    const img = document.createElement('img');
+    img.src = item.user.image || '/assets/images/search/defaultProfil.webp';
+    img.alt = item.title;
+    figure.appendChild(img);
 
     li.appendChild(titleEl);
     li.appendChild(figure);
 
     li.addEventListener('click', () => {
-      window.location.href = `/src/features/search/search-author?_id=${item._id}`;
+      window.location.href = `/src/features/detail/detail?_id=${item._id}`;
     });
 
     ul.appendChild(li);
@@ -199,7 +214,11 @@ function saveRecentKeyword(keyword: string) {
   const maxId = list.length > 0 ? Math.max(...list.map(item => item.id)) : 0;
 
   const newList: Recent[] = [{ id: maxId + 1, title: keyword }, ...filtered];
-  localStorage.setItem('recentList', JSON.stringify(newList));
+
+  // 최대 10개까지만 유지 (오래된 항목 제거)
+  const limitedList = newList.slice(0, 10);
+
+  localStorage.setItem('recentList', JSON.stringify(limitedList));
 }
 
 // 검색 단어 표기 하이라이트
