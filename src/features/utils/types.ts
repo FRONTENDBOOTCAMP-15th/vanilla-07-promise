@@ -3,6 +3,7 @@ export interface LoginUser {
   _id: number;
   email: string;
   name: string;
+  image: string;
   token: {
     accessToken: string;
     refreshToken: string;

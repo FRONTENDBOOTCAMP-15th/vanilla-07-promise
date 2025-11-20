@@ -6,25 +6,18 @@ class NodataSearch extends HTMLElement {
   render() {
     this.innerHTML = `
     <style>
-    
-
-
-
       main {
     height: 80%;
     background: linear-gradient(0deg, #f8f8f8 0%, #f8f8f8 100%), #fff;
     padding: 0 1em;
     align-content: center;
-
     .not-response {
       text-align: center;
-
       p {
         margin-block: 30px;
       }
     }
-  }
-    
+  }  
     </style>
         <div class="not-response">
           <svg
