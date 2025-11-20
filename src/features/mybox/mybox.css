@@ -230,7 +230,7 @@
   margin-block-start: 0.88em;
   margin-block-end: 1.13em;
   border-bottom: 0.06em solid #eeeeee;
-  margin-inline: -1.56em;
+  margin-inline: -1.28em;
   padding-inline: 1.56em;
   padding-block-end: 0.75em;
 }
@@ -243,10 +243,4 @@
 .my-brunch__item p {
   font-size: 0.75em;
   color: #959595;
-}
-
-.my-brunch__item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
 }
