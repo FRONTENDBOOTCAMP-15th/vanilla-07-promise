@@ -15,15 +15,23 @@ const updateBtn = document.querySelector<HTMLButtonElement>("#updateBtn");
 
 // 이미지 URL 저장 변수
 let imageUrl = '';
+const id = localStorage.getItem("userId");
 
 // 🔹 로그인한 사용자 정보 불러오기
 async function loadUserInfo() {
   try {
-    const res = await api.get("/users/{_id}");
-    const user = res.data.data ?? res.data.item;
+    const res = await api.get(`/users/${id}`);
+    const data = res.data;
+    const user = data.data ?? data.item;
 
     if (!user) {
       throw new Error("유저 정보를 찾을 수 없습니다.");
+    }
+
+    // 응답에 토큰이 있으면 저장
+    if (data.item?.token?.accessToken) {
+      const accessToken = data.item.token.accessToken;
+      sessionStorage.setItem('accessToken', accessToken);
     }
 
     profileImg!.src = user.image ? `${user.image}` : "/assets/images/login-picture.png";
@@ -88,8 +96,15 @@ async function updateProfile() {
   try {
     // 인터셉터가 Content-Type과 Authorization 헤더를 자동으로 처리
     const res = await api.patch("/users/{_id}", updateData);
+    const data = res.data;
 
-    if (res.data.ok !== false) {
+    // 응답에 토큰이 있으면 저장
+    if (data.item?.token?.accessToken) {
+      const accessToken = data.item.token.accessToken;
+      sessionStorage.setItem('accessToken', accessToken);
+    }
+
+    if (data.ok !== false) {
       alert("프로필이 수정되었습니다!");
       await loadUserInfo(); // UI 즉시 갱신!
       // 파일 입력 초기화
@@ -99,7 +114,7 @@ async function updateProfile() {
       // 헤더의 프로필 이미지 업데이트
       window.dispatchEvent(new Event('profileImageChanged'));
     } else {
-      throw new Error(res.data.message || "프로필 수정 실패");
+      throw new Error(data.message || "프로필 수정 실패");
     }
   } catch (err) {
     console.error(err);
