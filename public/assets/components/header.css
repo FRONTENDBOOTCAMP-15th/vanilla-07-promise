@@ -6,6 +6,7 @@ body {
 }
 
 .header {
+
   position: fixed;
   top: 0;
   left: 50%;
@@ -20,15 +21,16 @@ body {
   block-size: 4.125em;
   border-bottom: 0.0625em solid var(--color-border);
 
+
   .search-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625em;
 
     img {
       display: block;
-      width: 40px;
-      height: 40px;
+      width: 2.5em;
+      height: 2.5em;
       border-radius: 50%;
       object-fit: cover;
       flex-shrink: 0;
