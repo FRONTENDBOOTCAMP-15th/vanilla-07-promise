@@ -1,8 +1,6 @@
-import { getAxios } from '../../utils/axios';
-import type {
-  UsersResponse,
-  Recent,
-} from '../../../types/search-author-type/search-author-type.ts';
+import { RequestUserResults } from '../../utils/pages/searchFn.ts';
+
+import type { Recent } from '../../../types/search-author-type/search-author-type.ts';
 
 let currentPage = 1;
 let isLoading = false;
@@ -33,46 +31,6 @@ function getKeyword(): string {
 
 // 글목록 API 호출 (page 받도록 수정)
 
-async function RequestResults(page: number): Promise<UsersResponse> {
-  const axios = getAxios();
-  const searchKeyword = getKeyword();
-  const limit = 10;
-
-  const custom = {
-    $or: [
-      { name: { $regex: searchKeyword, $options: 'i' } },
-      { 'extra.keyword': { $regex: searchKeyword, $options: 'i' } },
-      { 'extra.biography': { $regex: searchKeyword, $options: 'i' } },
-    ],
-  };
-
-  try {
-    const response = await axios.get<UsersResponse>('/users', {
-      params: {
-        type: 'user',
-        custom: JSON.stringify(custom),
-        page,
-        limit,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('검색 결과 가져오기 실패', error);
-
-    return {
-      ok: 0,
-      item: [],
-      pagination: {
-        page,
-        limit,
-        total: 0,
-        totalPages: 1,
-      },
-    };
-  }
-}
-
 // 검색창 엔터 이벤트
 searchInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
@@ -98,7 +56,7 @@ async function renderResults(page: number) {
   if (isLoading) return;
   isLoading = true;
 
-  const response = await RequestResults(page);
+  const response = await RequestUserResults(page, getKeyword(), 10);
   const { item: results, pagination } = response;
 
   totalPages = pagination.totalPages;

@@ -1,3 +1,5 @@
+import type { UserItem } from '../../types/search-author-type/search-author-type';
+import { RequestUserResults } from '../utils/pages/searchFn';
 
 type Recent = {
   id: number;
@@ -14,7 +16,10 @@ const searchInput = document.querySelector('#search-input') as HTMLInputElement;
 // 로컬스토리지 기준으로 초기 리스트 가져오기
 const recentList = getRecentList();
 
-// 화면에 렌더링
+//추천 작가 화면 렌더링
+renderAuthorSection();
+
+// 최근검색어 화면 렌더링
 recentList.forEach(item => {
   recentUl?.appendChild(createRow(item));
 });
@@ -23,7 +28,10 @@ if (searchInput) {
   searchInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       const keyword = searchInput.value.trim();
-      if (keyword === '') return;
+      if (keyword === '') {
+        goToSearchResult('');
+        return;
+      }
 
       saveRecentKeyword(keyword);
       goToSearchResult(keyword);
@@ -119,6 +127,53 @@ function createRow(item: Recent): HTMLLIElement {
   });
 
   return li;
+}
+
+async function renderAuthorSection() {
+  try {
+    const response = await RequestUserResults(); // 실제 API 호출
+    const { ok, item }: { ok: number; item: UserItem[] } = response;
+
+    if (ok && item.length > 0) {
+      // 랜덤 1개 선택 (item 길이에 맞게)
+      const randomIndex = Math.floor(Math.random() * item.length);
+      const author = item[randomIndex];
+
+      // 기존 a.author 제거 (있으면)
+      const section = document.querySelector('.keyword-group');
+      if (!section) return;
+      const oldAuthor = section.querySelector('a.author');
+      if (oldAuthor) oldAuthor.remove();
+
+      // 새로운 a.author 생성
+      const a = document.createElement('a');
+      a.href = `../writerhome/writerhome?_id=${author._id}`;
+      a.className = 'author';
+
+      // p 요소
+      const p = document.createElement('p');
+      p.innerHTML =
+        author.extra.biography || '작가님이 소개 글을 미등록했습니다';
+
+      // ul.tags 생성
+      const ul = document.createElement('ul');
+      ul.className = 'tags';
+      author.extra.keyword.forEach((kw: string) => {
+        const li = document.createElement('li');
+        li.textContent = kw;
+        ul.appendChild(li);
+      });
+
+      // a.author에 p와 ul 추가
+      a.appendChild(p);
+      a.appendChild(ul);
+
+      // section 안에 삽입
+      section.appendChild(a);
+    }
+  } catch (err) {
+    console.error('작가 섹션 로드 실패', err);
+  }
 }
 
 // 최근 검색어 삭제

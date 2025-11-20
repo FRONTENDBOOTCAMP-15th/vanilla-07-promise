@@ -1,8 +1,6 @@
-import { getAxios } from '../../utils/axios';
-import type {
-  ApiResponse,
-  Recent,
-} from '../../../types/search-result-type/search-result-type.ts';
+import { RequestPostResults } from '../../utils/pages/searchFn.ts';
+
+import type { Recent } from '../../../types/search-result-type/search-result-type.ts';
 
 let currentPage = 1;
 let isLoading = false;
@@ -31,45 +29,11 @@ function getKeyword(): string {
   return new URLSearchParams(window.location.search).get('keyword') || '';
 }
 
-// 글목록 API 호출 (page 받도록 수정)
-
-async function RequestResults(page: number): Promise<ApiResponse> {
-  const axios = getAxios();
-  const keyword = getKeyword();
-  const limit = 10;
-  try {
-    const response = await axios.get<ApiResponse>(`/posts`, {
-      params: {
-        type: 'brunch',
-        keyword,
-        page,
-        limit,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('검색 결과 가져오기 실패', error);
-
-    return {
-      ok: 0,
-      item: [],
-      pagination: {
-        page,
-        limit,
-        total: 0,
-        totalPages: 1,
-      },
-    };
-  }
-}
-
 // 검색창 엔터 이벤트
 searchInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const keyword = searchInput.value.trim();
     if (!keyword) {
-      saveRecentKeyword(keyword);
       window.location.href = window.location.origin + window.location.pathname;
       return;
     }
@@ -90,7 +54,7 @@ async function renderResults(page: number) {
   if (isLoading) return;
   isLoading = true;
 
-  const response = await RequestResults(page);
+  const response = await RequestPostResults(page, getKeyword());
   const { item: results, pagination } = response;
 
   totalPages = pagination.totalPages;
