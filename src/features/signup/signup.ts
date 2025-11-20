@@ -5,6 +5,7 @@ import {
   registerUser,
   type User,
 } from '../../types/apiClient';
+import { uploadImage } from '../../types/upload';
 
 let nicknameVerified = false;
 let emailVerified = false;
@@ -61,12 +62,12 @@ const biographyInput = document.querySelector(
   'input[placeholder="biography"]',
 ) as HTMLInputElement;
 const keywordInput = document.querySelector(
-  'input[placeholder="keyword"]',
+  'input[placeholder="keyword(초코, 별, 사탕)"]',
 ) as HTMLInputElement;
-const imageInput = document.querySelector(
-  '#image-input',
-) as HTMLInputElement;
-
+const imageInput = document.querySelector('#image-input') as HTMLInputElement;
+const imagePreview = document.querySelector(
+  '#image-preview',
+) as HTMLImageElement;
 // =========================
 // ⭐ 필드 상태 업데이트 헬퍼 함수
 // =========================
@@ -311,6 +312,50 @@ password.addEventListener('input', passwordCheckLive);
 passwordCheck.addEventListener('input', passwordCheckLive);
 
 // =========================
+// ⭐ 이미지 미리보기
+// =========================
+let imageUrl = '';
+
+imageInput.addEventListener('change', async e => {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  if (file) {
+    // 파일 크기 검증 (5MB 제한)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('이미지 크기는 5MB 이하여야 합니다.');
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+      imageUrl = '';
+      return;
+    }
+
+    // 이미지 타입 검증
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드 가능합니다.');
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+      imageUrl = '';
+      return;
+    }
+
+    // 이미지 업로드 및 미리보기 표시
+    try {
+      imageUrl = await uploadImage(file);
+      imagePreview.src = imageUrl;
+      imagePreview.style.display = 'block';
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err);
+      alert('이미지 업로드에 실패했습니다.');
+      imageInput.value = '';
+      imagePreview.style.display = 'none';
+      imageUrl = '';
+    }
+  } else {
+    imagePreview.style.display = 'none';
+    imageUrl = '';
+  }
+});
+
+// =========================
 // ⭐ 회원가입
 // =========================
 signupForm.addEventListener('submit', async event => {
@@ -354,7 +399,7 @@ signupForm.addEventListener('submit', async event => {
     password: password.value,
     name: cleanNickname,
     type: 'user',
-    image: imageInput?.value.trim() || '',
+    ...(imageUrl && { image: imageUrl }),
     extra: {
       job: jobInput?.value.trim() || '',
       biography: biographyInput?.value.trim() || '',
