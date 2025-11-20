@@ -29,7 +29,7 @@ function renderWriters(writers: FavWriter[]) {
     const noImg =
       writer.user.image && writer.user.image.startsWith('http')
         ? writer.user.image
-        : '/assets/images/mybox-icons/no-img.svg';
+        : '/assets/images/search/defaultProfil.webp';
 
     return `
     <li class="fav-writers__item">
@@ -92,7 +92,7 @@ function renderPosts(posts: FavPost[]) {
 
     return `
       <li class="fav-books__item">
-        <a href="../detail/detail.html">
+        <a href="/src/features/detail/detail.html?id=${post.post._id}">
           <img src="${noImg}" alt="${post.post.title}" />
             <p class="fav-books__booktitle">${post.post.title}</p>
             <p class="fav-books__name"><img src="/assets/images/mybox-icons/by.svg" alt="" />${post.post.user.name}</p>
@@ -147,7 +147,7 @@ function renderBrunchs(brunchs: MyBrunch[]) {
   const result = brunchs.map(brunch => {
     return ` 
     <li class="my-brunch__item">
-      <a href="../detail/detail.html">
+      <a href="/src/features/detail/detail.html?id=${brunch._id}">
         <h3>${brunch.title}</h3>
         <p>${brunch.content}</p>
       </a>
