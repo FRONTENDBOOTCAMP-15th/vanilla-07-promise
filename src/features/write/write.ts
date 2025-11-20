@@ -233,6 +233,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     }
     alert('글이 등록되었습니다.');
     form?.reset();
+    location.href = '../writerhome/writerhome.html';
   } catch (error) {
     console.error('[write] post submission failed:', error);
 
