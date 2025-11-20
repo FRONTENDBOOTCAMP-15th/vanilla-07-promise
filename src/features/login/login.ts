@@ -18,19 +18,15 @@ const signupBtn = document.querySelector('.signup-link') as HTMLAnchorElement;
 
 
 // 토큰 및 사용자 정보 저장 함수
-function saveUserData(user: LoginUser, rememberMe: boolean) {
+function saveUserData(user: LoginUser) {
   const { accessToken } = user.token;
   const userData = {
+    _id: user._id,
     name: user.name,
     image: user.image,
   };
 
-  if (rememberMe) {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('user', JSON.stringify(userData));
-  } else {
-    sessionStorage.setItem('accessToken', accessToken);
-  }
+  sessionStorage.setItem('accessToken', accessToken);
   sessionStorage.setItem('user', JSON.stringify(userData));
 }
 
@@ -66,7 +62,7 @@ loginForm.addEventListener('submit', async event => {
     );
 
     // 토큰 및 사용자 정보 저장
-    saveUserData(data.item, checkBox.checked);
+    saveUserData(data.item);
 
 
     alert('로그인 성공했습니다');

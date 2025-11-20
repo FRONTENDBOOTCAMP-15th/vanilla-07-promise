@@ -1,126 +1,154 @@
-import { api, tokenStore } from "../../types/apiClient";
-import { uploadImage } from "../../types/upload";
+import { tokenStore } from '../../types/apiClient';
+import { getAxios } from '../utils/axios';
+
+interface UserItem {
+  name?: string;
+  path?: string;
+}
+
+interface UploadResult {
+  ok: number;
+  item: UserItem[]; // ← 배열로 변경!
+}
 
 // 로그인 안되어있으면 로그인 페이지로 이동
-if (!tokenStore.getAccessToken()) {
-  alert("로그인이 필요합니다!");
-  location.href = "/features/login/login.html";
-}
 
-// 요소 연결
-const profileImg = document.querySelector<HTMLImageElement>("#profileImage");
-const fileInput = document.querySelector<HTMLInputElement>("#profileFile");
-const nicknameInput = document.querySelector<HTMLInputElement>("#newNickname");
-const updateBtn = document.querySelector<HTMLButtonElement>("#updateBtn");
+const userString = sessionStorage.getItem('user') ?? '{}'; // null이면 빈 객체로 처리
+const user = JSON.parse(userString);
 
-// 이미지 URL 저장 변수
-let imageUrl = '';
-const id = localStorage.getItem("userId");
+populateProfileSection();
 
-// 🔹 로그인한 사용자 정보 불러오기
-async function loadUserInfo() {
-  try {
-    const res = await api.get(`/users/${id}`);
-    const data = res.data;
-    const user = data.data ?? data.item;
+//선택한파일 변수
 
-    if (!user) {
-      throw new Error("유저 정보를 찾을 수 없습니다.");
+function populateProfileSection() {
+  const section = document.querySelector('.mypage') as HTMLElement;
+
+  // 기존 요소 생성
+  const profileImg = document.createElement('img');
+  profileImg.id = 'profileImage';
+  profileImg.src = userString ? user.image : '';
+  profileImg.alt = '프로필 이미지';
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'profileFile';
+  fileInput.accept = 'image/*';
+
+  const nicknameInput = document.createElement('input');
+  nicknameInput.type = 'text';
+  nicknameInput.id = 'newNickname';
+  nicknameInput.placeholder = '새 닉네임';
+
+  const updateBtn = document.createElement('button');
+  updateBtn.id = 'updateBtn';
+  updateBtn.textContent = '정보 수정';
+
+  // 버튼 클릭 이벤트
+  updateBtn.addEventListener('click', () => {
+    UpdateUserNameANdImage();
+  });
+
+  section.appendChild(profileImg);
+  section.appendChild(fileInput);
+  section.appendChild(nicknameInput);
+  section.appendChild(updateBtn);
+
+  let selectedFile: File | undefined;
+
+  // 파일 선택 이벤트
+  fileInput.addEventListener('change', event => {
+    const target = event.target as HTMLInputElement;
+    console.log(target.files);
+
+    selectedFile = target.files?.[0];
+
+    if (selectedFile) {
+      // 여기서 undefined 체크
+      if (selectedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          profileImg.src = reader.result as string; // 이미지 변경
+        };
+        reader.readAsDataURL(selectedFile);
+      } else {
+        alert('이미지 파일만 선택해주세요!');
+        target.value = '';
+      }
+    }
+  });
+
+  async function UpdateUserNameANdImage(): Promise<void> {
+    const formData = new FormData();
+
+    if (selectedFile) {
+      const uploadImageResult = await UpdatefileImage(selectedFile);
+
+      if (uploadImageResult.item[0].path) {
+        formData.append('image', uploadImageResult.item[0].path);
+      }
     }
 
-    // 응답에 토큰이 있으면 저장
-    if (data.item?.token?.accessToken) {
-      const accessToken = data.item.token.accessToken;
-      sessionStorage.setItem('accessToken', accessToken);
+    if (nicknameInput.value) {
+      formData.append('name', nicknameInput.value);
     }
 
-    profileImg!.src = user.image ? `${user.image}` : "/assets/images/login-picture.png";
-    nicknameInput!.value = user.name ?? "";
-  } catch (err) {
-    console.error(err);
-    alert("유저 정보를 불러오지 못했습니다.");
-  }
-}
+    const axios = getAxios();
 
-// 🔹 이미지 선택 시 업로드
-fileInput?.addEventListener('change', async e => {
-  const file = (e.target as HTMLInputElement).files?.[0];
-  if (file) {
-    // 파일 크기 검증 (5MB 제한)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('이미지 크기는 5MB 이하여야 합니다.');
-      fileInput.value = '';
-      return;
+    console.log('formData', formData);
+    const userString = sessionStorage.getItem('user');
+
+    if (!userString) {
+      throw new Error('유저 정보가 없습니다.');
+    }
+    const userId = JSON.parse(userString)._id;
+
+    const body: { name?: string; image: string } = {
+      image: formData.get('image')?.toString() ?? '', 
+    };
+
+    // 닉네임 값이 있으면 추가
+    const name = formData.get('name')?.toString();
+    if (name) {
+      body.name = name;
     }
 
-    // 이미지 타입 검증
-    if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드 가능합니다.');
-      fileInput.value = '';
-      return;
-    }
-
-    // 이미지 업로드
     try {
-      imageUrl = await uploadImage(file);
-      profileImg!.src = imageUrl;
-    } catch (err) {
-      console.error('이미지 업로드 실패:', err);
-      alert('이미지 업로드에 실패했습니다.');
-      fileInput.value = '';
-      imageUrl = '';
+      const result = await axios.patch(`/users/${userId}`, body, {
+        headers: {
+          Authorization: `Bearer ${tokenStore.getAccessToken()}`,
+        },
+      });
+
+      if (result.data.ok === 1) {
+        alert('상태가 변경되었습니다.');
+      } else {
+        alert('오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-  } else {
-    imageUrl = '';
-  }
-});
-
-// 🔹 프로필 수정 요청
-async function updateProfile() {
-  const updateData: { name?: string; image?: string } = {};
-
-  if (nicknameInput!.value.trim()) {
-    updateData.name = nicknameInput!.value.trim();
   }
 
-  if (imageUrl) {
-    updateData.image = imageUrl;
-  }
+  async function UpdatefileImage(
+    uploadFileObject: File,
+  ): Promise<UploadResult> {
+    const axios = getAxios();
 
-  // 닉네임과 이미지 모두 없으면 수정할 내용이 없음
-  if (!nicknameInput!.value.trim() && !imageUrl) {
-    alert("수정할 내용을 입력해주세요.");
-    return;
-  }
+    const formData = new FormData();
+    formData.append('attach', uploadFileObject);
 
-  try {
-    // 인터셉터가 Content-Type과 Authorization 헤더를 자동으로 처리
-    const res = await api.patch(`/users/${id}`, updateData);
-    const data = res.data;
+    try {
+      const result = await axios.post(`/files/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-    // 응답에 토큰이 있으면 저장
-    if (data.item?.token?.accessToken) {
-      const accessToken = data.item.token.accessToken;
-      sessionStorage.setItem('accessToken', accessToken);
+      return result.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-
-    if (data.ok !== false) {
-      alert("프로필이 수정되었습니다!");
-      await loadUserInfo(); // UI 즉시 갱신!
-      // 파일 입력 초기화
-      fileInput!.value = "";
-      imageUrl = '';
-      
-      // 헤더의 프로필 이미지 업데이트
-      window.dispatchEvent(new Event('profileImageChanged'));
-    } else {
-      throw new Error(data.message || "프로필 수정 실패");
-    }
-  } catch (err) {
-    console.error(err);
-    const errorMessage = 
-      (err as { response?: { data?: { message?: string } } })?.response?.data?.message 
-      || "프로필 수정 실패!";
-    alert(errorMessage);
   }
 }

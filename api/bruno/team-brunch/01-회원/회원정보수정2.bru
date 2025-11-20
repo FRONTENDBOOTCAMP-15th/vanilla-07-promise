@@ -1,0 +1,22 @@
+meta {
+  name: 회원정보수정2
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{url}}/users/31
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJ0eXBlIjoic2VsbGVyIiwibmFtZSI6IuydtOyKueq3nCDthYzsiqTtirgg6rOE7KCVIiwiZW1haWwiOiJ0bWRyYkBuYXZlci5jb20iLCJpbWFnZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RkZWRzbHF2di9pbWFnZS91cGxvYWQvdjE3NjI3NTg2NjcvbmlrZS9sNnd0NWdRUFRkLndlYnAiLCJsb2dpblR5cGUiOiJlbWFpbCIsImlhdCI6MTc2MzYyMjA4NiwiZXhwIjoxNzYzNzA4NDg2LCJpc3MiOiJGRUJDIn0.CyQ0fVr5GRdq-dob6VSzPVl2jYpvyynSwPm2uf_MoU8
+}
+
+body:json {
+  {
+    "image": "",
+    "name": "이승규 회원 수정 테스트"
+  }
+}

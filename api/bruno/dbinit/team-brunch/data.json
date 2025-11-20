@@ -1,131 +1,264 @@
 {
   "user": [
     {
-      "email": "admin@fesp.shop",
+      "email": "user1@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "무지",
-      "type": "admin",
+      "name": "사용자1",
+      "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-muzi.webp",
-      "extra": {
-        "job": "관리자"
-      }
-    },
-    {
-      "email": "w1@market.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "AB",
-      "type": "seller",
-      "loginType": "email",
-      "image": "uploadFiles/user-neo.webp",
+      "image": "uploadFiles/user1.webp",
       "extra": {
         "job": "마케터",
-        "biography": "서른살, 새내기 취준생",
-        "keyword": [
-          "취업",
-          "노션",
-          "포트폴리오"
-        ]
+        "biography": "25살, 신입 개발자",
+        "keyword": ["개발", "노트", "포트폴리오"]
       }
     },
     {
-      "email": "w2@market.com",
+      "email": "user2@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "자기반성",
-      "type": "seller",
+      "name": "사용자2",
+      "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-jayg.webp",
+      "image": "uploadFiles/user2.webp",
       "extra": {
-        "job": "자기탐구인문학 크리에이터",
-        "biography": "공상가, AB형, ENFP 성향을 똑 닮은 딸을 키우고 있는 해외맘. 세상의 모든 할머니, 엄마와 딸을 응원합니다. 열심히 일하며 생명체를 키워나가고 있습니다. 자기 탐구 인문학자",
-        "keyword": [
-          "인문학",
-          "공상가",
-          "엄마"
-        ]
+        "job": "디자이너",
+        "biography": "28살, 프리랜서 디자이너",
+        "keyword": ["포토샵", "일러스트", "브랜딩"]
       }
     },
     {
-      "email": "w3@gmail.com",
+      "email": "user3@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "AI러 이채문",
-      "type": "seller",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-apeach.webp",
+      "name": "사용자3",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user3.webp",
       "extra": {
-        "job": "edifice 매니저",
-        "biography": "프롬프트 기획 전문가 & GPT전문강사, 강연자",
-        "keyword": [
-          "AI",
-          "GPT",
-          "프롬프트",
-          "강사"
-        ]
+        "job": "학생",
+        "biography": "22살, 대학생",
+        "keyword": ["공부", "책", "스터디"]
       }
     },
     {
-      "email": "heart@naver.com",
+      "email": "user4@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "하트핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-heartping.webp"
-    },
-    {
-      "email": "joy@daum.net",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "조이핑",
+      "name": "사용자4",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-joyping.webp"
+      "image": "uploadFiles/user4.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "30살, 경력 5년차 개발자",
+        "keyword": ["JavaScript", "React", "Node.js"]
+      }
     },
     {
-      "email": "sparkle@gmail.com",
+      "email": "user5@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "스파클핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-sparkleping.webp"
-    },
-    {
-      "email": "love@hotmail.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "러브핑",
+      "name": "사용자5",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-loveping.webp"
+      "image": "uploadFiles/user5.webp",
+      "extra": {
+        "job": "프리랜서",
+        "biography": "27살, 영상 편집자",
+        "keyword": ["영상", "편집", "유튜브"]
+      }
     },
     {
-      "email": "twinkle@hanmail.net",
+      "email": "user6@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "트윙클핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-twinklingping.webp"
-    },
-    {
-      "email": "flower@yahoo.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "플라워핑",
+      "name": "사용자6",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-flowerping.webp"
+      "image": "uploadFiles/user6.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "33살, 광고회사 근무",
+        "keyword": ["SNS", "광고", "마케팅"]
+      }
     },
     {
-      "email": "cook@gmail.com",
+      "email": "user7@example.com",
       "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "쿡핑",
-      "type": "user",
-      "loginType": "kakao",
-      "image": "uploadFiles/user-cookping.webp"
-    },
-    {
-      "email": "dream@outlook.com",
-      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
-      "name": "드림핑",
+      "name": "사용자7",
       "type": "user",
       "loginType": "email",
-      "image": "uploadFiles/user-dreamping.webp"
+      "image": "uploadFiles/user7.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "21살, 대학 2학년",
+        "keyword": ["공부", "알바", "게임"]
+      }
+    },
+    {
+      "email": "user8@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자8",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user8.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "29살, 풀스택 개발자",
+        "keyword": ["React", "Node.js", "Python"]
+      }
+    },
+    {
+      "email": "user9@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자9",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user9.webp",
+      "extra": {
+        "job": "프리랜서",
+        "biography": "26살, 그래픽 디자이너",
+        "keyword": ["디자인", "포트폴리오", "브랜딩"]
+      }
+    },
+    {
+      "email": "user10@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자10",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user10.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "31살, 마케팅 전문가",
+        "keyword": ["광고", "SNS", "분석"]
+      }
+    },
+    {
+      "email": "user11@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자11",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user11.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "23살, 대학 4학년",
+        "keyword": ["스터디", "공부", "자격증"]
+      }
+    },
+    {
+      "email": "user12@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자12",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user12.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "34살, 프론트엔드 개발자",
+        "keyword": ["JavaScript", "CSS", "HTML"]
+      }
+    },
+    {
+      "email": "user13@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자13",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user13.webp",
+      "extra": {
+        "job": "프리랜서",
+        "biography": "28살, 영상 편집자",
+        "keyword": ["영상", "편집", "유튜브"]
+      }
+    },
+    {
+      "email": "user14@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자14",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user14.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "32살, 광고회사 근무",
+        "keyword": ["SNS", "광고", "분석"]
+      }
+    },
+    {
+      "email": "user15@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자15",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user15.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "24살, 대학생",
+        "keyword": ["스터디", "독서", "코딩"]
+      }
+    },
+    {
+      "email": "user16@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자16",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user16.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "29살, 백엔드 개발자",
+        "keyword": ["Node.js", "Database", "API"]
+      }
+    },
+    {
+      "email": "user17@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자17",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user17.webp",
+      "extra": {
+        "job": "프리랜서",
+        "biography": "30살, 그래픽 디자이너",
+        "keyword": ["디자인", "포트폴리오", "브랜딩"]
+      }
+    },
+    {
+      "email": "user18@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자18",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user18.webp",
+      "extra": {
+        "job": "마케터",
+        "biography": "31살, 마케팅 전문가",
+        "keyword": ["광고", "SNS", "분석"]
+      }
+    },
+    {
+      "email": "user19@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자19",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user19.webp",
+      "extra": {
+        "job": "학생",
+        "biography": "23살, 대학 4학년",
+        "keyword": ["스터디", "공부", "자격증"]
+      }
+    },
+    {
+      "email": "user20@example.com",
+      "password": "$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2",
+      "name": "사용자20",
+      "type": "user",
+      "loginType": "email",
+      "image": "uploadFiles/user20.webp",
+      "extra": {
+        "job": "개발자",
+        "biography": "34살, 프론트엔드 개발자",
+        "keyword": ["JavaScript", "CSS", "HTML"]
+      }
     }
   ],
   "post": [
