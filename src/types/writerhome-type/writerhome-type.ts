@@ -13,3 +13,14 @@ export interface WriterInfo {
     job: 'edifice 매니저'; // 직업
   };
 }
+
+// 작가 글 리스트
+export interface WriteList {
+  title: string;
+  content: string;
+  user: {
+    _id: number;
+  };
+  repliesCount: number;
+  createdAt: string;
+}

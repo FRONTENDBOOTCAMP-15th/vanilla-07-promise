@@ -10,7 +10,9 @@ body {
   margin-inline-start: 1.25em;
   margin-inline-end: 1.25em;
   margin-block-start: 7em;
+  padding: 0 1.56em;
 }
+
 /* 작가 카드 섹션 */
 .writercard {
   display: flex;
@@ -90,6 +92,10 @@ body {
 }
 
 /* 글 리스트 섹션 */
+.write-list__items {
+  margin-block-start: 2.54em;
+}
+
 .write-list__item {
   display: flex;
   flex-direction: column;
@@ -99,6 +105,15 @@ body {
   border-bottom: 0.06em solid #eee;
   margin-inline: -1.25em;
   padding-inline: 1.25em;
+}
+
+.write-list__item p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .write-list__item a {
@@ -126,7 +141,7 @@ h3 {
 
 .write-list__data {
   display: flex;
-  gap: 0.8em;
+  gap: 0.5em;
   font-size: 0.75em;
   color: #959595;
 }
