@@ -36,12 +36,12 @@ function createPostElement(post: Post, index: number): string {
       <div>${index + 1}</div>
       <div class="trending-content">
          <h2>
-        <a href="/src/features/detail/detail.html?_id=${post._id}">
+        <a href="/src/features/detail/detail.html?id=${post._id}">
           ${post.title}
         </a>
       </h2>
         <span>by ${post.user?.name}</span>
-        <a href="/src/features/detail/detail.html?_id=${post._id}">
+        <a href="/src/features/detail/detail.html?id=${post._id}">
           ${cleanContent}...
         </a>
       </div>
@@ -105,21 +105,24 @@ async function renderTopWriters() {
     const writers: Writer[] = response.data.item.slice(0, 4);
 
     writers.forEach(writer => {
-      const imageSrc = writer.image;
+      const imageSrc =
+        writer.image && writer.image.startsWith('http')
+          ? writer.image
+          : '/assets/images/search/defaultProfil.webp';
 
       const card = document.createElement('div');
       card.className = 'author-card';
       card.innerHTML = `
-        <a href="/src/features/writerhome/writerhome.html">
+       <a href="src/features/writerhome/writerhome.html?_id=${writer._id}">
           <img src="${imageSrc}" alt="${writer.name}" class="profile" />
         </a>
-        <a href="/src/features/writerhome/writerhome.html">
+        <a href="src/features/writerhome/writerhome.html?_id=${writer._id}">
           <h3>${writer.name}</h3>
         </a>
-        <a href="/src/features/writerhome/writerhome.html">
+        <a href="src/features/writerhome/writerhome.html?_id=${writer._id}">
           <p class="job">${writer.extra?.job || ''}</p>
         </a>
-        <a href="/src/features/writerhome/writerhome.html">
+        <a href="src/features/writerhome/writerhome.html?_id=${writer._id}">
           <p class="prev">${(writer.extra?.biography || '').replace(/\n/g, '<br />')}</p>
         </a>
       `;
