@@ -142,7 +142,7 @@ function renderPost(item: PostDetail) {
     }
   }
 
-  imageEl.src = item?.image || '/assets/images/author3.png'; //추후 공통 이미지로 첨부 예정
+  imageEl.src = item?.image || '/assets/images/mybox-icons/no-img.svg';
   if (captionEl) captionEl.textContent = item.imageCaption ?? '';
 
   authorNameEl.textContent = item.user.name;
