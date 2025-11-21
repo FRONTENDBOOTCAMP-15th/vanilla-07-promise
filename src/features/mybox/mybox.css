@@ -120,6 +120,11 @@
   object-fit: cover;
 }
 
+.recent-books__noItem {
+  color: #959595;
+  font-size: 0.81em;
+}
+
 .recent-books__booktitle {
   font-size: 0.75em;
   margin-block-start: 1em;
