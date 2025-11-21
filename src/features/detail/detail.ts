@@ -4,10 +4,10 @@ import {
   initSubscribeButton,
 } from '../../common/sub-section';
 import { saveRecentBook } from '../mybox/recent';
+import { initLikeButton } from '../../common/like.ts';
 
 const axios = getAxios();
 
-//detail 타입 정의
 interface PostDetail {
   title: string;
   extra?: { subTitle?: string };
@@ -27,7 +27,6 @@ interface PostDetail {
   likeCount?: number;
 }
 
-//작가 type 정의
 interface Author {
   _id: number;
   name: string;
@@ -40,10 +39,7 @@ interface Author {
     keyword?: string[];
   };
 }
-//기본 좋아요 상태
-let isLiked = false;
 
-//URL에서 id 정보 받아오기
 function getPostIdFromUrl(): number | null {
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
@@ -51,13 +47,11 @@ function getPostIdFromUrl(): number | null {
   return !isNaN(parsedId) ? parsedId : null;
 }
 
-//상세 페이지 api 받아오기
 async function fetchPostDetail(postId: number): Promise<PostDetail> {
   const res = await axios.get(`/posts/${String(postId)}`);
   return res.data.item;
 }
 
-//작가 정보 api 받아오기
 async function fetchAuthorExtraInfo(userId: number): Promise<Author | null> {
   const res = await axios.get('/users', {
     params: {
@@ -66,39 +60,6 @@ async function fetchAuthorExtraInfo(userId: number): Promise<Author | null> {
   });
   const users: Author[] = res.data?.item ?? [];
   return users.find(user => user._id === userId) ?? null;
-}
-
-//좋아요 버튼
-function updateLikeUI(active: boolean) {
-  const heartBtn = document.getElementById('heartBtn')!;
-  const img = heartBtn.querySelector('img')!;
-  const countEl = heartBtn.querySelector('.like-count')!;
-  let count = parseInt(countEl.textContent ?? '0');
-
-  if (active) {
-    img.src = '/assets/images/detail/heart.png';
-    count += 1;
-  } else {
-    img.src = '/assets/images/detail/heart-a.png';
-    count = Math.max(0, count - 1);
-  }
-  countEl.textContent = String(count);
-}
-
-function initLike(postId: number) {
-  void postId;
-  const heart = document.getElementById('heartBtn');
-  heart?.addEventListener('click', async () => {
-    const isLoggedIn = false;
-    if (!isLoggedIn) {
-      alert('로그인이 필요한 기능입니다.');
-      return;
-    }
-
-    if (isLiked) return;
-    isLiked = true;
-    updateLikeUI(true);
-  });
 }
 
 function renderPost(item: PostDetail) {
@@ -118,32 +79,35 @@ function renderPost(item: PostDetail) {
   subtitleEl.textContent = item.extra?.subTitle ?? '';
   authorEl.textContent = `by ${item.user.name}`;
 
-  const plainText = item.content.replace(/<[^>]*>/g, ''); //html제외 텍스트만 인식
+  const plainText = item.content.replace(/<[^>]*>/g, '');
   const totalLength = plainText.length;
-
   const imageSection = document.querySelector<HTMLElement>('.image-section');
+  const containsHtmlTags = /<\/?[a-z][\s\S]*>/i.test(item.content);
 
-  //글자 수 80기준으로 나눠 표시
-  if (totalLength <= 80) {
-    contentEl.innerHTML = item.content;
-    contentEl.style.display = 'block';
+  if (containsHtmlTags) {
+    contentEl.textContent =
+      '이 콘텐츠는 HTML형식이라 내용 보기는 불가능 합니다';
   } else {
-    const firstPart = plainText.slice(0, 80);
-    const secondPart = plainText.slice(80);
+    if (totalLength <= 80) {
+      contentEl.innerHTML = item.content;
+      contentEl.style.display = 'block';
+    } else {
+      const firstPart = plainText.slice(0, 80);
+      const secondPart = plainText.slice(80);
 
-    contentEl.textContent = firstPart;
-    contentEl.style.display = 'block';
+      contentEl.textContent = firstPart;
+      contentEl.style.display = 'block';
 
-    if (imageSection) {
-      const newContentEl = document.createElement('div');
-      newContentEl.className = 'content content-below-image';
-      newContentEl.textContent = secondPart;
-      imageSection.insertAdjacentElement('afterend', newContentEl);
+      if (imageSection) {
+        const newContentEl = document.createElement('div');
+        newContentEl.className = 'content content-below-image';
+        newContentEl.textContent = secondPart;
+        imageSection.insertAdjacentElement('afterend', newContentEl);
+      }
     }
   }
 
-  imageEl.src = item?.image || '/assets/images/mybox-icons/no-img.svg'; //대체 기본이미지!
-
+  imageEl.src = item?.image || '/assets/images/mybox-icons/no-img.svg';
   if (captionEl) captionEl.textContent = item.imageCaption ?? '';
 
   authorNameEl.textContent = item.user.name;
@@ -169,20 +133,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!authorInfo) return console.error('작성자 정보 오류');
 
     const subCount = authorInfo.bookmarkedBy?.users ?? 0;
-    renderSubscribeSection(post.user._id, subCount);
-    initSubscribeButton(postId);
+    const isUserSubscribed = false; // ✅ 기본은 항상 false로 시작
+    renderSubscribeSection(subCount, isUserSubscribed);
+    initSubscribeButton();
 
     const likeCountEl = document.querySelector<HTMLElement>('.like-count');
     if (likeCountEl)
       likeCountEl.textContent = String(authorInfo.likedBy?.users ?? 0);
-    initLike(postId);
+
+    initLikeButton();
   } catch (err) {
     console.error('로딩 실패:', err);
     alert('게시글을 불러오지 못했습니다.');
   }
 });
 
-// 최근 본
 function getBookIdFromURL() {
   const params = new URLSearchParams(location.search);
   return Number(params.get('id'));
@@ -195,15 +160,12 @@ function extractAuthor(raw: string): string {
 
 function loadDetail() {
   const _id = getBookIdFromURL();
-
   const title = document.querySelector('.title')?.textContent?.trim() ?? '';
-
   const imgEl = document.querySelector(
     '.image-section img',
   ) as HTMLImageElement;
 
-  const image =
-    imgEl && imgEl.src ? imgEl.src : '/assets/images/mybox-icons/no-img.svg';
+  const image = imgEl?.src || '/assets/images/mybox-icons/no-img.svg';
 
   const rawAuthor = document.querySelector('.author')?.textContent ?? '';
   const name = extractAuthor(rawAuthor);

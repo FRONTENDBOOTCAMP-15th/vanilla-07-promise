@@ -39,19 +39,28 @@
           </div>
           <div class="author-desc"></div>
           <div class="author-footer">
-            <span class="subs"
-              >구독자 <span class="subscribe-count">0</span></span
-            >
+            <span class="subs">
+              구독자 <span class="subscribe-count">0</span>
+            </span>
 
-            <button class="subscribe-btn">+ 구독</button>
+            <!--=====버튼 구조 수정========= -->
+            <button class="subscribe-btn" aria-label="구독 버튼">
+              <img
+                class="subscribe-icon"
+                src="/assets/images/detail/sub-B.svg"
+                alt="구독 아이콘"
+              />
+            </button>
           </div>
+
           <div class="author-react">
-            <img
-              id="heartBtn"
-              src="/assets/images/detail/heart.svg"
-              alt="하트 버튼"
-              class="icon-button"
-            />
+            <button id="heartBtn" class="icon-button" aria-label="좋아요 버튼">
+              <img
+                src="/assets/images/detail/heart.svg"
+                alt="하트 버튼"
+                class="heart-icon"
+              />
+            </button>
             <span class="like-count">0</span>
           </div>
         </div>
