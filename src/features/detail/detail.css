@@ -1,8 +1,10 @@
+@import url(/assets/css/base/global.css);
+
 /* 콘텐츠스타일 */
 .container {
   width: 100%;
   max-width: 28.875rem;
-  margin: 0 auto; /* 좌우 중앙 정렬은 이것만 있으면 됨 */
+  margin: 0 auto;
   margin-top: 3.75rem;
   margin-bottom: 5rem;
 
