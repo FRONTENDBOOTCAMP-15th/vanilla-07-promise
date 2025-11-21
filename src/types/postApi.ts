@@ -3,7 +3,7 @@ import { api, type ApiItemResponse } from './apiClient';
 export interface PostPayload {
   title: string;
   content: string;
-  tag?: string;
+  tag?: string[];
   image?: string;
 }
 
@@ -11,7 +11,7 @@ export interface PostResponse {
   _id: string;
   title: string;
   content: string;
-  tag?: string;
+  tag?: string[];
   image?: string;
   createdAt?: string;
   updatedAt?: string;
