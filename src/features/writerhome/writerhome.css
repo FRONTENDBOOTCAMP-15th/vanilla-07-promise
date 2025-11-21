@@ -118,6 +118,12 @@ body {
   text-decoration: underline;
   color: var(--color-primary);
   text-underline-offset: 0.19em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .write-list__item a:hover {
