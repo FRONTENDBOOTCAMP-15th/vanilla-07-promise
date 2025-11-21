@@ -64,7 +64,8 @@ if (
 ) {
   renderEmtyFavWriter();
 } else {
-  renderWriters(writerData.item);
+  const limit = writerData.item.slice(0, 10);
+  renderWriters(limit);
 }
 
 // 최근 본
