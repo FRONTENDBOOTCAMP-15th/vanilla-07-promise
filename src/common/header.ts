@@ -42,7 +42,7 @@ class BrunchHeader extends HTMLElement {
     this.innerHTML = `
       <style>
                 /* 모바일 화면 */
-          @import url(../css/base/global.css);
+          @import url('/assets/css/base/global.css');
           body {
             margin: 0 auto;
             max-width: var(--body-width);
@@ -53,7 +53,8 @@ class BrunchHeader extends HTMLElement {
             top: 0;
             left: 50%;
             transform: translateX(-50%); /* 좌우 중앙 이동 */
-            width: var(--body-width);
+            inline-size: 100%;
+            max-inline-size: var(--body-width);
             z-index: 1000;
             display: flex;
             background-color: var(--color-white);

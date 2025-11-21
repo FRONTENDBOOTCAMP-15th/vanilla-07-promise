@@ -1,0 +1,21 @@
+meta {
+  name: 게시물 수정
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{url}}/posts/3
+  body: json
+  auth: inherit
+}
+
+params:query {
+  ~_id: 1
+}
+
+body:json {
+  {
+    "image" :"https://res.cloudinary.com/ddedslqvv/image/upload/v1763699172/febc15-vanilla07-ecad/HSNz23fm5.png"
+  }
+}
