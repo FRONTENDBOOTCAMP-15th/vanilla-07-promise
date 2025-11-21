@@ -23,6 +23,14 @@ populateProfileSection();
 function populateProfileSection() {
   const section = document.querySelector('.mypage') as HTMLElement;
 
+  // 뒤로가기 버튼 추가
+  const backBtn = document.createElement('button');
+  backBtn.id = 'backBtn';
+  backBtn.textContent = '← 뒤로가기';
+  backBtn.addEventListener('click', () => {
+    window.history.back();
+  });
+
   // 기존 요소 생성
   const profileImg = document.createElement('img');
   profileImg.id = 'profileImage';
@@ -48,6 +56,7 @@ function populateProfileSection() {
     UpdateUserNameANdImage();
   });
 
+  section.appendChild(backBtn);
   section.appendChild(profileImg);
   section.appendChild(fileInput);
   section.appendChild(nicknameInput);
