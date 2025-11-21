@@ -39,6 +39,7 @@ export interface DeleteSubs {
 
 // 작가 글 리스트
 export interface WriteList {
+  _id: number;
   title: string;
   content: string;
   user: {

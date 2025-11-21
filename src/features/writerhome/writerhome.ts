@@ -245,7 +245,7 @@ function renderWriteLists(lists: WriteList[]) {
   const result = lists.map(list => {
     return `
     <li class="write-list__item">
-      <a href="/src/features/detail/detail.html?id=${list.user._id}">${withoutTags(list.title)}</a>
+      <a href="/src/features/detail/detail.html?id=${list._id}">${withoutTags(list.title)}</a>
         <p>${withoutTags(list.content)}</p>
           <div class="write-list__data">
             <p>댓글${list.repliesCount}</p>

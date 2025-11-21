@@ -5,6 +5,7 @@ import type {
   MyBrunch,
 } from '../../types/mybox-type/mybox-type';
 import { getAxios } from '../utils/axios';
+import { getRecentBooks, type RecentBook } from './recent';
 
 // 관심 작가
 
@@ -64,6 +65,47 @@ if (
   renderEmtyFavWriter();
 } else {
   renderWriters(writerData.item);
+}
+
+// 최근 본
+function renderRecentBooks(recents: RecentBook[]) {
+  const result = recents.map(recent => {
+    const noImg =
+      recent.image && recent.image.startsWith('http')
+        ? recent.image
+        : '/assets/images/mybox-icons/no-img.svg';
+
+    return `<li class="recent-books__item">
+          <a href="../detail/detail.html?id=${recent._id}">
+            <img src="${noImg}" alt="${recent.title}" />
+            <p class="recent-books__booktitle">${recent.title}</p>
+            <p class="recent-books__name">
+              <img src="/assets/images/mybox-icons/by.svg" alt="" />
+              ${recent.name}
+            </p>
+          </a>
+        </li>`;
+  });
+
+  const list = document.querySelector('.recent-books__list');
+  if (list) {
+    list.innerHTML = result.join('');
+  }
+}
+
+function renderEmtyRecentBooks() {
+  const list = document.querySelector('.recent-books__list');
+  if (list) {
+    list.innerHTML = `<li class="recent-books__noItem"><p>최근 본 글이 없습니다.<p></li>`;
+  }
+}
+
+const recentData = getRecentBooks();
+
+if (!recentData || recentData.length === 0) {
+  renderEmtyRecentBooks();
+} else {
+  renderRecentBooks(recentData);
 }
 
 // 관심 글

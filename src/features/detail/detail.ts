@@ -3,6 +3,7 @@ import {
   renderSubscribeSection,
   initSubscribeButton,
 } from '../../common/sub-section';
+import { saveRecentBook } from '../mybox/recent';
 
 const axios = getAxios();
 
@@ -161,6 +162,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const post = await fetchPostDetail(postId);
     renderPost(post);
 
+    loadDetail();
+
     const authorInfo = await fetchAuthorExtraInfo(post.user._id);
     if (!authorInfo) return console.error('작성자 정보 오류');
 
@@ -177,3 +180,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     alert('게시글을 불러오지 못했습니다.');
   }
 });
+
+// 최근 본
+function getBookIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  return Number(params.get('id'));
+}
+
+function extractAuthor(raw: string): string {
+  if (!raw) return '';
+  return raw.replace('by', '').split('·')[0].trim();
+}
+
+function loadDetail() {
+  const _id = getBookIdFromURL();
+
+  const title = document.querySelector('.title')?.textContent?.trim() ?? '';
+
+  const imgEl = document.querySelector(
+    '.image-section img',
+  ) as HTMLImageElement;
+
+  const image =
+    imgEl && imgEl.src ? imgEl.src : '/assets/images/mybox-icons/no-img.svg';
+
+  const rawAuthor = document.querySelector('.author')?.textContent ?? '';
+  const name = extractAuthor(rawAuthor);
+
+  saveRecentBook({
+    _id,
+    title,
+    image,
+    name,
+  });
+}
