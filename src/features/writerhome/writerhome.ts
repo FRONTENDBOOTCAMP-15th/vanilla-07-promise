@@ -61,7 +61,7 @@ if (writerInfoData?.ok) {
   renderWriterInfo(writerInfoData.item);
 }
 
-// 구독
+// 구독 버튼 & 구독자
 
 // 구독자 수 UI 렌더링
 renderSubscribeSection(
@@ -72,7 +72,7 @@ renderSubscribeSection(
 // 구독 버튼 기능 활성화
 initSubscribeButton(writerInfoData.item._id);
 
-// 구독 인포
+// 관심 작가 count
 function getSubsInfoId(): number {
   const params = new URLSearchParams(location.search);
   return Number(params.get('_id'));
@@ -98,11 +98,7 @@ function renderSubsInfo(info: SubsInfo) {
 
   if (list) {
     list.innerHTML = `
-      <div>
-        <p class="writer-subscribe__subscriber">구독자</p>
-        <p class="writer-subscribe__subcount">${info.bookmarkedBy.users}</p>
-      </div>
-      <div>
+      <div class="writer-subscribe__bookmark">
         <p class="writer-subscribe__favwriter">관심작가</p>
         <p class="writer-subscribe__favcount">${info.bookmark.users}</p>
       </div>
@@ -115,97 +111,6 @@ const subsInfoData = await getSubsInfoData();
 if (subsInfoData?.ok) {
   renderSubsInfo(subsInfoData.item);
 }
-
-// // 구독 버튼
-// const axios = getAxios();
-
-// function getSubsBtnId(): number {
-//   const params = new URLSearchParams(location.search);
-//   return Number(params.get('_id'));
-// }
-
-// const isSubscribed = false;
-// const bookmarkId: number | null = null;
-
-// const subscribeBtn = document.querySelector(
-//   '.writer-subscribe__button',
-// ) as HTMLButtonElement;
-// const subsBtnId = getSubsBtnId();
-
-// async function SubscribeStatus() {
-//   try {
-//     const { data } = await axios.get(`/bookmarks/${subsBtnId}`, {
-//       headers: { Authorization: `Bearer ${TEMP_TOKEN}` },
-//     });
-
-//     if (data.ok && data.item) {
-//       isSubscribed = true;
-//       bookmarkId = data.item._id;
-
-//       updateButtonUI(); // 버튼 모양 초기화
-//     }
-//   } catch (err) {
-//     // 구독 안 되어있으면 404가 올 수 있음 → 정상
-//     isSubscribed = false;
-//     bookmarkId = null;
-//     updateButtonUI();
-//   }
-// }
-
-// async function subscribe() {
-//   try {
-//     const { data } = await axios.post(
-//       `/bookmarks/writer`,
-//       { target_id: subsBtnId },
-//       {
-//         headers: { Authorization: `Bearer ${TEMP_TOKEN}` },
-//       },
-//     );
-
-//     if (data.ok) {
-//       isSubscribed = true;
-//       bookmarkId = data.item._id; // 삭제에 필요!
-//       updateButtonUI();
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
-// async function unsubscribe() {
-//   if (!bookmarkId) return;
-
-//   try {
-//     const { data } = await axios.delete(`/bookmarks/${bookmarkId}`, {
-//       headers: { Authorization: `Bearer ${TEMP_TOKEN}` },
-//     });
-
-//     if (data.ok) {
-//       isSubscribed = false;
-//       bookmarkId = null;
-//       updateButtonUI();
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-
-// function updateButtonUI() {
-//   if (isSubscribed) {
-//     subscribeBtn.textContent = '✔ 구독중';
-//     subscribeBtn.classList.add('on'); // 스타일 커스텀 가능
-//   } else {
-//     subscribeBtn.textContent = '+ 구독하기';
-//     subscribeBtn.classList.remove('on');
-//   }
-// }
-
-// subscribeBtn.addEventListener('click', () => {
-//   if (isSubscribed) unsubscribe();
-//   else subscribe();
-// });
-
-// SubscribeStatus();
 
 // 작가 글 리스트
 function getListId(): number {

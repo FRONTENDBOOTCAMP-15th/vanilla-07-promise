@@ -26,7 +26,7 @@ export function renderSubscribeSection(userId: number, count: number) {
   countEl.textContent = String(count);
 
   const img = btn.querySelector('img');
-  if (img) img.src = '/assets/images/detail/sub-A.png';
+  if (img) img.src = '/assets/images/detail/sub-A.svg';
 }
 
 // 구독 상태 업데이트
@@ -38,10 +38,10 @@ function updateSubscribeUI(active: boolean) {
   let count = parseInt(countEl.textContent ?? '0');
 
   if (active) {
-    if (img) img.src = '/assets/images/detail/sub-B.png';
+    if (img) img.src = '/assets/images/detail/sub-B.svg';
     countEl.textContent = String(count + 1);
   } else {
-    if (img) img.src = '/assets/images/detail/sub-A.png';
+    if (img) img.src = '/assets/images/detail/sub-A.svg';
     countEl.textContent = String(Math.max(0, count - 1));
   }
 }
