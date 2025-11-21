@@ -91,15 +91,20 @@
   gap: 2.2em;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  /* iOS 부드러운 스크롤 */
   -webkit-overflow-scrolling: touch;
-  /* Firefox 스크롤바 숨김 */
-  scrollbar-width: none;
 }
 
 .recent-books__list::-webkit-scrollbar {
-  /* Chrome, Safari 스크롤바 숨김 */
-  display: none;
+  height: 0.375em;
+}
+
+.recent-books__list:hover::-webkit-scrollbar {
+  height: 0.375em;
+}
+
+.recent-books__list:hover::-webkit-scrollbar-thumb {
+  background: #eeeeee;
+  border-radius: 0.625em;
 }
 
 .recent-books__item {
@@ -159,15 +164,20 @@
   gap: 2.2em;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  /* iOS 부드러운 스크롤 */
   -webkit-overflow-scrolling: touch;
-  /* Firefox 스크롤바 숨김 */
-  scrollbar-width: none;
 }
 
 .fav-books__list::-webkit-scrollbar {
-  /* Chrome, Safari 스크롤바 숨김 */
-  display: none;
+  height: 0.375em;
+}
+
+.fav-books__list:hover::-webkit-scrollbar {
+  height: 0.375em;
+}
+
+.fav-books__list:hover::-webkit-scrollbar-thumb {
+  background: #eeeeee;
+  border-radius: 0.625em;
 }
 
 .fav-books__item {
