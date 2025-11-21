@@ -1,5 +1,4 @@
-@import '/assets/css/base/global.css';
-
+@import url(/assets/css/base/global.css);
 /* 관심 작가 섹션 */
 
 .wrapper {
