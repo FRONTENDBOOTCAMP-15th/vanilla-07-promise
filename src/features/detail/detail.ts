@@ -142,7 +142,8 @@ function renderPost(item: PostDetail) {
     }
   }
 
-  imageEl.src = item?.image || '/assets/images/mybox-icons/no-img.svg'; //대체 기본이미지
+  imageEl.src = item?.image || '/assets/images/mybox-icons/no-img.svg'; //대체 기본이미지!
+
   if (captionEl) captionEl.textContent = item.imageCaption ?? '';
 
   authorNameEl.textContent = item.user.name;
