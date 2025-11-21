@@ -3,7 +3,7 @@ import { api } from '../../types/apiClient';
 
 const form = document.querySelector<HTMLFormElement>('.post-form');
 const titleInput = document.querySelector<HTMLInputElement>('#title');
-const subtitleInput = document.querySelector<HTMLInputElement>('#subtitle');
+const tagInput = document.querySelector<HTMLInputElement>('#tag');
 const contentInput = document.querySelector<HTMLTextAreaElement>('#content');
 const imageInput = document.querySelector<HTMLInputElement>(
   'input[name="imageUpload"]',
@@ -18,7 +18,7 @@ const STORAGE_KEY = 'vanilla:posts';
 interface StoredPost {
   id: string;
   title: string;
-  subtitle: string;
+  tag: string[];
   content: string;
   image: Array<{ name: string; type: string; size: number }>;
   createdAt: string;
@@ -69,7 +69,7 @@ interface CreatePostPayload {
   type: 'brunch';
   title: string;
   extra: {
-    subtitle: string;
+    tag: string;
     align: string;
   };
   content: string;
@@ -79,7 +79,7 @@ interface CreatePostPayload {
 
 export async function createPostRequest(
   title: string,
-  subtitle: string,
+  tag: string,
   content: string,
   getAlign: () => string,
   file?: File,
@@ -104,7 +104,7 @@ export async function createPostRequest(
     type: 'brunch',
     title,
     extra: {
-      subtitle,
+      tag,
       align: getAlign(),
     },
     content,
@@ -149,7 +149,7 @@ const savePosts = (posts: StoredPost[]): void => {
 
 const validateRequiredFields = (): boolean => {
   const title = titleInput?.value.trim() ?? '';
-  const subtitle = subtitleInput?.value.trim() ?? '';
+  const tag = tagInput?.value.trim() ?? '';
   const content = contentInput?.value.trim() ?? '';
 
   if (!title) {
@@ -157,9 +157,9 @@ const validateRequiredFields = (): boolean => {
     titleInput?.focus();
     return false;
   }
-  if (!subtitle) {
-    alert('소제목을 입력해주세요.');
-    subtitleInput?.focus();
+  if (!tag) {
+    alert('태그를 입력해주세요.');
+    tagInput?.focus();
     return false;
   }
   if (!content) {
@@ -175,7 +175,7 @@ const persistLocally = (payload: CreatePostPayload): void => {
   const newPost: StoredPost = {
     id: generateId(),
     title: payload.title,
-    subtitle: payload.extra.subtitle ?? '',
+    tag: payload.extra.tag ? [payload.extra.tag] : [],
     content: payload.content,
     image:
       imageInput?.files && imageInput.files.length > 0
@@ -200,7 +200,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
   if (!validateRequiredFields()) return;
 
   const title = titleInput.value.trim() ?? '';
-  const subtitle = subtitleInput?.value.trim() ?? '';
+  const tag = tagInput?.value.trim() ?? '';
   const content = contentInput.value.trim() ?? '';
 
   const file =
@@ -211,7 +211,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
   try {
     const payload = await createPostRequest(
       title,
-      subtitle,
+      tag,
       content,
       () =>
         document.querySelector('.align-button')?.getAttribute('data-align') ??
@@ -223,7 +223,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     const postPayload = {
       title: payload.title,
       content: payload.content,
-      subtitle: payload.extra.subtitle,
+      tag: payload.extra.tag,
       images: payload.image || undefined,
     };
 
@@ -250,7 +250,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     try {
       const payload = await createPostRequest(
         title,
-        subtitle,
+        tag,
         content,
         () =>
           document.querySelector('.align-button')?.getAttribute('data-align') ??
@@ -270,9 +270,9 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
 const updateSubmitButtonState = (): void => {
   if (!submitButton) return;
   const title = titleInput?.value.trim() ?? '';
-  const subtitle = subtitleInput?.value.trim() ?? '';
+  const tag = tagInput?.value.trim() ?? '';
   const content = contentInput?.value.trim() ?? '';
-  const hasAny = Boolean(title || subtitle || content);
+  const hasAny = Boolean(title || tag || content);
   if (hasAny) {
     submitButton.classList.add('active');
     submitButton.removeAttribute('disabled');
@@ -284,7 +284,7 @@ const updateSubmitButtonState = (): void => {
 
 const registerFieldListeners = (): void => {
   titleInput?.addEventListener('input', updateSubmitButtonState);
-  subtitleInput?.addEventListener('input', updateSubmitButtonState);
+  tagInput?.addEventListener('input', updateSubmitButtonState);
   contentInput?.addEventListener('input', updateSubmitButtonState);
 };
 
