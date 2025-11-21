@@ -245,8 +245,8 @@ function renderWriteLists(lists: WriteList[]) {
   const result = lists.map(list => {
     return `
     <li class="write-list__item">
-      <a href="/src/features/detail/detail.html?id=${list.user._id}">${list.title}</a>
-        <p>${list.content}</p>
+      <a href="/src/features/detail/detail.html?id=${list.user._id}">${withoutTags(list.title)}</a>
+        <p>${withoutTags(list.content)}</p>
           <div class="write-list__data">
             <p>댓글${list.repliesCount}</p>
             <img src="/assets/images/writerhome/round.svg"></img>
@@ -260,6 +260,12 @@ function renderWriteLists(lists: WriteList[]) {
   if (list) {
     list.innerHTML = result.join('');
   }
+}
+
+//제목 및 본문 태그 들어올 경우 제거
+function withoutTags(text: string): string {
+  const withoutTags = text.replace(/<\/?[^>]+(>|$)/g, '');
+  return withoutTags;
 }
 
 function renderEmtyWriteList() {
