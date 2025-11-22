@@ -51,16 +51,21 @@ function populateProfileSection() {
   updateBtn.id = 'updateBtn';
   updateBtn.textContent = '정보 수정';
 
+  const logoutBtn = document.createElement('button');
+  logoutBtn.id = 'logout';
+  logoutBtn.textContent = '로그아웃';
+
   // 버튼 클릭 이벤트
   updateBtn.addEventListener('click', () => {
     UpdateUserNameANdImage();
   });
 
-  section.appendChild(backBtn);
   section.appendChild(profileImg);
   section.appendChild(fileInput);
   section.appendChild(nicknameInput);
   section.appendChild(updateBtn);
+  section.appendChild(backBtn);
+  section.appendChild(logoutBtn);
 
   let selectedFile: File | undefined;
 
