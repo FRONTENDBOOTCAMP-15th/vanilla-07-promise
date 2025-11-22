@@ -225,10 +225,11 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
 
     // CreatePostPayload를 PostPayload로 변환
     const postPayload = {
+      type: 'brunch',
       title: payload.title,
       content: payload.content,
       tag: payload.extra.tag,
-      images: payload.image || undefined,
+      image: payload.image || undefined,
     };
 
     const response = await postApi.createPost(postPayload);

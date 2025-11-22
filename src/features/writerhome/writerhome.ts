@@ -1,4 +1,3 @@
-import { TEMP_TOKEN } from '../../common/token';
 import type {
   SubsInfo,
   WriteList,
@@ -28,7 +27,7 @@ async function getWriterInfoData() {
   try {
     const { data } = await axios.get(`/users/${writerId}`, {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     return data;
@@ -84,7 +83,7 @@ async function getSubsInfoData() {
   try {
     const { data } = await axios.get(`/users/${SubsInfoId}`, {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     return data;
@@ -124,7 +123,7 @@ async function getWriteListData() {
   try {
     const { data } = await axios.get(`/posts/users/${ListId}`, {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     return data;
