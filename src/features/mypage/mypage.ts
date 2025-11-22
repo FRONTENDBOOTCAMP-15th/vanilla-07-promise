@@ -34,7 +34,7 @@ function populateProfileSection() {
   // 기존 요소 생성
   const profileImg = document.createElement('img');
   profileImg.id = 'profileImage';
-  profileImg.src = userString ? user.image : '';
+  profileImg.src = user?.image ?? '/assets/images/search/defaultProfil.webp';
   profileImg.alt = '프로필 이미지';
 
   const fileInput = document.createElement('input');
@@ -112,7 +112,7 @@ function populateProfileSection() {
     const userId = JSON.parse(userString)._id;
 
     const body: { name?: string; image: string } = {
-      image: formData.get('image')?.toString() ?? '', 
+      image: formData.get('image')?.toString() ?? '',
     };
 
     // 닉네임 값이 있으면 추가
