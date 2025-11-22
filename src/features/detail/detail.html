@@ -15,7 +15,12 @@
         <div class="text-wrap">
           <div class="title"></div>
           <div class="subtitle"></div>
-          <div class="author"></div>
+          <div class="author">
+            <a href="#" class="author-link-inline">
+              <span class="author-name-inline"></span>
+            </a>
+            <span class="author-date"></span>
+          </div>
         </div>
       </div>
 
@@ -32,26 +37,36 @@
         <div class="author-info">
           <div class="author-header">
             <div>
-              <div class="author-name"></div>
+              <a href="#" class="author-link">
+                <div class="author-name"></div>
+              </a>
               <div class="author-job"></div>
             </div>
-            <img class="author-img" src="" alt="작성자 이미지" />
+            <a href="#" class="author-link">
+              <img class="author-img" src="" alt="작성자 이미지" />
+            </a>
           </div>
           <div class="author-desc"></div>
           <div class="author-footer">
-            <span class="subs"
-              >구독자 <span class="subscribe-count">0</span></span
-            >
-
-            <button class="subscribe-btn">+ 구독</button>
+            <span class="subs">
+              구독자 <span class="subscribe-count">0</span>
+            </span>
+            <button class="subscribe-btn" aria-label="구독 버튼">
+              <img
+                class="subscribe-icon"
+                src="/assets/images/detail/sub-B.svg"
+                alt="구독 아이콘"
+              />
+            </button>
           </div>
           <div class="author-react">
-            <img
-              id="heartBtn"
-              src="/assets/images/detail/heart.svg"
-              alt="하트 버튼"
-              class="icon-button"
-            />
+            <button id="heartBtn" class="icon-button" aria-label="좋아요 버튼">
+              <img
+                src="/assets/images/detail/heart.svg"
+                alt="하트 버튼"
+                class="heart-icon"
+              />
+            </button>
             <span class="like-count">0</span>
           </div>
         </div>

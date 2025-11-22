@@ -55,6 +55,15 @@
   font-size: 1rem;
   color: #959595;
   margin-top: 2.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.author-date {
+  font-size: 0.9rem;
+  color: #959595;
 }
 
 /* 본문 공통 */
@@ -115,8 +124,8 @@
 }
 
 .author-img {
-  width: 72px;
-  height: 72px;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -142,16 +151,9 @@
 }
 
 .subscribe-btn {
-  background-color: transparent;
-  color: #00c4c4;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px 20px;
-  border: 2px solid #00c4c4;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  border: none;
 }
+
 .author-react {
   display: flex;
   justify-content: flex-start;
@@ -165,9 +167,4 @@
   height: 28px;
   cursor: pointer;
   transition: transform 0.2s ease;
-}
-
-.subscribe-btn:hover {
-  background-color: #00c4c4;
-  color: white;
 }
