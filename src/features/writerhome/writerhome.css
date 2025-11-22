@@ -10,7 +10,7 @@ body {
   margin-inline-start: 1.25em;
   margin-inline-end: 1.25em;
   margin-block-start: 7em;
-  padding: 0 1.56em;
+  padding-bottom: 1.56em;
 }
 
 /* 작가 카드 섹션 */
@@ -86,7 +86,7 @@ body {
 
 /* 글 리스트 섹션 */
 .write-list {
-  margin-block-end: 15em;
+  padding-block-end: 10em;
 }
 
 .write-list__items {
@@ -118,6 +118,12 @@ body {
   text-decoration: underline;
   color: var(--color-primary);
   text-underline-offset: 0.19em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .write-list__item a:hover {

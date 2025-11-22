@@ -125,6 +125,11 @@
   object-fit: cover;
 }
 
+.recent-books__item a > img[src*='no-img'] {
+  padding: 1.9em 1.9em;
+  object-fit: contain;
+}
+
 .recent-books__noItem {
   color: #959595;
   font-size: 0.81em;
@@ -133,6 +138,12 @@
 .recent-books__booktitle {
   font-size: 0.75em;
   margin-block-start: 1em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .recent-books__name {
@@ -210,6 +221,12 @@
 .fav-books__booktitle {
   font-size: 0.75em;
   margin-block-start: 1em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fav-books__name {
@@ -252,6 +269,12 @@
 .my-brunch__item h3 {
   all: unset;
   font-size: 1.06em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .my-brunch__item p {

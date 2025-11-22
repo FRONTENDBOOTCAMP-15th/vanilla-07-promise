@@ -69,7 +69,7 @@ interface CreatePostPayload {
   type: 'brunch';
   title: string;
   extra: {
-    tag: string;
+    tag: string[];
     align: string;
   };
   content: string;
@@ -79,7 +79,7 @@ interface CreatePostPayload {
 
 export async function createPostRequest(
   title: string,
-  tag: string,
+  tag: string[],
   content: string,
   getAlign: () => string,
   file?: File,
@@ -175,7 +175,7 @@ const persistLocally = (payload: CreatePostPayload): void => {
   const newPost: StoredPost = {
     id: generateId(),
     title: payload.title,
-    tag: payload.extra.tag ? [payload.extra.tag] : [],
+    tag: payload.extra.tag,
     content: payload.content,
     image:
       imageInput?.files && imageInput.files.length > 0
@@ -200,7 +200,11 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
   if (!validateRequiredFields()) return;
 
   const title = titleInput.value.trim() ?? '';
-  const tag = tagInput?.value.trim() ?? '';
+  const rawTag = tagInput?.value.trim() ?? '';
+  const tagArray = rawTag
+    .split(',')
+    .map(t => t.trim())
+    .filter(t => t.length > 0);
   const content = contentInput.value.trim() ?? '';
 
   const file =
@@ -211,7 +215,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
   try {
     const payload = await createPostRequest(
       title,
-      tag,
+      tagArray,
       content,
       () =>
         document.querySelector('.align-button')?.getAttribute('data-align') ??
@@ -234,7 +238,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     alert('글이 등록되었습니다.');
     form?.reset();
     location.href = '../writerhome/writerhome.html';
-    
+
     // 생성된 게시글의 ID를 사용하여 detail 페이지로 이동
     const postId = response.item?._id;
     if (postId) {
@@ -250,7 +254,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     try {
       const payload = await createPostRequest(
         title,
-        tag,
+        tagArray,
         content,
         () =>
           document.querySelector('.align-button')?.getAttribute('data-align') ??
