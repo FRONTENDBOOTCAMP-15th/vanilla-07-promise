@@ -131,7 +131,10 @@ function renderPost(item: PostDetail) {
 
   // 작성자 정보
   authorNameEl.textContent = item.user.name;
-  authorImgEl.setAttribute('src', item.user.image);
+  authorImgEl.setAttribute(
+    'src',
+    item.image ?? '/assets/images/search/defaultProfil.webp',
+  );
   if (jobEl) jobEl.textContent = item.user.job ?? '';
   if (descEl) descEl.innerHTML = item.user.desc ?? item.user.bio ?? '';
 }
@@ -157,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const subCount = authorInfo.bookmarkedBy?.users ?? 0;
     const isUserSubscribed = false;
     renderSubscribeSection(subCount, isUserSubscribed);
-    initSubscribeButton();
+  initSubscribeButton();
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');

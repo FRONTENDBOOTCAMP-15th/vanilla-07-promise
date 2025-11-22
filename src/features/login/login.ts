@@ -21,6 +21,7 @@ function saveUserData(user: LoginUser) {
   const { accessToken } = user.token;
   const userData = {
     _id: user._id,
+    email: user.email,
     name: user.name,
     image: user.image,
   };
@@ -65,7 +66,7 @@ loginForm.addEventListener('submit', async event => {
     location.href = '../../../index.html';
   } catch (err) {
     if (err instanceof AxiosError) {
-      alert(`로그인 실패: ${err.response?.data?.message || '알 수 없는 오류'}`);
+      alert(`로그인 실패 ${err.response?.data?.message || '알 수 없는 오류'}`);
     } else {
       alert(`로그인 실패: ${err}`);
     }

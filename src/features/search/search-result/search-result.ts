@@ -134,7 +134,7 @@ async function renderResults(page: number) {
     figure.appendChild(figcaption);
 
     const img = document.createElement('img');
-    img.src = item.user.image || '/assets/images/search/defaultProfil.webp';
+    img.src = item.image || '/assets/images/mybox-icons/no-img.svg';
     img.alt = item.title;
     figure.appendChild(img);
 
