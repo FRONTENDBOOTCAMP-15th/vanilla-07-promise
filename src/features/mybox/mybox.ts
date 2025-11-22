@@ -1,4 +1,3 @@
-import { TEMP_TOKEN } from '../../common/token';
 import type {
   FavPost,
   FavWriter,
@@ -14,7 +13,7 @@ async function getWriterData() {
   try {
     const { data } = await axios.get('/bookmarks/user', {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     console.log(data);
@@ -116,7 +115,7 @@ async function getPostData() {
   try {
     const { data } = await axios.get('/bookmarks/post', {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     console.log(data);
@@ -177,7 +176,7 @@ async function getBrunchData() {
   try {
     const { data } = await axios.get('/posts/users', {
       headers: {
-        Authorization: `Bearer ${TEMP_TOKEN}`,
+        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
       },
     });
     console.log(data);

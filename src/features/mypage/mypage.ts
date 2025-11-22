@@ -23,24 +23,27 @@ populateProfileSection();
 function populateProfileSection() {
   const section = document.querySelector('.mypage') as HTMLElement;
 
-  // 뒤로가기 버튼 추가
-  const backBtn = document.createElement('button');
-  backBtn.id = 'backBtn';
-  backBtn.textContent = '← 뒤로가기';
-  backBtn.addEventListener('click', () => {
-    window.history.back();
-  });
-
   // 기존 요소 생성
   const profileImg = document.createElement('img');
   profileImg.id = 'profileImage';
-  profileImg.src = user?.image ?? '/assets/images/search/defaultProfil.webp';
+  profileImg.src =
+    user?.image && user.image !== ''
+      ? user.image
+      : '/assets/images/search/defaultProfil.webp';
   profileImg.alt = '프로필 이미지';
 
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.id = 'profileFile';
   fileInput.accept = 'image/*';
+
+  const myEmail = document.createElement('h3');
+  myEmail.textContent = `email : ${JSON.parse(sessionStorage.getItem('user') ?? '{}')?.email ?? ''}`;
+  myEmail.id = 'myEmail';
+
+  const myName = document.createElement('h3');
+  myName.textContent = `name : ${JSON.parse(sessionStorage.getItem('user') ?? '{}')?.name ?? ''}`;
+  myName.id = 'myEmail';
 
   const nicknameInput = document.createElement('input');
   nicknameInput.type = 'text';
@@ -49,18 +52,37 @@ function populateProfileSection() {
 
   const updateBtn = document.createElement('button');
   updateBtn.id = 'updateBtn';
-  updateBtn.textContent = '정보 수정';
+  updateBtn.textContent = '정보 수정 완료';
+
+  // 뒤로가기 버튼 추가
+  const backBtn = document.createElement('button');
+  backBtn.id = 'backBtn';
+  backBtn.textContent = '← 뒤로가기';
+  backBtn.addEventListener('click', () => {
+    window.history.back();
+  });
+
+  const logoutBtn = document.createElement('button');
+  logoutBtn.id = 'logout';
+  logoutBtn.textContent = '로그아웃';
+  logoutBtn.addEventListener('click', () => {
+    sessionStorage.removeItem('accessToken');
+    window.history.back();
+  });
 
   // 버튼 클릭 이벤트
   updateBtn.addEventListener('click', () => {
     UpdateUserNameANdImage();
   });
 
-  section.appendChild(backBtn);
   section.appendChild(profileImg);
   section.appendChild(fileInput);
+  section.appendChild(myEmail);
+  section.appendChild(myName);
   section.appendChild(nicknameInput);
   section.appendChild(updateBtn);
+  section.appendChild(backBtn);
+  section.appendChild(logoutBtn);
 
   let selectedFile: File | undefined;
 
@@ -97,7 +119,7 @@ function populateProfileSection() {
       }
     }
 
-    if (nicknameInput.value) {
+    if (nicknameInput.value.trim()) {
       formData.append('name', nicknameInput.value);
     }
 
@@ -129,7 +151,20 @@ function populateProfileSection() {
       });
 
       if (result.data.ok === 1) {
+        const userStr = sessionStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : {};
+
+        if (body.name != null) {
+          user.name = body.name;
+        }
+
+        if (body.image != null) {
+          user.image = body.image;
+        }
+
+        sessionStorage.setItem('user', JSON.stringify(user));
         alert('상태가 변경되었습니다.');
+        window.location.href = '/';
       } else {
         alert('오류가 발생했습니다.');
       }

@@ -28,7 +28,7 @@ function stripHtmlTags(html: string): string {
 // HTML 문자열 생성
 function createPostElement(post: Post, index: number): string {
   const imageUrl =
-    post.user?.image || post.image || '/assets/images/mybox-icons/no-img.svg';
+    post?.image || post.image || '/assets/images/mybox-icons/no-img.svg';
   const cleanContent = stripHtmlTags(post.content).slice(0, 40);
 
   return `

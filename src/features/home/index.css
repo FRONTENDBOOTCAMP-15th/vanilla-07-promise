@@ -61,7 +61,7 @@ body {
 .trending-book span:nth-of-type(1) {
   display: block;
   font-size: 0.875rem;
-  color: #999;
+  color: var(--color-muted);
   font-style: italic;
   margin: 0.25rem 0;
 }
@@ -78,8 +78,8 @@ body {
 
 .trending-book img {
   object-fit: fill;
-  width: 6.3em;
-  height: 6.12em;
+  width: 5.625em;
+  height: 5.625em;
   
 }
 
