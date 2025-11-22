@@ -65,12 +65,12 @@ if (writerInfoData?.ok) {
 
 // 구독자 수 UI 렌더링
 renderSubscribeSection(
-  writerInfoData.item._id,
-  writerInfoData.item.bookmarkedBy.users,
+  writerInfoData.item.bookmarkedBy.users, // 구독자 수
+  false, // 초기 구독 상태: false
 );
 
 // 구독 버튼 기능 활성화
-initSubscribeButton(writerInfoData.item._id);
+initSubscribeButton(); // 인자 없이 사용
 
 // 관심 작가 count
 function getSubsInfoId(): number {

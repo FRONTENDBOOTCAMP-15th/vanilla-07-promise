@@ -12,8 +12,8 @@ export function renderSubscribeSection(count: number, subscribed: boolean) {
 
   if (img) {
     img.src = subscribed
-      ? '/assets/images/detail/sub-A.svg' //
-      : '/assets/images/detail/sub-B.svg'; //
+      ? '/assets/images/detail/sub-A.svg' // 구독 중
+      : '/assets/images/detail/sub-B.svg'; // 구독 안함
   }
 
   isSubscribed = subscribed;
@@ -29,18 +29,20 @@ function updateSubscribeUI(active: boolean) {
 
   if (img) {
     img.src = active
-      ? '/assets/images/detail/sub-A.svg' // ✅ 구독 중이면 A
-      : '/assets/images/detail/sub-B.svg'; // ✅ 구독 해제되면 B
+      ? '/assets/images/detail/sub-A.svg'
+      : '/assets/images/detail/sub-B.svg';
   }
 
   countEl.textContent = String(active ? count + 1 : Math.max(0, count - 1));
 }
 
 // 구독 버튼 클릭 이벤트 등록
-export function initSubscribeButton() {
+export function initSubscribeButton(): void {
   const btn = document.querySelector('.subscribe-btn');
 
-  btn?.addEventListener('click', () => {
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
     if (!isUserLoggedIn()) {
       alert('로그인이 필요한 기능입니다.');
       location.href = '../login/login.html';
