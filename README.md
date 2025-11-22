@@ -1,7 +1,10 @@
 # 7조 Promise: 브런치 스토리
 <br>
 
-![브런치 스토리](https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA4MTlfMjAw%2FMDAxNjkyNDI0ODUyNzYz.smYd3p6s6Hl2RYCT8BsbuNDUUPQwh84dIK-t_JAFRTgg.iSA8rE1iOotyForzf7X0D1aByMfBESV2PkySe6NH50cg.PNG.sanctacrux%2F%253F%258B%25A4%253F%259A%25B4%25EB%25A1%259C%25EB%2593%259C.png&type=l340_165)
+<img width="750" height="350" alt="image" src="https://github.com/user-attachments/assets/8ebcb661-c92a-45da-ac00-cf05b973a8f7" />
+<!-- <img width="900" height="200" alt="image" src="https://github.com/user-attachments/assets/1e85f3e5-3ef1-42fb-95e5-41894ce15479" /> -->
+
+
 
 <br>
 
@@ -101,8 +104,8 @@
 ### 🎯메인 페이지
 - 요즘 뜨는 브런치
 - Top 구독 작가
-<img width="300" height="450" alt="스크린샷 2025-11-22 163214" src="https://github.com/user-attachments/assets/e2955c5d-039f-4a27-92c7-0c6c5e3dcbb7" />
-<img width="300" height="450" alt="스크린샷 2025-11-22 163234" src="https://github.com/user-attachments/assets/ec0dac55-6713-4c42-968e-7edfb2dde469" />
+<img width="300" height="450" alt="스크린샷 2025-11-22 182502" src="https://github.com/user-attachments/assets/8fc8a55a-1b6c-4c12-86c9-4d247c276e86" />
+<img width="300" height="440" alt="스크린샷 2025-11-22 163234" src="https://github.com/user-attachments/assets/ec0dac55-6713-4c42-968e-7edfb2dde469" />
 
 <hr>
 
@@ -153,6 +156,8 @@
 - 내 브런치
   
   <img width="300" height="450" alt="스크린샷 2025-11-22 170221" src="https://github.com/user-attachments/assets/3eb24f58-1e20-40c1-b80e-a8c6e1a2476c" />
+  <img width="300" height="450" alt="스크린샷 2025-11-22 183424" src="https://github.com/user-attachments/assets/5a7efc26-4e7b-484b-9216-10a2e7f0efc7" />
+
 
 
 <hr>
@@ -169,10 +174,16 @@
 
 
 ## 🔧 기술 구현 상세  
-- 폴더 구조: (승규님 수정 후 반영 예정 – 공간 확보)  
-- 아키텍처 다이어그램: 디스코드 제공 사진 사용 (승규님 준비 중)  
+- 폴더 구조: (승규님 수정 후 반영 예정 – 공간 확보)
 
-- **🛠 트러블 슈팅**
+ **아키텍처 다이어그램**
+ 
+ <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/c0769036-aa00-4db8-b889-3efbe4d60236" />
+
+<br>
+<br>
+
+## 🛠 트러블 슈팅
 
 | 이름 | 문제 상황 | 해결 방법 |
 |:--:|:--:|:--:|
