@@ -12,7 +12,7 @@
 “모바일 중심의 창작 경험을 혁신하는  
 프리미엄 작가 글쓰기 플랫폼 개발”   
 
-본 프로젝트는 브런치(Brunch) 플랫폼의 글쓰기 경험과 콘텐츠 생태계를 기반으로,  모바일 환경에서의 사용성·
+본 프로젝트는 브런치 플랫폼의 글쓰기 경험과 콘텐츠 생태계를 기반으로,  모바일 환경에서의 사용성·
 접근성을 대폭 향상시키는 것을 목표로 한다.
 
 <br>
@@ -26,11 +26,13 @@
 
 ## 🧑‍💻 팀원 역할 및소개
 
-| ![김현주]() | ![이승규]() | ![김은재]() | ![윤소라]() |
+| <img src="https://github.com/user-attachments/assets/195ebe45-3b18-4285-ae05-0476f538d092" width="150"/> | <img src="https://github.com/user-attachments/assets/195f8051-bb99-48a6-8ef0-2c26110fc7aa" width="150"/> | <img src="https://github.com/user-attachments/assets/2529e66e-b59a-4b0d-932c-78fa90b33ca0" width="150"/> | <img src="https://github.com/user-attachments/assets/03f33f4a-2afa-4f51-bd7a-5964522483a7" width="150"/> |
 |:--:|:--:|:--:|:--:|
-| **김현주**  | **이승규** | **김은재**  | **윤소라**  |
-| 조장(PM), PM | PL | 서기 | 발표 |
-| 로그인 및 글쓰기 | 발견(관련 키워드 검색) | 메인 및 상세 페이지 | 마이페이지, 작가 홈 및 내 서랍 페이지 |
+| **김현주** | **이승규** | **김은재** | **윤소라** |
+| 조장(PM) | PL | 서기 | 발표 |
+| 로그인 및 글쓰기 | 발견 (관련 키워드 검색) | 메인 및 상세 페이지 | 마이페이지, 작가 홈 및 내 서랍 페이지 |
+
+
 
 
 
@@ -46,7 +48,9 @@
 
 ## 🤝 협업 방식  
 
-### 작업 분배 방식
+<br>
+
+### 📚작업 분배 방식
 **기능 단위 분리 방식**
 - 메인 페이지
 - 상세 페이지
@@ -73,7 +77,7 @@
 <br>
 <br>
 
-### 소통 및 이슈 관리 방법
+### 🗨️소통 및 이슈 관리 방법
 **소통 방식**
 - 메신저 기반 실시간 소통(디스코드)
 - 오전마다 데일리 스크럼 진행, 수업 이후 상황 공유
@@ -102,16 +106,17 @@
 ## ✨ 기능 소개 
 
 ### 🎯메인 페이지
-- 요즘 뜨는 브런치
-- Top 구독 작가
-<img width="300" height="450" alt="스크린샷 2025-11-22 182502" src="https://github.com/user-attachments/assets/8fc8a55a-1b6c-4c12-86c9-4d247c276e86" />
-<img width="300" height="440" alt="스크린샷 2025-11-22 163234" src="https://github.com/user-attachments/assets/ec0dac55-6713-4c42-968e-7edfb2dde469" />
+- ✔️요즘 뜨는 브런치
+- ✔️Top 구독 작가
+<img width="300" height="433" alt="스크린샷 2025-11-22 182502" src="https://github.com/user-attachments/assets/8fc8a55a-1b6c-4c12-86c9-4d247c276e86" />
+<img width="300" height="450" alt="스크린샷 2025-11-23 222908" src="https://github.com/user-attachments/assets/3e37057a-709a-47f7-ad35-f462efed9d57" />
+
 
 <hr>
 
 ### 📚상세 페이지
-- 구독 등록/취소
-- 좋아요 등록/취소
+- ✔️구독 등록/취소
+- ✔️좋아요 등록/취소
 <img width="300" height="450" alt="스크린샷 2025-11-22 164958" src="https://github.com/user-attachments/assets/721a1b06-0bea-4a35-ab9a-55b7ebe3d3c7" />
 <img width="300" height="450" alt="스크린샷 2025-11-22 165308" src="https://github.com/user-attachments/assets/7a92415b-a398-4657-80db-fcca7670ab19" />
 
@@ -120,28 +125,31 @@
 <hr>
 
 ### 🔓로그인 페이지
-- 이메일 회원 가입(로그인)
-<img width="300" height="450" alt="스크린샷 2025-11-22 165115" src="https://github.com/user-attachments/assets/2ec3572f-9077-4ce9-816c-670fd20c573a" />
-<img width="300" height="450" alt="스크린샷 2025-11-22 165239" src="https://github.com/user-attachments/assets/fa58ffb5-b2e1-4364-a233-b0ca620e1c2a" />
+- ✔️이메일 회원 가입(로그인)
+- ✔️마이페이지
+<img width="300" height="445" alt="스크린샷 2025-11-22 165115" src="https://github.com/user-attachments/assets/2ec3572f-9077-4ce9-816c-670fd20c573a" />
+<img width="300" height="450" alt="image" src="https://github.com/user-attachments/assets/c8367610-3d92-4ac9-a9fa-2ad283458511" />
+
 
 
 
 <hr>
 
 ### ✍️글쓰기 및 등록
-- 파일 첨부
-- 글쓰기
-<img width="300" height="440" alt="스크린샷 2025-11-22 165414" src="https://github.com/user-attachments/assets/c2b35cdd-5f10-4590-9189-bf8996970f66" />
-<img width="300" height="450" alt="스크린샷 2025-11-22 165515" src="https://github.com/user-attachments/assets/f1794a83-4623-434b-a181-49c40fcf906f" />
+- ✔️파일 첨부
+- ✔️글쓰기
+<img width="300" height="436" alt="스크린샷 2025-11-23 224953" src="https://github.com/user-attachments/assets/47cdda21-c987-404e-ae66-a70247113a7d" />
+<img width="300" height="450" alt="스크린샷 2025-11-23 223352" src="https://github.com/user-attachments/assets/da735dee-6670-439c-9585-a12db13684cf" />
+
 
 
 
 <hr>
 
 ### 🔎발견(관련 키워드 검색)
-- 발견 기능 UI 작업
-- 글 검색
-- 작가 검색
+- ✔️발견 기능 UI 작업
+- ✔️글 검색
+- ✔️작가 검색
 <img width="300" height="450" alt="스크린샷 2025-11-22 165542" src="https://github.com/user-attachments/assets/2452a480-3e71-4aa4-baa6-20cddc63d684" />
 <img width="300" height="440" alt="스크린샷 2025-11-22 165613" src="https://github.com/user-attachments/assets/c25f7a2d-c90b-4c6a-97a3-f0f93c6483eb" />
 
@@ -150,22 +158,23 @@
 <hr>
 
 ### 📄내 서랍 페이지
-- 관심 작가
-- 최근 본 글
-- 관심 글
-- 내 브런치
-  
-  <img width="300" height="450" alt="스크린샷 2025-11-22 170221" src="https://github.com/user-attachments/assets/3eb24f58-1e20-40c1-b80e-a8c6e1a2476c" />
-  <img width="300" height="450" alt="스크린샷 2025-11-22 183424" src="https://github.com/user-attachments/assets/5a7efc26-4e7b-484b-9216-10a2e7f0efc7" />
+- ✔️관심 작가
+- ✔️최근 본 글
+- ✔️관심 글
+- ✔️내 브런치
+<img width="300" height="435" alt="스크린샷 2025-11-23 223013" src="https://github.com/user-attachments/assets/44534eea-70cf-45fc-a91a-77787e79302e" />
+<img width="300" height="450" alt="스크린샷 2025-11-23 223405" src="https://github.com/user-attachments/assets/f9c6d881-44b8-4696-b0bb-70e5bbc35d63" />
+
+
 
 
 
 <hr>
 
 ### ✏️작가 홈
-- 작가 정보
-- 구독/ 구독 취소
-- 작가의 글 목 목록
+- ✔️작가 정보
+- ✔️구독/ 구독 취소
+- ✔️작가의 글 목 목록
 <img width="300" height="445" alt="스크린샷 2025-11-22 170557" src="https://github.com/user-attachments/assets/aa93e422-62b9-4db1-a5ba-d2c9ca98b41f" />
 <img width="300" height="450" alt="스크린샷 2025-11-22 170606" src="https://github.com/user-attachments/assets/762025e5-743e-4d7a-8ae3-5b762da49d01" />
 
@@ -174,9 +183,9 @@
 
 
 ## 🔧 기술 구현 상세  
-- 폴더 구조: (승규님 수정 후 반영 예정 – 공간 확보)
+ <!-- 폴더 구조: (승규님 수정 후 반영 예정 – 공간 확보) -->
 
- **아키텍처 다이어그램**
+ **시스템 흐름도**
  
  <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/c0769036-aa00-4db8-b889-3efbe4d60236" />
 
@@ -185,12 +194,13 @@
 
 ## 🛠 트러블 슈팅
 
+
 | 이름 | 문제 상황 | 해결 방법 |
-|:--:|:--:|:--:|
-| **김현주** | | |
-| **이승규** | | |
-| **김은재** | | |
-| **윤소라** | | |
+|:--:|:--|:--|
+| **김현주** | 배포 시 글쓰기에 이미지 업로드가 안됨 | 타입 정의할 때 `image`에 `?`를 안 붙이고 `images`를 하나 더 만들어버림 |
+| **이승규** | - | - |
+| **김은재** | 브런치 목록 중 `content`에 HTML 태그가 들어가 있어 글이 깨지는 현상 발생 | HTML 태그 제거 함수를 만들어 처리함 |
+| **윤소라** | Axios 요청 작성, 응답 타입 정의, 에러 처리, Bruno로 API 테스트 과정에서 다수의 오류 발생 | Bruno로 실제 응답 구조를 확인하고, 오류는 개발자 도구로 디버깅하며 해결 |
 
 
 <br>
@@ -202,11 +212,12 @@
 <br>
 <br>
 
-## 💭 회고 및 느낀점  
+## 💭 회고 및 느낀점
 
 | 이름 | 아쉬운 점 | 성장 경험 |
-|:--:|:--:|:--:|
-| **김현주** | | |
-| **이승규** | | |
-| **김은재** | | |
-| **윤소라** | | |
+|:--:|:--|:--|
+| **김현주** | 선택 기능 중 하나인 카카오톡 로그인을 구현하지 못한 점 | `api`, `async/await`를 사용하는 데 익숙해지며 점점 적응함 |
+| **이승규** | - | - |
+| **김은재** | 여러 부분을 확인하지 않고 코드를 짜 오류가 생기거나 기능이 빠진 점 | 느리더라도 기초를 지키며 꼼꼼하게 짜야 한다는 점을 체감함 |
+| **윤소라** | API와 Axios를 능숙하게 다루고 싶었지만, 각종 오류 해결에 시간이 많이 소요된 점 | 코드를 짜고 오류를 해결하는 과정을 통해 감을 익히며 빠르게 성장  |
+
