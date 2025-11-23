@@ -127,8 +127,8 @@ async function loadInitialsubState(targetId: number) {
 // 구독 버튼 클릭 이벤트 등록
 export async function initSubscribeButton(
   targetId: number,
-  subNumber: number = 0,
-  subStatus: boolean = false,
+  // subNumber: number = 0,
+  // subStatus: boolean = false,
 ) {
   // renderSubscribeSection(subNumber, subStatus);
   await loadInitialsubState(targetId);
