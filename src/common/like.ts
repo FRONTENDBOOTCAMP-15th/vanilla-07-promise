@@ -1,5 +1,5 @@
 import { getAxios } from '../features/utils/axios.ts';
-import { isUserLoggedIn } from '../features/utils/checklogin.ts';
+import { getToken, isUserLoggedIn } from '../features/utils/checklogin.ts';
 
 interface BookmarkItem {
   _id: number; // 북마크 자체 id
@@ -32,15 +32,14 @@ function updateLikeUI(active: boolean) {
 
 // 좋아요 추가
 async function postlikeData(postId: number) {
-  const token = sessionStorage.getItem('accessToken');
-  if (!token) throw new Error('로그인이 필요합니다');
+  if (!getToken()) throw new Error('로그인이 필요합니다');
   try {
     const { data } = await axios.post(
       '/bookmarks/post',
       { target_id: postId },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       },
     );
@@ -54,14 +53,13 @@ async function postlikeData(postId: number) {
 
 // 좋아요 삭제
 async function dellikeData() {
-  const token = sessionStorage.getItem('accessToken');
-  if (!token) throw new Error('로그인이 필요합니다');
+  if (!getToken()) throw new Error('로그인이 필요합니다');
   if (!bookmarkId) return;
 
   try {
     const { data } = await axios.delete(`/bookmarks/${bookmarkId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     console.log(data);
@@ -75,13 +73,12 @@ async function dellikeData() {
 //  현재 게시글이 좋아요 상태인지 확인
 
 async function loadInitialLikedState(postId: number) {
-  const token = sessionStorage.getItem('accessToken');
-  if (!token) return;
+  if (!getToken()) return;
 
   try {
     const { data } = await axios.get('/bookmarks/post?type=brunch', {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
 

@@ -133,7 +133,7 @@ function renderPost(item: PostDetail) {
   authorNameEl.textContent = item.user.name;
   authorImgEl.setAttribute(
     'src',
-    item.image ?? '/assets/images/search/defaultProfil.webp',
+    item.user.image ?? '/assets/images/search/defaultProfil.webp',
   );
   if (jobEl) jobEl.textContent = item.user.job ?? '';
   if (descEl) descEl.innerHTML = item.user.desc ?? item.user.bio ?? '';
