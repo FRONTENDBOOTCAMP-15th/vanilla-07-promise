@@ -36,7 +36,8 @@ function updateSubscribeUI(active: boolean) {
   const btn = document.querySelector('.subscribe-btn')!;
   const img = btn.querySelector('img');
   const countEl = document.querySelector('.subscribe-count')!;
-  // eslint-disable-next-line prefer-const
+  
+  // 현재 화면에 표시된 숫자 가져오기
   let count = parseInt(countEl.textContent ?? '0');
 
   if (img) {
@@ -92,7 +93,7 @@ async function delsubData() {
 
 //  현재 게시글이 구독 상태인지 확인
 
-async function loadInitialsubState(targetId: number) {
+async function loadInitialsubState(targetId: number, subNumber:number) {
   const token = getToken();
   if (!token) return;
 
@@ -103,13 +104,18 @@ async function loadInitialsubState(targetId: number) {
       },
     });
 
+    const countEl = document.querySelector('.subscribe-count')!;
+    countEl.textContent = subNumber.toString();
+
     const list: subItem[] = data.item ? data.item : [];
 
     const found = list.find(b => b.user._id === targetId);
 
+
     if (found) {
       isSubscribed = true;
       subId = found._id;
+
 
       const btn = document.querySelector('.subscribe-btn')!;
       const img = btn.querySelector('img');
@@ -127,18 +133,18 @@ async function loadInitialsubState(targetId: number) {
 // 구독 버튼 클릭 이벤트 등록
 export async function initSubscribeButton(
   targetId: number,
-  // subNumber: number = 0,
-  // subStatus: boolean = false,
+  subNumber: number = 0,
 ) {
   // renderSubscribeSection(subNumber, subStatus);
-  await loadInitialsubState(targetId);
-
+  await loadInitialsubState(targetId,subNumber);
 
   const btn = document.querySelector('.subscribe-btn') as HTMLElement;
 
   if (!btn) return;
 
   btn.onclick = async () => {
+
+
     if (!isUserLoggedIn()) {
       alert('로그인이 필요한 기능입니다.');
       location.href = '../login/login.html';
@@ -154,6 +160,7 @@ export async function initSubscribeButton(
           isSubscribed = true;
           updateSubscribeUI(true); // UI 한 번만 업데이트
         }
+        alert("구독이 완료되었습니다.");
       } else {
         // 구독 취소
         const res = await delsubData();

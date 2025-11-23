@@ -160,7 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // const subCount = authorInfo.bookmarkedBy?.users ?? 0;
     // const isUserSubscribed = false;
     // renderSubscribeSection(subCount, isUserSubscribed);
-    await initSubscribeButton(post.user._id);
+
+     initSubscribeButton(post.user._id, authorInfo.bookmarkedBy?.users);
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');

@@ -30,6 +30,7 @@ async function getWriterInfoData() {
     const { data } = await axios.get(`/users/${writerId}`, {
       headers: {
         Authorization: `Bearer ${getToken()}`,
+        'Cache-Control': 'no-cache',
       },
     });
     return data;
@@ -60,6 +61,13 @@ const writerInfoData = await getWriterInfoData();
 
 if (writerInfoData?.ok) {
   renderWriterInfo(writerInfoData.item);
+  const writerId = getWriterIdFromURL();
+  if (!writerId) {
+    console.error('작가 ID가 없음');
+  }
+  
+  // 구독 버튼 활성화
+  initSubscribeButton(writerId, writerInfoData.item.bookmarkedBy.users);
 }
 
 
@@ -73,14 +81,7 @@ if (writerInfoData?.ok) {
 
 // 구독 버튼 & 구독자
 
-const writerId = getWriterIdFromURL();
 
-if (!writerId) {
-  console.error('작가 ID가 없음');
-}
-
-// 구독 버튼 활성화
-initSubscribeButton(writerId);
 
 // 구독자 수 UI 렌더링
 // renderSubscribeSection(
