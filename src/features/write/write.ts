@@ -18,7 +18,7 @@ const STORAGE_KEY = 'vanilla:posts';
 interface StoredPost {
   id: string;
   title: string;
-  subtitle: string;
+  subtitle: string | string[];
   content: string;
   image: Array<{ name: string; type: string; size: number }>;
   createdAt: string;
@@ -79,7 +79,7 @@ interface CreatePostPayload {
 
 export async function createPostRequest(
   title: string,
-  subtitle: string,
+  subtitle: string | string[],
   content: string,
   getAlign: () => string,
   file?: File,
@@ -230,7 +230,9 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
       type: 'brunch',
       title: payload.title,
       content: payload.content,
-      subtitle: payload.extra.subtitle,
+      subtitle:  Array.isArray(payload.extra.subtitle)
+    ? payload.extra.subtitle.join(', ')
+    : payload.extra.subtitle,
       image: payload.image || undefined,
     };
 
