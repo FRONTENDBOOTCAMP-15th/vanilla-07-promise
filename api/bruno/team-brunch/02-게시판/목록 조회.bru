@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{url}}/posts?type=brunch
+  url: {{url}}/posts
   body: none
   auth: none
 }
 
 params:query {
-  type: brunch
+  ~type: brunch
   ~sort: {"createdAt": 1}
   ~page: 1
   ~limit: 5
