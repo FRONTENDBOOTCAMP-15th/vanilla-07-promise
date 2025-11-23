@@ -1,6 +1,6 @@
 import { getAxios } from '../utils/axios';
 import {
-  renderSubscribeSection,
+  // renderSubscribeSection,
   initSubscribeButton,
 } from '../../common/sub-section';
 import { saveRecentBook } from '../mybox/recent';
