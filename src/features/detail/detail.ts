@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const subCount = authorInfo.bookmarkedBy?.users ?? 0;
     const isUserSubscribed = false;
     renderSubscribeSection(subCount, isUserSubscribed);
-  initSubscribeButton();
+    await initSubscribeButton(post.user._id);
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (likeCountEl)
       likeCountEl.textContent = String(authorInfo.likedBy?.users ?? 0);
 
-    initLikeButton();
+    await initLikeButton(postId);
 
     // 작가홈 링크
     const writerId = authorInfo._id;

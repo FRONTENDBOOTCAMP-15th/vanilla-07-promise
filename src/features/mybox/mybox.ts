@@ -63,8 +63,7 @@ if (
 ) {
   renderEmtyFavWriter();
 } else {
-  const limit = writerData.item.slice(0, 10);
-  renderWriters(limit);
+  renderWriters(writerData.item);
 }
 
 // 최근 본
@@ -165,8 +164,7 @@ if (
 ) {
   renderEmtyFavBooks();
 } else {
-  const limit = postData.item.slice(0, 10);
-  renderPosts(limit);
+  renderPosts(postData.item);
 }
 
 // 내 브런치

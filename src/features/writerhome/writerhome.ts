@@ -4,6 +4,7 @@ import type {
   WriterInfo,
 } from '../../types/writerhome-type/writerhome-type';
 import { getAxios } from '../utils/axios';
+
 import {
   renderSubscribeSection,
   initSubscribeButton,
@@ -69,7 +70,24 @@ renderSubscribeSection(
 );
 
 // 구독 버튼 기능 활성화
-initSubscribeButton(); // 인자 없이 사용
+function getWriterIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  return Number(params.get('_id'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const writerId = getWriterIdFromURL();
+
+  if (!writerId) {
+    console.error('작가 ID가 없음');
+    return;
+  }
+
+  // 구독 버튼 활성화
+  initSubscribeButton(writerId);
+});
+
+// initSubscribeButton(post.user._id); // 인자 없이 사용
 
 // 관심 작가 count
 function getSubsInfoId(): number {
