@@ -1,3 +1,5 @@
+import { getToken, getUserInform } from '../features/utils/checklogin';
+
 // brunch-header.ts
 class BrunchHeader extends HTMLElement {
   connectedCallback() {
@@ -6,11 +8,10 @@ class BrunchHeader extends HTMLElement {
   }
 
   async render() {
-    const accessToken = sessionStorage.getItem('accessToken');
+    const accessToken = getToken();
 
     // user 정보 가져오기
-    const userString = sessionStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
+    const user = getUserInform() ?? null;
     const isLoggedIn = !!accessToken;
 
     // 기본 프로필 이미지

@@ -4,6 +4,7 @@ import type {
   MyBrunch,
 } from '../../types/mybox-type/mybox-type';
 import { getAxios } from '../utils/axios';
+import { getToken } from '../utils/checklogin';
 import { getRecentBooks, type RecentBook } from './recent';
 
 // 관심 작가
@@ -13,7 +14,7 @@ async function getWriterData() {
   try {
     const { data } = await axios.get('/bookmarks/user', {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     console.log(data);
@@ -114,7 +115,7 @@ async function getPostData() {
   try {
     const { data } = await axios.get('/bookmarks/post', {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     console.log(data);
@@ -173,8 +174,11 @@ async function getBrunchData() {
   const axios = getAxios();
   try {
     const { data } = await axios.get('/posts/users', {
+      params: {
+        type: 'brunch',
+      },
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     console.log(data);

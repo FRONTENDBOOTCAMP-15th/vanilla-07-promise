@@ -17,7 +17,7 @@ const loginBtn = document.querySelector('.login-submit') as HTMLButtonElement;
 const signupBtn = document.querySelector('.signup-link') as HTMLAnchorElement;
 
 // 토큰 및 사용자 정보 저장 함수
-function saveUserData(user: LoginUser) {
+function saveUserData(user: LoginUser, checkBox: boolean) {
   const { accessToken } = user.token;
   const userData = {
     _id: user._id,
@@ -28,6 +28,11 @@ function saveUserData(user: LoginUser) {
 
   sessionStorage.setItem('accessToken', accessToken);
   sessionStorage.setItem('user', JSON.stringify(userData));
+  
+  if (checkBox) {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+  }
 }
 
 // 이메일, 비밀번호 입력 후 로그인 버튼 색상 변경, 회원가입 버튼 감추기
@@ -60,7 +65,7 @@ loginForm.addEventListener('submit', async event => {
     );
 
     // 토큰 및 사용자 정보 저장
-    saveUserData(data.item);
+    saveUserData(data.item, checkBox.checked);
 
     alert('로그인 성공했습니다');
     location.href = '../../../index.html';

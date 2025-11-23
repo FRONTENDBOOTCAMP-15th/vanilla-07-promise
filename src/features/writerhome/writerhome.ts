@@ -9,6 +9,7 @@ import {
   renderSubscribeSection,
   initSubscribeButton,
 } from '../../common/sub-section';
+import { getToken } from '../utils/checklogin';
 
 // 작가 정보
 function getWriterId(): number {
@@ -28,7 +29,7 @@ async function getWriterInfoData() {
   try {
     const { data } = await axios.get(`/users/${writerId}`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return data;
@@ -101,7 +102,7 @@ async function getSubsInfoData() {
   try {
     const { data } = await axios.get(`/users/${SubsInfoId}`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return data;
@@ -141,7 +142,7 @@ async function getWriteListData() {
   try {
     const { data } = await axios.get(`/posts/users/${ListId}`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('accessToken')}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     return data;
