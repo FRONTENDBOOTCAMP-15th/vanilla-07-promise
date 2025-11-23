@@ -1,3 +1,4 @@
+import { getToken } from '../features/utils/checklogin';
 import { api, type ApiItemResponse } from './apiClient';
 
 export interface PostPayload {
@@ -24,6 +25,11 @@ const postApi = {
     const { data } = await api.post<ApiItemResponse<PostResponse>>(
       '/posts',
       payload,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      },
     );
     return data;
   },

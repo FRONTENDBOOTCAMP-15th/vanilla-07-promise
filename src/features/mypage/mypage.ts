@@ -1,5 +1,5 @@
-import { tokenStore } from '../../types/apiClient';
 import { getAxios } from '../utils/axios';
+import { getUserInform, getToken } from '../utils/checklogin';
 
 interface UserItem {
   name?: string;
@@ -13,8 +13,7 @@ interface UploadResult {
 
 // 로그인 안되어있으면 로그인 페이지로 이동
 
-const userString = sessionStorage.getItem('user') ?? '{}'; // null이면 빈 객체로 처리
-const user = JSON.parse(userString);
+const user = getUserInform();
 
 populateProfileSection();
 
@@ -38,12 +37,12 @@ function populateProfileSection() {
   fileInput.accept = 'image/*';
 
   const myEmail = document.createElement('h3');
-  myEmail.textContent = `email : ${JSON.parse(sessionStorage.getItem('user') ?? '{}')?.email ?? ''}`;
+  myEmail.textContent = `email : ${user.email ?? ''}`;
   myEmail.id = 'myEmail';
 
   const myName = document.createElement('h3');
-  myName.textContent = `name : ${JSON.parse(sessionStorage.getItem('user') ?? '{}')?.name ?? ''}`;
-  myName.id = 'myEmail';
+  myName.textContent = `name : ${user.name ?? ''}`;
+  myName.id = 'myName';
 
   const nicknameInput = document.createElement('input');
   nicknameInput.type = 'text';
@@ -67,6 +66,12 @@ function populateProfileSection() {
   logoutBtn.textContent = '로그아웃';
   logoutBtn.addEventListener('click', () => {
     sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('user');
+
+    if (localStorage.getItem('accessToken')) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+    }
     window.history.back();
   });
 
@@ -126,12 +131,9 @@ function populateProfileSection() {
     const axios = getAxios();
 
     console.log('formData', formData);
-    const userString = sessionStorage.getItem('user');
+    const userObject = getUserInform();
 
-    if (!userString) {
-      throw new Error('유저 정보가 없습니다.');
-    }
-    const userId = JSON.parse(userString)._id;
+    const userId = userObject._id;
 
     const body: { name?: string; image: string } = {
       image: formData.get('image')?.toString() ?? '',
@@ -146,13 +148,12 @@ function populateProfileSection() {
     try {
       const result = await axios.patch(`/users/${userId}`, body, {
         headers: {
-          Authorization: `Bearer ${tokenStore.getAccessToken()}`,
+          Authorization: `Bearer ${getToken()}`,
         },
       });
 
       if (result.data.ok === 1) {
-        const userStr = sessionStorage.getItem('user');
-        const user = userStr ? JSON.parse(userStr) : {};
+        const user = getUserInform() ?? {};
 
         if (body.name != null) {
           user.name = body.name;
@@ -162,7 +163,14 @@ function populateProfileSection() {
           user.image = body.image;
         }
 
-        sessionStorage.setItem('user', JSON.stringify(user));
+        const localUser = localStorage.getItem('user');
+        if (localUser) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+        const sessionUser = sessionStorage.getItem('user');
+        if (sessionUser) {
+          sessionStorage.setItem('user', JSON.stringify(user));
+        }
         alert('상태가 변경되었습니다.');
         window.location.href = '/';
       } else {
