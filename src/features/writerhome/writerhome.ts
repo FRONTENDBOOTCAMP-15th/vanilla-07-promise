@@ -4,8 +4,9 @@ import type {
   WriterInfo,
 } from '../../types/writerhome-type/writerhome-type';
 import { getAxios } from '../utils/axios';
+
 import {
-  renderSubscribeSection,
+  // renderSubscribeSection,
   initSubscribeButton,
 } from '../../common/sub-section';
 import { getToken } from '../utils/checklogin';
@@ -61,16 +62,40 @@ if (writerInfoData?.ok) {
   renderWriterInfo(writerInfoData.item);
 }
 
+
+
+
+
+
+
+
+
+
 // 구독 버튼 & 구독자
 
+const writerId = getWriterIdFromURL();
+
+if (!writerId) {
+  console.error('작가 ID가 없음');
+}
+
+// 구독 버튼 활성화
+initSubscribeButton(writerId);
+
 // 구독자 수 UI 렌더링
-renderSubscribeSection(
-  writerInfoData.item.bookmarkedBy.users, // 구독자 수
-  false, // 초기 구독 상태: false
-);
+// renderSubscribeSection(
+//   writerInfoData.item.bookmarkedBy.users, // 구독자 수
+//   false, // 초기 구독 상태: false
+// );
 
 // 구독 버튼 기능 활성화
-initSubscribeButton(); // 인자 없이 사용
+function getWriterIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  return Number(params.get('_id'));
+}
+
+
+// initSubscribeButton(post.user._id); // 인자 없이 사용
 
 // 관심 작가 count
 function getSubsInfoId(): number {

@@ -1,6 +1,6 @@
 import { getAxios } from '../utils/axios';
 import {
-  renderSubscribeSection,
+  // renderSubscribeSection,
   initSubscribeButton,
 } from '../../common/sub-section';
 import { saveRecentBook } from '../mybox/recent';
@@ -133,7 +133,7 @@ function renderPost(item: PostDetail) {
   authorNameEl.textContent = item.user.name;
   authorImgEl.setAttribute(
     'src',
-    item.image ?? '/assets/images/search/defaultProfil.webp',
+    item.user.image ?? '/assets/images/search/defaultProfil.webp',
   );
   if (jobEl) jobEl.textContent = item.user.job ?? '';
   if (descEl) descEl.innerHTML = item.user.desc ?? item.user.bio ?? '';
@@ -157,10 +157,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!authorInfo) return console.error('작성자 정보 오류');
 
     // 구독
-    const subCount = authorInfo.bookmarkedBy?.users ?? 0;
-    const isUserSubscribed = false;
-    renderSubscribeSection(subCount, isUserSubscribed);
-  initSubscribeButton();
+    // const subCount = authorInfo.bookmarkedBy?.users ?? 0;
+    // const isUserSubscribed = false;
+    // renderSubscribeSection(subCount, isUserSubscribed);
+    await initSubscribeButton(post.user._id);
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (likeCountEl)
       likeCountEl.textContent = String(authorInfo.likedBy?.users ?? 0);
 
-    initLikeButton();
+    await initLikeButton(postId);
 
     // 작가홈 링크
     const writerId = authorInfo._id;
