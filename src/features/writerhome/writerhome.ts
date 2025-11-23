@@ -80,7 +80,7 @@ if (!writerId) {
 }
 
 // 구독 버튼 활성화
-initSubscribeButton(writerId, writerInfoData.item.bookmarkedBy.users, false);
+initSubscribeButton(writerId);
 
 // 구독자 수 UI 렌더링
 // renderSubscribeSection(

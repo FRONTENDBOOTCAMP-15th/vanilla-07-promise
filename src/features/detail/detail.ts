@@ -157,10 +157,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!authorInfo) return console.error('작성자 정보 오류');
 
     // 구독
-    const subCount = authorInfo.bookmarkedBy?.users ?? 0;
-    const isUserSubscribed = false;
+    // const subCount = authorInfo.bookmarkedBy?.users ?? 0;
+    // const isUserSubscribed = false;
     // renderSubscribeSection(subCount, isUserSubscribed);
-    await initSubscribeButton(post.user._id, subCount, isUserSubscribed);
+    await initSubscribeButton(post.user._id);
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');
