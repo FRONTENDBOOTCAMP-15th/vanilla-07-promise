@@ -2,9 +2,13 @@ import { getToken } from '../features/utils/checklogin';
 import { api, type ApiItemResponse } from './apiClient';
 
 export interface PostPayload {
+  type?: string;
   title: string;
   content: string;
-  subtitle: string;
+  extra: {
+    subtitle: string;
+    align: string;
+  };
   image?: string;
 }
 
@@ -12,7 +16,10 @@ export interface PostResponse {
   _id: string;
   title: string;
   content: string;
-  subtitle: string;
+  extra: {
+    subtitle: string;
+    align: string;
+  };
   image?: string;
   createdAt?: string;
   updatedAt?: string;
