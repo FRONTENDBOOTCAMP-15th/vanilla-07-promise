@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 구독
     const subCount = authorInfo.bookmarkedBy?.users ?? 0;
     const isUserSubscribed = false;
-    renderSubscribeSection(subCount, isUserSubscribed);
-    await initSubscribeButton(post.user._id);
+    // renderSubscribeSection(subCount, isUserSubscribed);
+    await initSubscribeButton(post.user._id, subCount, isUserSubscribed);
 
     // 직업 및 소개글
     const jobEl = document.querySelector<HTMLElement>('.author-job');

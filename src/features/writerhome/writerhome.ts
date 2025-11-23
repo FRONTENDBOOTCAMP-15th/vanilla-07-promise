@@ -62,13 +62,31 @@ if (writerInfoData?.ok) {
   renderWriterInfo(writerInfoData.item);
 }
 
+
+
+
+
+
+
+
+
+
 // 구독 버튼 & 구독자
 
+const writerId = getWriterIdFromURL();
+
+if (!writerId) {
+  console.error('작가 ID가 없음');
+}
+
+// 구독 버튼 활성화
+initSubscribeButton(writerId, writerInfoData.item.bookmarkedBy.users, false);
+
 // 구독자 수 UI 렌더링
-renderSubscribeSection(
-  writerInfoData.item.bookmarkedBy.users, // 구독자 수
-  false, // 초기 구독 상태: false
-);
+// renderSubscribeSection(
+//   writerInfoData.item.bookmarkedBy.users, // 구독자 수
+//   false, // 초기 구독 상태: false
+// );
 
 // 구독 버튼 기능 활성화
 function getWriterIdFromURL() {
@@ -76,17 +94,6 @@ function getWriterIdFromURL() {
   return Number(params.get('_id'));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const writerId = getWriterIdFromURL();
-
-  if (!writerId) {
-    console.error('작가 ID가 없음');
-    return;
-  }
-
-  // 구독 버튼 활성화
-  initSubscribeButton(writerId);
-});
 
 // initSubscribeButton(post.user._id); // 인자 없이 사용
 

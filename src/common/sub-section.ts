@@ -48,7 +48,6 @@ function updateSubscribeUI(active: boolean) {
   countEl.textContent = String(active ? count + 1 : Math.max(0, count - 1));
 }
 
-
 // 구독 추가
 async function postsubData(targetId: number) {
   const token = getToken();
@@ -126,8 +125,14 @@ async function loadInitialsubState(targetId: number) {
 }
 
 // 구독 버튼 클릭 이벤트 등록
-export async function initSubscribeButton(targetId: number) {
+export async function initSubscribeButton(
+  targetId: number,
+  subNumber: number = 0,
+  subStatus: boolean = false,
+) {
+  // renderSubscribeSection(subNumber, subStatus);
   await loadInitialsubState(targetId);
+
 
   const btn = document.querySelector('.subscribe-btn') as HTMLElement;
 
