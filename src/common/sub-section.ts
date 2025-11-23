@@ -1,5 +1,5 @@
 import { getAxios } from '../features/utils/axios.ts';
-import { isUserLoggedIn } from '../features/utils/checklogin.ts';
+import { getToken, isUserLoggedIn } from '../features/utils/checklogin.ts';
 
 const axios = getAxios();
 
@@ -48,9 +48,10 @@ function updateSubscribeUI(active: boolean) {
   countEl.textContent = String(active ? count + 1 : Math.max(0, count - 1));
 }
 
+
 // 구독 추가
 async function postsubData(targetId: number) {
-  const token = sessionStorage.getItem('accessToken');
+  const token = getToken();
   if (!token) throw new Error('로그인이 필요합니다');
   try {
     const { data } = await axios.post(
@@ -72,7 +73,7 @@ async function postsubData(targetId: number) {
 
 // 구독 삭제
 async function delsubData() {
-  const token = sessionStorage.getItem('accessToken');
+  const token = getToken();
   if (!token) throw new Error('로그인이 필요합니다');
   if (!subId) return;
 
@@ -93,7 +94,7 @@ async function delsubData() {
 //  현재 게시글이 구독 상태인지 확인
 
 async function loadInitialsubState(targetId: number) {
-  const token = sessionStorage.getItem('accessToken');
+  const token = getToken();
   if (!token) return;
 
   try {
@@ -103,14 +104,21 @@ async function loadInitialsubState(targetId: number) {
       },
     });
 
-    const list: subItem[] = Array.isArray(data.item) ? data.item : [];
+    const list: subItem[] = data.item ? data.item : [];
 
-    const found = list.find(b => b.target_id === targetId);
+    const found = list.find(b => b.user._id === targetId);
 
     if (found) {
       isSubscribed = true;
       subId = found._id;
-      updateSubscribeUI(true);
+
+      const btn = document.querySelector('.subscribe-btn')!;
+      const img = btn.querySelector('img');
+
+      if (img) {
+        img.src = '/assets/images/detail/sub-A.svg';
+      }
+      // updateSubscribeUI(true);
     }
   } catch (err) {
     console.log(err);
