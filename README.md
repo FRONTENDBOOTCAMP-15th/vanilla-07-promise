@@ -187,7 +187,8 @@
 
  **🪢시스템 흐름도**
  
- <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/c0769036-aa00-4db8-b889-3efbe4d60236" />
+ <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/f8a30950-4116-47ce-b3ec-a7eeb0d57342" />
+
 
 <br>
 <br>
