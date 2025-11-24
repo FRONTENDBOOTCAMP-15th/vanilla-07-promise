@@ -177,6 +177,8 @@ const init = (): void => {
     e.preventDefault();
     if (window.history.length > 0) {
       window.history.back();
+    } else {
+      window.location.href = "/";
     }
   });
 
