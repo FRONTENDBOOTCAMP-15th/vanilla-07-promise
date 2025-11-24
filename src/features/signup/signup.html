@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./signup.css" />
+    <script type="module" src="./signup.ts"></script>
+  </head>
+  <body>
+    <main class="sign-up" aria-labelledby="signupHeading">
+      <h1 id="signup-heading" class="signup-title">회원가입</h1>
+
+      <form action="" id="signup-form" class="signup-form" novalidate>
+        <section class="field" data-field="nickname">
+          <div class="field-header">
+            <label for="nickname-input" class="field-label nickname">별명</label>
+            <button
+              type="button"
+              class="field-action field-action-nickname is-active"
+              data-action="nickname-check"
+            >중복확인
+            </button>
+          </div>
+          <input
+            type="text"
+            class="field-input"
+            id="nickname-input"
+            name="nickname"
+            placeholder="사용할 별명을 입력하세요"
+            autocomplete="nickname"
+            minlength="2"
+            max="20"
+            required
+          />            
+          <p class="field-message" id="nickname-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" data-field="email">
+          <div class="field-header">
+            <label for="email-input" class="field-label" id="email-label">이메일</label>
+            <button
+              type="button"
+              class="field-action is-active"
+              id="field-action-email"
+              data-action="email-check"
+            >
+              중복확인
+            </button>
+          </div>
+          <input
+            type="email"
+            class="field-input"
+            id="email-input"
+            name="email"
+            placeholder="이메일을 입력하세요"
+            autocomplete="email"
+            required
+          />
+          <p class="field-message" id="email-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" id="password-section" data-field="password">
+          <div class="field-header">
+            <label for="passwordInput" class="field-label">비밀번호</label>
+            <button
+              type="button"
+              class="field-icon-button1 field-icon-button"
+              data-toggle="password"
+              aria-controls="passwordInput"
+              aria-label="비밀번호 보기"
+            ></button>
+          </div>
+          <input
+            type="password"
+            class="field-input"
+            id="password-input"
+            name="password"
+            placeholder="영문, 숫자 조합 8자 이상"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+          <p class="field-message" id="password-message" aria-live="polite"></p>
+        </section>
+
+        <section class="field" data-field="passwordConfirm">
+          <div class="field-header">
+            <label for="passwordConfirmInput" class="field-label"
+              >비밀번호 확인</label
+            >
+            <button
+              type="button"
+              class="field-icon-button2 field-icon-button"
+              data-toggle="password-confirm"
+              aria-controls="passwordConfirmInput"
+              aria-label="비밀번호 보기"
+            ></button>
+          </div>
+          <input
+            type="password"
+            class="field-input"
+            id="password-confirm-input"
+            name="passwordConfirm"
+            placeholder="비밀번호를 한 번 더 입력하세요"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+          <p
+            class="field-message"
+            id="password-confirm-message"
+            aria-live="polite"
+          ></p>
+        </section>
+
+        <section class="field">
+          <label for="phone-input" class="field-label">
+          </label>
+          <input type="text"
+          class="field-input" placeholder="phone"/>
+        </section>
+
+        <section class="field">
+          <label for="address-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="address"/>
+        </section>
+
+        <section class="field">
+          <label for="job-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="job"/>
+        </section>
+
+        <section class="field">
+          <label for="biography-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="biography"/>
+        </section>
+
+        <section class="field">
+          <label for="keyword-input" class="field-label">
+          </label>
+          <input type="text" 
+          class="field-input"
+          placeholder="keyword(초코, 별, 사탕)"/>
+        </section>
+
+        <section class="field">
+          <label for="image-input" class="field-label">프로필 이미지</label>
+          <input 
+            type="file" 
+            id="image-input"
+            class="field-input"
+            accept="image/*"
+          />
+          <img 
+            id="image-preview" 
+            src="" 
+            alt="프로필 이미지 미리보기" 
+            style="display: none; max-width: 200px; max-height: 200px; margin-top: 10px; border-radius: 8px;"
+          />
+        </section>
+        
+
+        <div class="form-status" role="status" aria-live="polite"></div>
+
+        <button type="submit" class="signup-submit is-active">회원가입</button>
+      </form>
+    </main>
+  </body>
+</html>

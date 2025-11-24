@@ -1,0 +1,53 @@
+/* 모바일 화면 */
+@import url('/assets/css/base/global.css');
+body {
+  margin: 0 auto;
+  max-width: var(--body-width);
+}
+
+.header {
+
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%); /* 좌우 중앙 이동 */
+  width: var(--body-width);
+  z-index: 1000;
+  display: flex;
+  background-color: var(--color-white);
+
+  justify-content: space-between;
+  align-items: center;
+  block-size: 4.125em;
+  border-bottom: 0.0625em solid var(--color-border);
+
+
+  .search-group {
+    display: flex;
+    align-items: center;
+    gap: 0.625em;
+
+    img {
+      display: block;
+      width: 2.5em;
+      height: 2.5em;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .login-b {
+      vertical-align: middle;
+      button {
+        inline-size: 5.625em;
+        block-size: 2.1875em;
+        padding: 0.25em 0.8125em;
+
+        background-color: #231f20;
+        color: var(--color-white);
+        border: 1px solid;
+        border-radius: 15px;
+      }
+    }
+  }
+}

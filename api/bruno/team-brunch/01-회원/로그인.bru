@@ -1,0 +1,20 @@
+meta {
+  name: 로그인
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/users/login
+  body: json
+  auth: none
+}
+
+body:json {
+  
+  {
+    "email": "dltmdrb6677@naver.com",
+    "password": "12345678"
+  }
+  
+}

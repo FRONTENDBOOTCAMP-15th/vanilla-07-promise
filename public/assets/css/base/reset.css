@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  --body-width: 28.875rem;
+
+  min-block-size: 100dvh;
+  font-family: sans-serif;
+  max-inline-size: var(--body-width);
+  margin: 0 auto;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+button,
+input {
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+mark {
+  background-color: transparent;
+}

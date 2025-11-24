@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/features/detail/detail.css" />
+    <title>상세페이지</title>
+  </head>
+  <body>
+    <brunch-header></brunch-header>
+    <script type="module" src="/src/common/header.ts"></script>
+    <div class="container">
+      <div class="head">
+        <div class="overlay"></div>
+        <div class="text-wrap">
+          <div class="title"></div>
+          <div class="subtitle"></div>
+          <div class="author">
+            <a href="#" class="author-link-inline">
+              <span class="author-name-inline"></span>
+            </a>
+            <span class="author-date"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content"></div>
+
+      <div class="image-section">
+        <img src="" alt="대표 이미지" />
+        <div class="image-caption"></div>
+      </div>
+
+      <div class="content2"></div>
+
+      <div class="author-card">
+        <div class="author-info">
+          <div class="author-header">
+            <div>
+              <a href="#" class="author-link">
+                <div class="author-name"></div>
+              </a>
+              <div class="author-job"></div>
+            </div>
+            <a href="#" class="author-link">
+              <img class="author-img" src="" alt="작성자 이미지" />
+            </a>
+          </div>
+          <div class="author-desc"></div>
+          <div class="author-footer">
+            <span class="subs">
+              구독자 <span class="subscribe-count">0</span>
+            </span>
+            <button class="subscribe-btn" aria-label="구독 버튼">
+              <img
+                class="subscribe-icon"
+                src="/assets/images/detail/sub-B.svg"
+                alt="구독 아이콘"
+              />
+            </button>
+          </div>
+          <div class="author-react">
+            <button id="heartBtn" class="icon-button" aria-label="좋아요 버튼">
+              <img
+                src="/assets/images/detail/heart.svg"
+                alt="하트 버튼"
+                class="heart-icon"
+              />
+            </button>
+            <span class="like-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/features/detail/detail.ts"></script>
+    <brunch-nav></brunch-nav>
+    <script type="module" src="/src/common/nav.ts"></script>
+  </body>
+</html>

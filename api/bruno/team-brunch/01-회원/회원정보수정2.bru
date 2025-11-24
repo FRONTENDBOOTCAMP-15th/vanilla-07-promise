@@ -1,0 +1,32 @@
+meta {
+  name: 회원정보수정2
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{url}}/users/32
+  body: json
+  auth: bearer
+}
+
+headers {
+  ~Authorization: eyJfaWQiOjMxLCJ0eXBlIjoic2VsbGVyIiwibmFtZSI6IuydtOyKueq3nCDthYzsiqTtirgg6rOE7KCVIiwiZW1haWwiOiJ0bWRyYkBuYXZlci5jb20iLCJpbWFnZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RkZWRzbHF2di9pbWFnZS91cGxvYWQvdjE3NjI3NTg2NjcvbmlrZS9sNnd0NWdRUFRkLndlYnAiLCJsb2dpblR5cGUiOiJlbWFpbCIsImlhdCI6MTc2MzYyMjA4NiwiZXhwIjoxNzYzNzA4NDg2LCJpc3MiOiJGRUJDIn0
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMwLCJ0eXBlIjoidXNlciIsImlhdCI6MTc2Mzg4MDQ1MSwiZXhwIjoxNzYzOTY2ODUxLCJpc3MiOiJGRUJDIn0.girHpl2qDS6lg_PzwfqT_h630cg_mu7ZPXqVckWWZow
+}
+
+body:json {
+  {
+    "image": "https://res.cloudinary.com/ddedslqvv/image/upload/v1763699215/febc15-vanilla07-ecad/X_146gdH_.png",
+    "name": "이승규",
+    
+    "extra": {
+       "biography": "진짜 나는 프론트엔드가 너무 제있다 ㅠㅠ 인정이지?",
+      "job": "프론트엔드야",
+          "keyword": ["프론트엔드", "제일잘해", "너무 좋다"]
+        }
+  }
+}

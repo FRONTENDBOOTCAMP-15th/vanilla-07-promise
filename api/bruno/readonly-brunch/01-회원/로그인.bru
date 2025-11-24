@@ -1,0 +1,18 @@
+meta {
+  name: 로그인
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://res.cloudinary.com/ddedslqvv/image/upload/v1762758667/nike/l6wt5gQPTd.webp{{url}}/users/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "w1@market.com",
+    "password": "11111111"
+  }
+}

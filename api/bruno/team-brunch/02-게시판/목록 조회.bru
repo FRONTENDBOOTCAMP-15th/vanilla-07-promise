@@ -1,0 +1,19 @@
+meta {
+  name: 목록 조회
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/posts
+  body: none
+  auth: none
+}
+
+params:query {
+  ~type: brunch
+  ~sort: {"createdAt": 1}
+  ~page: 1
+  ~limit: 5
+  ~keyword: ㄷㄹ
+}

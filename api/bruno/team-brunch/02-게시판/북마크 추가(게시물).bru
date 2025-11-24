@@ -1,0 +1,24 @@
+meta {
+  name: 북마크 추가(게시물)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{url}}/posts/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "brunch",
+    "title": "여행 후기 입니다. 서브타이틀????????",
+    "extra": {
+    "subtitle": "여행 후기 입니다. 서브타이틀????????"
+    },
+    "content": "주말에 다녀온 여행지 입니다. 날씨가 맑아서 좋았어요.",
+    "image": "sample-bugatti.png",
+    "tag": "혼자,떠나요,제주도"
+  }
+}
