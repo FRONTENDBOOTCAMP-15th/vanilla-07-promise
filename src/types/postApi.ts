@@ -5,10 +5,7 @@ export interface PostPayload {
   type?: string;
   title: string;
   content: string;
-  extra: {
-    subtitle: string;
-    align: string;
-  };
+  extra: { subTitle: string };
   image?: string;
 }
 
@@ -16,10 +13,7 @@ export interface PostResponse {
   _id: string;
   title: string;
   content: string;
-  extra: {
-    subtitle: string;
-    align: string;
-  };
+  extra: { subTitle: string };
   image?: string;
   createdAt?: string;
   updatedAt?: string;

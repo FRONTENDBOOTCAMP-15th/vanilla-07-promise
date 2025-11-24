@@ -5,12 +5,12 @@ meta {
 }
 
 get {
-  url: {{url}}/posts?type=brunch&sort={"views": -1}
+  url: {{url}}/posts?type=brunch
   body: none
   auth: none
 }
 
 params:query {
   type: brunch
-  sort: {"views": -1}
+  ~sort: {"views": -1}
 }
