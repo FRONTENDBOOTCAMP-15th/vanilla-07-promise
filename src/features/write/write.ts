@@ -178,7 +178,7 @@ const init = (): void => {
     if (window.history.length > 0) {
       window.history.back();
     } else {
-      window.location.href = "/";
+      window.location.href = '/';
     }
   });
 
