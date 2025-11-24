@@ -9,6 +9,12 @@ const emailInput = document.querySelector('#email-input') as HTMLInputElement;
 const passwordInput = document.querySelector(
   '#password-input',
 ) as HTMLInputElement;
+
+
+  if (emailInput) emailInput.value = 'promise1234@naver.com';     // 개발용 아이디
+  if (passwordInput) passwordInput.value = 'test1234';     // 개발용 비밀번호
+
+
 const checkBox = document.querySelector(
   '#signin-checkbox-1',
 ) as HTMLInputElement;
