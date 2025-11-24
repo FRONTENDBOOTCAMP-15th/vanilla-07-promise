@@ -97,6 +97,10 @@
             height: 55px;
             border-radius: 50%;
             overflow: hidden;
+
+            .avatar {
+              block-size: 100%;
+            }
           }
 
           .author-info {
