@@ -65,7 +65,7 @@
 
 **우선순위 기반 할당**
 - 필수 기능(글 검색, 관심 작가)
-- 선택 기능(공유, 택스트 정렬)
+- 선택 기능(텍스트 정렬)
 - 추가 기능(로그인 후 헤더에 사진 누를 시 수정)
   
 <hr>
@@ -183,25 +183,145 @@
 
 
 ## 🔧 기술 구현 상세  
- <!-- 폴더 구조: (승규님 수정 후 반영 예정 – 공간 확보) -->
 
- **시스템 흐름도**
+ **🗂️폴더 구조**
+ ```
+ 📦 vanilla-07-promise              // 프로젝트 루트
+│
+├── 🗂️ .github                     // GitHub 워크플로우/Actions 등 자동화 설정
+├── 🗂️ .vscode                     // VSCode 편집기 설정
+│
+├── 📁 api                         // 서버/DB 관련 유틸리티 및 테스트용 리소스
+│   ├── 📁 bruno                   // Bruno API 테스트 파일
+│   └── 📁 dbinit                  // DB 초기화 스크립트
+│
+├── 📁 dist                        // Vite 빌드 결과물(배포 파일)
+├── 📁 node_modules                // npm 패키지들이 저장되는 폴더
+│
+├── 📁 public                      // 정적 리소스(빌드 없이 접근 가능)
+│   ├── 📁 assets                  // 이미지, CSS, 컴포넌트 등 모든 정적 자원
+│   │   ├── 🎨 components          // header, nav 등 공통 UI 컴포넌트 CSS
+│   │   │   ├── header.css
+│   │   │   └── nav.css
+│   │   │
+│   │   ├── 🎨 css                 // 전역 스타일 폴더
+│   │   │   └── 🎨 base            // reset/variables/theme 등 기초 스타일 파일
+│   │   │      ├── base.css
+│   │   │      ├── global.css
+│   │   │      ├── reset.css
+│   │   │      ├── theme.css
+│   │   │      └── variables.css
+│   │   │
+│   │   ├── 🖼️ images              // 모든 PNG/SVG 이미지 및 아이콘
+│   │   │   ├── detail / login / mybox-icons / nav-icons ...
+│   │   │   ├── trending-1.png ~ trending-10.png
+│   │   │   └── 다양한 SVG, PNG 파일들
+│   │   │
+│   │   └── 🎨 common.css          // 공통 스타일
+│   │
+│   └── 🖼️ vite.svg                // Vite 기본 아이콘
+│
+├── 📁 src                         // 실제 애플리케이션 로직이 들어가는 핵심 폴더
+│   ├── 📁 common                  // 공통 header/nav/토큰 관리/재사용 함수
+│   │   ├── header.html
+│   │   ├── header.ts
+│   │   ├── like.ts
+│   │   ├── nav.html
+│   │   ├── nav.ts
+│   │   ├── sub-section.ts
+│   │   └── token.ts
+│   │
+│   ├── 📁 components              // 재사용 가능한 UI 컴포넌트
+│   │   └── NoDataSearchPage.ts    // 검색에서 데이터 없을 때 보여줄 컴포넌트
+│   │
+│   ├── 📁 features                // 페이지(기능) 단위 모듈
+│   │   ├── 📁 detail              // 상세보기 페이지
+│   │   │   ├── detail.css
+│   │   │   ├── detail.html
+│   │   │   └── detail.ts
+│   │   │
+│   │   ├── 📁 home                // 홈 화면 기능
+│   │   │   ├── home.html
+│   │   │   ├── index.css
+│   │   │   ├── index.ts
+│   │   │   ├── top-author.css / top-author.html / top-author.ts
+│   │   │   ├── trending-brunch.css / trending-brunch.html / trending-brunch.ts
+│   │   │
+│   │   ├── 📁 login               // 로그인 페이지
+│   │   │   ├── login.css
+│   │   │   ├── login.html
+│   │   │   └── login.ts
+│   │   │
+│   │   ├── 📁 mybox               // 내보관함(My Box) 페이지
+│   │   │   ├── mybox.css
+│   │   │   ├── mybox.html
+│   │   │   ├── mybox.ts
+│   │   │   └── recent.ts
+│   │   │
+│   │   ├── 📁 mypage              // 마이페이지
+│   │   │   ├── mypage.css
+│   │   │   ├── mypage.html
+│   │   │   └── mypage.ts
+│   │   │
+│   │   ├── 📁 search              // 검색 기능
+│   │   │   ├── 📁 search-author   // 작가 검색
+│   │   │   ├── 📁 search-nodata   // 검색 결과 없을 때
+│   │   │   ├── 📁 search-result   // 검색 결과 페이지
+│   │   │   ├── search.css
+│   │   │   ├── search.html
+│   │   │   └── search.ts
+│   │   │
+│   │   ├── 📁 signup              // 회원가입 페이지
+│   │   │   ├── signup.css
+│   │   │   ├── signup.html
+│   │   │   └── signup.ts
+│   │   │
+│   │   ├── 📁 utils               // 공통 유틸리티 함수들
+│   │   │   ├── pages              // 페이징 처리 관련
+│   │   │   ├── auth.ts            // 인증 로직
+│   │   │   ├── axios.ts           // axios 인스턴스 설정
+│   │   │   ├── checklogin.ts      // 로그인 여부 확인
+│   │   │   └── types.ts           // 공통 타입
+│   │   │
+│   │   ├── 📁 write               // 글쓰기 페이지
+│   │   │   ├── write.css
+│   │   │   ├── write.html
+│   │   │   └── write.ts
+│   │   │
+│   │   └── 📁 writerhome          // 작가 홈(브런치 스타일)
+│   │       ├── writerhome.css
+│   │       ├── writerhome.html
+│   │       └── writerhome.ts
+│   │
+│   ├── 📁 types                   // 전역 타입 정의
+│   │   ├── mybox-type / mybox-type.ts
+│   │   ├── search-author-type / search-author-type.ts
+│   │   ├── search-result-type / search-result-type.ts
+│   │   ├── writerhome-type / writerhome-type.ts
+│   │   ├── apiClient.ts
+│   │   ├── postApi.ts
+│   │   └── upload.ts
+│   │
+│   ├── 💡 main.ts                 // 앱 진입 파일
+│   ├── 💡 counter.ts              // 예제용 코드(템플릿)
+│   ├── 🎨 style.css               // 전역 스타일
+│   └── 🖼️ typescript.svg          // TS 로고 이미지
+│
+├── ⚙️ .gitignore                  // Git에 포함하지 않을 파일 목록
+├── ⚙️ eslint.config.js            // ESLint 설정
+├── 📄 index.html                  // 프로젝트 기본 HTML
+├── 📦 package.json                // npm 패키지 설정 및 스크립트
+├── 📦 package-lock.json           // 패키지 버전 고정 파일
+├── ⚙️ prettier.config.js          // Prettier 코드 스타일 설정
+├── 📄 [README.md](http://readme.md/)                   // 프로젝트 설명 문서
+├── 📄 test.txt                    // 테스트 파일
+├── ⚙️ tsconfig.json               // TypeScript 설정
+└── ⚙️ vite.config.js              // Vite 번들 설정
+```
+
+ **🪢시스템 흐름도**
  
  <img width="600" height="500" alt="image" src="https://github.com/user-attachments/assets/c0769036-aa00-4db8-b889-3efbe4d60236" />
-
-<br>
-<br>
-
-## 🛠 트러블 슈팅
-
-
-| 이름 | 문제 상황 | 해결 방법 |
-|:--:|:--|:--|
-| **김현주** | 배포 시 글쓰기에 이미지 업로드가 안됨 | 타입 정의할 때 `image`에 `?`를 안 붙이고 `images`를 하나 더 만들어버림 |
-| **이승규** | - | - |
-| **김은재** | 브런치 목록 중 `content`에 HTML 태그가 들어가 있어 글이 깨지는 현상 발생 | HTML 태그 제거 함수를 만들어 처리함 |
-| **윤소라** | Axios 요청 작성, 응답 타입 정의, 에러 처리, Bruno로 API 테스트 과정에서 다수의 오류 발생 | Bruno로 실제 응답 구조를 확인하고, 오류는 개발자 도구로 디버깅하며 해결 |
-
 
 <br>
 <br>
@@ -212,12 +332,31 @@
 <br>
 <br>
 
+## 🛠 트러블 슈팅
+
+| 이름👨‍👩‍👧‍👦 | 문제 상황 | 해결 방법 |
+|:--:|:--|:--| 
+| **현주** | 배포 시 글쓰기에 이미지 업로드가 안됨 | 타입 정의할 때 image에 ?를 안 붙이고 images를 하나 더 만들어버림 | 
+| **승규** | 1번 페이지와 2번 페이지가 같은 HTTP 메소드와 동일한 파라미터로 요청을 보내는데도, 결과가 다르게 나오는 현상을 발견| 기존에 UI를 수정할 때 브라우저 캐시로 인해 변경 사항이 즉시 반영되지 않았던 경험을 떠올리며, 이번에는 Axios API 호출에도 캐시가 적용될 수 있는지를 확인 |
+| **은재** | 브런치 목록 중 content에 HTML 태그가 들어가 있어 글이 깨지는 현상 발생 | HTML 태그 제거 함수를 만들어 처리함 |
+| **소라** | Axios 요청 작성, 응답 타입 정의, 에러 처리, Bruno로 API 테스트 과정에서 다수의 오류 발생 | Bruno로 실제 응답 구조를 확인하고, 오류는 개발자 도구로 디버깅하며 해결 |
+
+
+
+
+
+
+
+
+<br>
+<br>
+
 ## 💭 회고 및 느낀점
 
-| 이름 | 아쉬운 점 | 성장 경험 |
+| 이름👨‍👩‍👧‍👦 | 아쉬운 점 | 성장 경험 |
 |:--:|:--|:--|
-| **김현주** | 선택 기능 중 하나인 카카오톡 로그인을 구현하지 못한 점 | `api`, `async/await`를 사용하는 데 익숙해지며 점점 적응함 |
-| **이승규** | - | - |
-| **김은재** | 여러 부분을 확인하지 않고 코드를 짜 오류가 생기거나 기능이 빠진 점 | 느리더라도 기초를 지키며 꼼꼼하게 짜야 한다는 점을 체감함 |
-| **윤소라** | API와 Axios를 능숙하게 다루고 싶었지만, 각종 오류 해결에 시간이 많이 소요된 점 | 코드를 짜고 오류를 해결하는 과정을 통해 감을 익히며 성장  |
+| **현주** | 선택 기능 중 하나인 카카오톡 로그인을 구현하지 못한 점 | `api`, `async/await`를 사용하는 데 익숙해지며 점점 적응함 |
+| **승규** | 컨벤션부터 파일 구조까지 모든 틀을 완벽하게 갖췄다고 생각했지만, 실제 개발 과정에서는 구석구석 예상치 못한 요소들이 계속해서 나온 점 | 다음 파이널 프로젝트에서는 전체적인 설계 단계에서부터 더 체계적이고 일관성 있는 규칙을 세워, 프로젝트 전반에 걸쳐 통일성을 유지할 수 있을 것이라는 점을 깨달음 |
+| **은재** | 여러 부분을 확인하지 않고 코드를 짜 오류가 생기거나 기능이 빠진 점 | 시간이 걸리더라도도 기초를 지키며 꼼꼼하게 짜야 한다는 점을 체감함 |
+| **소라** | API와 Axios를 능숙하게 다루고 싶었지만, 각종 오류 해결에 시간이 많이 소요된 점 | 코드를 짜고 오류를 해결하는 과정을 통해 감을 익히며 성장  |
 
