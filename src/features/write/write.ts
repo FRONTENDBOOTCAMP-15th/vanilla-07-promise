@@ -64,7 +64,7 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
       ? imageInput.files[0]
       : undefined;
 
-  const createPayload = await createPostRequest(
+  const payload = await createPostRequest(
     title,
     subtitle,
     content,
@@ -73,19 +73,19 @@ const handleSubmit = async (event: SubmitEvent): Promise<void> => {
     file,
   );
 
-    // CreatePostPayload를 PostPayload로 변환
-    const postPayload = {
-      type: 'brunch',
-      title: payload.title,
-      content: payload.content,
-      extra: {
-        subTitle: Array.isArray(payload.extra.subtitle)
-          ? payload.extra.subtitle.join(', ')
-          : payload.extra.subtitle,
-      },
-      image: payload.image || undefined,
-    };
-
+  // CreatePostPayload를 PostPayload로 변환
+  const postPayload: PostPayload = {
+    type: 'brunch',
+    title: payload.title,
+    content: payload.content,
+    extra: {
+      subTitle: Array.isArray(payload.extra.subtitle)
+        ? payload.extra.subtitle.join(', ')
+        : payload.extra.subtitle,
+    },
+    image: payload.image || undefined,
+  };
+  try {
     const response = await postApi.createPost(postPayload);
     if (!response.ok) {
       throw new Error(response.message ?? '게시글 등록에 실패했습니다.');
@@ -171,8 +171,7 @@ const initAlignControl = (): void => {
 };
 
 const init = (): void => {
-  const backButton =
-    document.querySelector<HTMLButtonElement>('.cancel-btn');
+  const backButton = document.querySelector<HTMLButtonElement>('.cancel-btn');
 
   backButton?.addEventListener('click', e => {
     e.preventDefault();
